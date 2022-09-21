@@ -21,15 +21,6 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class FixedTimeExecutor {
     private final ActorSystem system;
-
-    @Inject
-    @Named("queryRefundActor")
-    ActorRef queryRefundActorRef;
-
-    @Inject
-    @Named("queryPayResultActor")
-    ActorRef queryPayResultActorRef;
-
     private final ApplicationLifecycle appLifecycle;
     Logger.ALogger logger = Logger.of(FixedTimeExecutor.class);
 
@@ -47,23 +38,6 @@ public class FixedTimeExecutor {
 
     public void schedule() {
         logger.info("schedule");
-        system.scheduler().schedule(
-                Duration.create(600, TimeUnit.MILLISECONDS),
-                Duration.create(5, TimeUnit.MINUTES),
-                queryPayResultActorRef,
-                new ActorProtocol.CHECK_PAY_RESULT(),
-                system.dispatcher(),
-                ActorRef.noSender()
-        );
-
-        system.scheduler().schedule(
-                Duration.create(600, TimeUnit.MILLISECONDS),
-                Duration.create(2, TimeUnit.MINUTES),
-                queryRefundActorRef,
-                new ActorProtocol.QUERY_REFUND_RESULT(),
-                system.dispatcher(),
-                ActorRef.noSender()
-        );
     }
 
 

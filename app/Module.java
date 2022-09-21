@@ -37,13 +37,6 @@ public class Module extends AbstractModule implements AkkaGuiceSupport {
         bind(BizUtils.class).asEagerSingleton();
         bind(EncodeUtils.class).asEagerSingleton();
         bind(IPUtil.class).asEagerSingleton();
-        bindActor(OrderActor.class, "orderActor");
-        bindActor(HandleOrderPaidActor.class, "handleOrderPaidActor");
-        bindActor(QueryPayResultActor.class, "queryPayResultActor");
-        bindActor(QueryRefundActor.class, "queryRefundActor");
-        bindActor(ExchangeActor.class, "exchangeActor");
-        bindActor(StoreOrderActor.class, "storeOrderActor");
-        bindActor(GroupOrderActor.class, "groupOrderActor");
         bind(FixedTimeExecutor.class).asEagerSingleton();
     }
 }

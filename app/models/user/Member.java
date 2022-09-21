@@ -24,22 +24,7 @@ public class Member extends Model {
      * 用户的状态：被锁定
      */
     public static final int MEMBER_STATUS_LOCK = 2;
-    //1普通会员，2高级会员，3钻石会员，4至尊会员
-    public static final int LEVEL_0 = 0;
-    public static final int LEVEL_1 = 1;
-    public static final int LEVEL_2 = 2;
-    public static final int LEVEL_3 = 3;
-    public static final int LEVEL_4 = 4;
 
-    public static final int AUTH_STATUS_DENY = -1;
-    public static final int AUTH_STATUS_NOT_AUTH = 0;
-    public static final int AUTH_STATUS_PROCESSING = 1;
-    public static final int AUTH_STATUS_PRE_AUTH = 2;
-    public static final int AUTH_STATUS_AUTHED = 3;
-
-    public static final int USER_TYPE_CUSTOMER = 1;
-    public static final int USER_TYPE_STAFF = 10;
-    public static final int USER_TYPE_MANAGER = 20;
 
 
     @Column(name = "id")
@@ -69,9 +54,9 @@ public class Member extends Model {
     @JsonDeserialize(using = EscapeHtmlSerializer.class)
     public String nickName;//昵称
 
-    @Column(name = "phone_number")
+    @Column(name = "account_name")
     @JsonDeserialize(using = EscapeHtmlSerializer.class)
-    public String phoneNumber;//手机号
+    public String accountName;
 
     @Column(name = "contact_number")
     @JsonDeserialize(using = EscapeHtmlSerializer.class)
@@ -80,72 +65,12 @@ public class Member extends Model {
     @Column(name = "create_time")
     public long createdTime;//创建时间
 
-    @Column(name = "dealer_id")
-    public long dealerId;
-
-    @Column(name = "dealer_code")
-    public String dealerCode;
-
-    @Column(name = "dealer_type")
-    public long dealerType;
-
-    @Column(name = "favs_count")
-    public long favsCount;
-
-    @Column(name = "auth_status")
-    public int authStatus;
-
-    @Column(name = "level")
-    public int level;
-
-    @Column(name = "shop_id")
-    public long shopId;
-
-    @Column(name = "shop_name")
-    @JsonDeserialize(using = EscapeHtmlSerializer.class)
-    public String shopName;
-
-    @Column(name = "department_id")
-    public long departmentId;
-
-    @Column(name = "department_name")
-    @JsonDeserialize(using = EscapeHtmlSerializer.class)
-    public String departmentName;
-
     @Column(name = "avatar")
     @JsonDeserialize(using = EscapeHtmlSerializer.class)
     public String avatar;//头像
 
     @Column(name = "user_type")
     public int userType;
-
-    @Column(name = "open_id")
-    @JsonDeserialize(using = EscapeHtmlSerializer.class)
-    public String openId;
-
-    @Column(name = "session_key")
-    @JsonDeserialize(using = EscapeHtmlSerializer.class)
-    public String sessionKey;
-
-    @Column(name = "union_id")
-    @JsonDeserialize(using = EscapeHtmlSerializer.class)
-    public String unionId;
-
-    @Column(name = "root_dealer_id")
-    public long rootDealerId;
-
-    @Transient
-    public long leftBalance;
-
-    @Transient
-    public long score;
-
-    @Transient
-    public String dealerName;
-
-    @Transient
-    public double totalOrderMoney;
-
 
     public static Finder<Long, Member> find = new Finder<>(Member.class);
 
@@ -197,84 +122,12 @@ public class Member extends Model {
         this.nickName = nickName;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getAccountName() {
+        return accountName;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public long getCreatedTime() {
-        return createdTime;
-    }
-
-    public void setCreatedTime(long createdTime) {
-        this.createdTime = createdTime;
-    }
-
-    public long getDealerId() {
-        return dealerId;
-    }
-
-    public void setDealerId(long dealerId) {
-        this.dealerId = dealerId;
-    }
-
-    public int getAuthStatus() {
-        return authStatus;
-    }
-
-    public void setAuthStatus(int authStatus) {
-        this.authStatus = authStatus;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public long getLeftBalance() {
-        return leftBalance;
-    }
-
-    public void setLeftBalance(long leftBalance) {
-        this.leftBalance = leftBalance;
-    }
-
-    public long getScore() {
-        return score;
-    }
-
-    public void setScore(long score) {
-        this.score = score;
-    }
-
-    public long getFavsCount() {
-        return favsCount;
-    }
-
-    public void setFavsCount(long favsCount) {
-        this.favsCount = favsCount;
-    }
-
-    public String getDealerCode() {
-        return dealerCode;
-    }
-
-    public void setDealerCode(String dealerCode) {
-        this.dealerCode = dealerCode;
-    }
-
-    public long getDealerType() {
-        return dealerType;
-    }
-
-    public void setDealerType(long dealerType) {
-        this.dealerType = dealerType;
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
     }
 
     public String getContactNumber() {
@@ -285,44 +138,20 @@ public class Member extends Model {
         this.contactNumber = contactNumber;
     }
 
-    public String getDealerName() {
-        return dealerName;
+    public long getCreatedTime() {
+        return createdTime;
     }
 
-    public void setDealerName(String dealerName) {
-        this.dealerName = dealerName;
+    public void setCreatedTime(long createdTime) {
+        this.createdTime = createdTime;
     }
 
-    public double getTotalOrderMoney() {
-        return totalOrderMoney;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setTotalOrderMoney(double totalOrderMoney) {
-        this.totalOrderMoney = totalOrderMoney;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    public long getShopId() {
-        return shopId;
-    }
-
-    public void setShopId(long shopId) {
-        this.shopId = shopId;
-    }
-
-    public String getShopName() {
-        return shopName;
-    }
-
-    public void setShopName(String shopName) {
-        this.shopName = shopName;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public int getUserType() {
@@ -331,57 +160,5 @@ public class Member extends Model {
 
     public void setUserType(int userType) {
         this.userType = userType;
-    }
-
-    public long getDeportmentId() {
-        return departmentId;
-    }
-
-    public void setDepartmentId(long departmentId) {
-        this.departmentId = departmentId;
-    }
-
-    public String getDepartmentName() {
-        return departmentName;
-    }
-
-    public void setDepartmentName(String departmentName) {
-        this.departmentName = departmentName;
-    }
-
-    public long getDepartmentId() {
-        return departmentId;
-    }
-
-    public String getOpenId() {
-        return openId;
-    }
-
-    public void setOpenId(String openId) {
-        this.openId = openId;
-    }
-
-    public String getSessionKey() {
-        return sessionKey;
-    }
-
-    public void setSessionKey(String sessionKey) {
-        this.sessionKey = sessionKey;
-    }
-
-    public String getUnionId() {
-        return unionId;
-    }
-
-    public void setUnionId(String unionId) {
-        this.unionId = unionId;
-    }
-
-    public long getRootDealerId() {
-        return rootDealerId;
-    }
-
-    public void setRootDealerId(long rootDealerId) {
-        this.rootDealerId = rootDealerId;
     }
 }

@@ -8,6 +8,7 @@ import play.mvc.Result;
 import play.mvc.Security;
 import security.ApiSecured;
 import utils.BizUtils;
+import utils.CacheUtils;
 import utils.DateUtils;
 
 import javax.inject.Inject;
@@ -23,7 +24,8 @@ public class BaseController extends Controller {
     protected DateUtils dateUtils;
     @Inject
     protected BizUtils businessUtils;
-
+    @Inject
+    protected CacheUtils cacheUtils;
     @Inject
     @NamedCache("redis")
     protected play.cache.AsyncCacheApi redis;
@@ -89,7 +91,7 @@ public class BaseController extends Controller {
         return node;
     }
 
-    public Result index(){
+    public Result index() {
         return okJSON200();
     }
 }

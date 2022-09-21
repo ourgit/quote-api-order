@@ -213,4 +213,23 @@ public class CacheUtils {
     public String getGroupProductStatJsonCacheKey(long id) {
         return RedisKeyConstant.GROUP_PRODUCT_STAT_JSON_CACHE_KEY_PREFIX + id;
     }
+
+
+    public String getArticleCategoryKey(String cateName) {
+        return RedisKeyConstant.ARTICLE_CATEGORY_KEY_PREFIX + cateName;
+    }
+
+    public String getArticleCategoryKey(int categoryId) {
+        return RedisKeyConstant.ARTICLE_CATEGORY_KEY_BY_ID_PREFIX + categoryId;
+    }
+
+
+    public String getCarouselJsonCache() {
+        return RedisKeyConstant.CAROUSEL_JSON_CACHE;
+    }
+
+    public String getCarouselJsonCache(int bizType, int clientType) {
+        return RedisKeyConstant.CAROUSEL_JSON_CACHE + ":" + bizType + ":" + clientType;
+    }
+
 }

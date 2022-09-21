@@ -191,65 +191,11 @@ public class BusinessConstant {
      */
     public static final String KEY_LAST_VERIFICATION_CODE_PREFIX_KEY = "KEY_LAST_VERIFICATION_CODE_PREFIX_KEY:";
 
-    /**
-     * 交易类型,充值
-     */
-    public static final int TRANSACTION_TYPE_DEPOSIT = 1;
-
-    /**
-     * 交易类型,系统取消订单
-     */
-    public static final int TRANSACTION_TYPE_CANCEL_ORDER_BY_SYSTEM = 2;
-
-    /**
-     * 交易类型,系统后台设置
-     */
-    public static final int TRANSACTION_TYPE_SYSTEM = 3;
-
-
-    /**
-     * 交易类型,交易扣除
-     */
-    public static final int TRANSACTION_TYPE_PLACE_ORDER = 5;
-    /**
-     * 交易类型,下单赚送积分
-     */
-    public static final int TRANSACTION_TYPE_GIVE_SCORE_FOR_ORDER = 6;
-    /**
-     * 交易类型,积分支付订单
-     */
-    public static final int TRANSACTION_TYPE_SCORE_PAY_FOR_ORDER = 7;
-
-    /**
-     * 交易类型,充值赠送
-     */
-    public static final int TRANSACTION_TYPE_GIVE_FOR_CHARGE = 8;
-
-    /**
-     * 交易类型,取消订单
-     */
-    public static final int TRANSACTION_TYPE_CANCEL_ORDER = 9;
-
-    /**
-     * 交易类型,拼团失败，退款
-     */
-    public static final int TRANSACTION_TYPE_GROUPBUY_FAILED_REFUND_MONEY = 10;
 
     /**
      * 交易类型,取消订单扣除赠送的积分
      */
     public static final int TRANSACTION_TYPE_SUBTRACT_SCORE_GAVE_FOR_CANCEL_ORDER = 11;
-
-    /**
-     * 交易类型,交易扣除
-     */
-    public static final int TRANSACTION_TYPE_AUTO_CLOSE_ORDER = 12;
-
-    //订单抽成
-    public static final int TRANSACTION_TYPE_DRAW_COMMISSION = 13;
-
-    //返现到冻结中
-    public static final int TRANSACTION_TYPE_RETURN_COMMISSION_FREEZE = 15;
 
     //提现
     public static final int TRANSACTION_TYPE_WITHDRAW = 16;
@@ -259,132 +205,8 @@ public class BusinessConstant {
      * 交易类型,交易扣除
      */
 
-    public static final int TRANSACTION_BUY_SERVICE = 30;
-    public static final int TRANSACTION_BUY_MEMBERSHIP = 31;
-    public static final int TRANSACTION_USE_SERVICE = 32;
-    public static final int TRANSACTION_ORDER_AWARD = 33;
-    public static final int TRANSACTION_PICK_UP_CONFIRM = 34;
-    public static final int TRANSACTION_DIRECT_DEALER_AWARD = 35;
-    public static final int TRANSACTION_INDIRECT_DEALER_AWARD = 36;
-    public static final int TRANSACTION_BUY_MEMBERSHIP_AWARD = 37;
 
     public static final int MAX_COUNT_INVOKE_IS_VALID_ACCOUNT_PER_DAY = 50;
-
-    public static final int TRANSACTION_TYPE_PLACE_ORDER_BY_CARD = 51;
-
-    public static final int TRANSACTION_TYPE_REFUND_MONEY = 61;
-
-    public static final int TRANSACTION_TYPE_GIVE_FREE_MEMBER_SHIP = 106;
-    /**
-     * 以下为系统参数配置名字
-     */
-    //首充达到普通会员所需要的充值金额
-    public static final String PARAM_KEY_FIRST_CHARGE_TO_NORMAL_LEVEL = "FIRST_CHARGE_TO_NORMAL_LEVEL";
-    //首充达到高级会员所需要的充值金额
-    public static final String PARAM_KEY_FIRST_CHARGE_TO_ADVANCE_LEVEL = "FIRST_CHARGE_TO_ADVANCE_LEVEL";
-    //首充达到钻石会员所需要的充值金额
-    public static final String PARAM_KEY_FIRST_CHARGE_TO_DIAMOND_LEVEL = "FIRST_CHARGE_TO_DIAMOND_LEVEL";
-    //首充达到至尊会员所需要的充值金额
-    public static final String PARAM_KEY_FIRST_CHARGE_TO_TOP_LEVEL = "FIRST_CHARGE_TO_TOP_LEVEL";
-
-    //统计积分的天数来判断是否需要升级，暂定90天
-    public static final String PARAM_KEY_DAYS_FOR_SCORE_TO_UPDATE = "DAYS_FOR_SCORE_TO_UPDATE";
-    //达到普通会员所需要的消费金额
-    public static final String PARAM_KEY_CONSUME_MONEY_TO_NORMAL_LEVEL = "CONSUME_MONEY_TO_NORMAL_LEVEL";
-    //达到高级会员所需要的消费金额
-    public static final String PARAM_KEY_CONSUME_MONEY_TO_ADVANCE_LEVEL = "CONSUME_MONEY_TO_ADVANCE_LEVEL";
-    //达到钻石会员所需要的消费金额
-    public static final String PARAM_KEY_CONSUME_MONEY_TO_DIAMOND_LEVEL = "CONSUME_MONEY_TO_DIAMOND_LEVEL";
-    //达到至尊会员所需要的消费金额
-    public static final String PARAM_KEY_CONSUME_MONEY_TO_TOP_LEVEL = "CONSUME_MONEY_TO_TOP_LEVEL";
-
-    //普通会员生日折扣
-    public static final String PARAM_KEY_BIRTHDAY_DISCOUNT_FOR_NORMAL_LEVEL = "BIRTHDAY_DISCOUNT_FOR_NORMAL_LEVEL";
-    //高级会员生日折扣
-    public static final String PARAM_KEY_BIRTHDAY_DISCOUNT_FOR_ADVANCE_LEVEL = "BIRTHDAY_DISCOUNT_FOR_ADVANCE_LEVEL";
-    //钻石会员生日折扣
-    public static final String PARAM_KEY_BIRTHDAY_DISCOUNT_FOR_DIAMOND_LEVEL = "BIRTHDAY_DISCOUNT_FOR_DIAMOND_LEVEL";
-    //至尊会员生日折扣
-    public static final String PARAM_KEY_BIRTHDAY_DISCOUNT_FOR_TOP_LEVEL = "BIRTHDAY_DISCOUNT_FOR_TOP_LEVEL";
-
-
-    //普通会员消费获得积分
-    public static final String PARAM_KEY_CONSUME_GOT_SCORE_FOR_NORMAL_LEVEL = "CONSUME_GOT_SCORE_FOR_NORMAL_LEVEL";
-    //高级会员消费获得积分
-    public static final String PARAM_KEY_CONSUME_GOT_SCORE_FOR_ADVANCE_LEVEL = "CONSUME_GOT_SCORE_FOR_ADVANCE_LEVEL";
-    //钻石会员消费获得积分
-    public static final String PARAM_KEY_CONSUME_GOT_SCORE_FOR_DIAMOND_LEVEL = "CONSUME_GOT_SCORE_FOR_DIAMOND_LEVEL";
-    //至尊会员消费获得积分
-    public static final String PARAM_KEY_CONSUME_GOT_SCORE_FOR_TOP_LEVEL = "CONSUME_GOT_SCORE_FOR_TOP_LEVEL";
-
-    //充300送多少
-    public static final String PARAM_KEY_GIVE_MONEY_WHEN_UPTO_300 = "GIVE_MONEY_WHEN_UPTO_300";
-    //充500送多少
-    public static final String PARAM_KEY_GIVE_MONEY_WHEN_UPTO_500 = "GIVE_MONEY_WHEN_UPTO_500";
-    //充1000送多少
-    public static final String PARAM_KEY_GIVE_MONEY_WHEN_UPTO_1000 = "GIVE_MONEY_WHEN_UPTO_1000";
-    //充2000送多少
-    public static final String PARAM_KEY_GIVE_MONEY_WHEN_UPTO_2000 = "GIVE_MONEY_WHEN_UPTO_2000";
-    //充5000送多少
-    public static final String PARAM_KEY_GIVE_MONEY_WHEN_UPTO_5000 = "GIVE_MONEY_WHEN_UPTO_5000";
-    //充10000送多少
-    public static final String PARAM_KEY_GIVE_MONEY_WHEN_UPTO_10000 = "GIVE_MONEY_WHEN_UPTO_10000";
-    //公司名字
-    public static final String PARAM_KEY_COMPANY_NAME = "COMPANY_NAME";
-    public static final String PARAM_KEY_CONTACT_NAME = "CONTACT_NAME";
-    public static final String PARAM_KEY_CONTACT_PHONE_NUMBER = "CONTACT_PHONE_NUMBER";
-    public static final String PARAM_KEY_CONTACT_POST_CODE = "CONTACT_POST_CODE";
-    public static final String PARAM_KEY_CONTACT_PROVINCE = "CONTACT_PROVINCE";
-    public static final String PARAM_KEY_CONTACT_CITY = "CONTACT_CITY";
-    public static final String PARAM_KEY_CONTACT_AREA = "CONTACT_AREA";
-    public static final String PARAM_KEY_CONTACT_ADDRESS = "CONTACT_ADDRESS";
-
-    public static final String PARAM_KEY_VIP_MEMBERSHIP_FEE = "PARAM_KEY_VIP_MEMBERSHIP_FEE";
-
-    public static final String KEY_LIMIT_IP_REQUEST_KEYSET = "KEY_LIMIT_IP_REQUEST_KEYSET";
-
-    public static final int QUERY_TYPE_CHARGE = 1;
-    public static final int QUERY_TYPE_CONSUME = 2;
-
-    public static final String PARAM_KEY_IMAGE_SHOW_DOMAIN = "IMAGE_SHOW_DOMAIN";
-
-    public static final int TRANSACTION_TYPE_USER_PLACE_ORDER_AWARD_INVITER = 97;
-    public static final int TRANSACTION_TYPE_USER_PLACE_ORDER_AWARD_TEAM_LEADER = 98;
-    public static final int TRANSACTION_TYPE_CREDIT_SCORE = 99;
-    public static final int TRANSACTION_TYPE_GROUPON_REFUND = 100;
-    public static final int TRANSACTION_TYPE_ORDER_CANCEL_CALL_BACK_AWARD = 101;
-    public static final int TRANSACTION_TYPE_ORDER_CONFIRM_EXECUTE_AWARD = 102;
-
-    public static final String TASK_NEW_ORDER = "TASK_NEW_ORDER";
-    public static final String TASK_NEW_POST_SERVICE = "TASK_NEW_POST_SERVICE";
-    public static final String TASK_NEW_CUSTOMER = "TASK_NEW_CUSTOMER";
-    public static final String TASK_NEED_APPROVE = "TASK_NEED_APPROVE";
-
-
-    public static final int GROUPON_REQUIRE_ORDERS = 2;
-    public static final int GROUPON_TIME_LIMIT_SECONDS = 1800;
-
-    public static final String PARAM_KEY_AWARD_DEALER_FOR_REG = "PARAM_KEY_AWARD_DEALER_FOR_REG";
-    public static final String PARAM_KEY_AWARD_DEALER_FOR_BUY_VIP = "PARAM_KEY_AWARD_DEALER_FOR_BUY_VIP";
-    public static final String PARAM_KEY_AWARD_DEALER_FOR_PLACE_ORDER = "PARAM_KEY_AWARD_DEALER_FOR_PLACE_ORDER";
-    public static final String PARAM_KEY_AWARD_CUSTOMER_FOR_EVERYDAY_SIGN_IN = "PARAM_KEY_AWARD_CUSTOMER_FOR_EVERYDAY_SIGN_IN";
-    public static final String PARAM_KEY_MAX_USE_BEAUTY_CARD = "PARAM_KEY_MAX_USE_BEAUTY_CARD";
-    public static final String PARAM_KEY_AWARD_DIRECT_DEALER_PERCENTAGE = "PARAM_KEY_AWARD_DIRECT_DEALER_PERCENTAGE";
-    public static final String PARAM_KEY_AWARD_INDIRECT_DEALER_PERCENTAGE = "PARAM_KEY_AWARD_INDIRECT_DEALER_PERCENTAGE";
-    public static final String PARAM_KEY_AWARD_SELF_TAKEN_PLACE_PERCENTAGE = "PARAM_KEY_AWARD_SELF_TAKEN_PLACE_PERCENTAGE";
-    public static final String PARAM_KEY_SHOP_LAT_LNG = "PARAM_KEY_SHOP_LAT_LNG";
-
-    //至尊会员消费获得积分
-    public static final String PARAM_KEY_MAX_TIME_FOR_RETURN_GOODS = "PARAM_KEY_MAX_TIME_FOR_RETURN_GOODS";
-    public static final String PARAM_KEY_MAX_TIME_FOR_AUDIT = "PARAM_KEY_MAX_TIME_FOR_AUDIT";
-    public static final String PARAM_KEY_MAX_TIME_FOR_REFUND = "PARAM_KEY_MAX_TIME_FOR_REFUND";
-
-    public static final long DEFAULT_MAX_TIME_FOR_RETURN_GOODS = 7 * 24 * 3600;
-    public static final long DEFAULT_MAX_TIME_FOR_AUDIT_RETURN = 2 * 24 * 3600;
-    public static final long DEFAULT_MAX_TIME_FOR_REFUND = 7 * 24 * 3600;
-
-    public static final int DEFAULT_AWARD_DEALER_FOR_BUY_VIP = 3000;
-    public static final double DEFAULT_AWARD_DEALER_FOR_PLACE_ORDER = 0.05;
 
 
     public static final String PARAM_KEY_WECHAT_MP_APP_ID = "PARAM_KEY_WECHAT_MP_APP_ID";
@@ -419,4 +241,6 @@ public class BusinessConstant {
     public static final String PARAM_KEY_WE_PAY_KEY_SERIAL_NO = "PARAM_KEY_WE_PAY_KEY_SERIAL_NO";//序列号
     public static final String PARAM_KEY_WE_PAY_API_V3_KEY = "PARAM_KEY_WE_PAY_API_V3_KEY";
     public static final String PARAM_KEY_WE_PAY_PRIVATE_KEY = "PARAM_KEY_WE_PAY_PRIVATE_KEY";
+
+    public static final String PARAM_KEY_DEFAULT_AVATAR = "PARAM_CONFIG_KEY_PREFIX:DEFAULT_AVATAR";
 }
