@@ -1,0 +1,13 @@
+/.idea/
+/project/project/target/
+/project/target/
+/target/
+/test/
+/.idea/
+/apidoc/
+/project/.sbtserver.lock
+/bin/activator
+/bin/activator.bat
+*.class
+/.idea/
+/.bsp/
