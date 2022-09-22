@@ -646,7 +646,7 @@ public class MemberController extends BaseController {
 
 
     /**
-     * @api {GET} /v1/user/is_login/ 19是否已登录
+     * @api {GET} /v1/user/is_login/ 13是否已登录
      * @apiName isLogin
      * @apiGroup User
      * @apiSuccess (Success 200){int} code 200
@@ -663,7 +663,7 @@ public class MemberController extends BaseController {
     }
 
     /**
-     * @api {GET} /v1/user/balance_logs/?bizType=&itemId=&page= 27余额/积分明细列表
+     * @api {GET} /v1/user/balance_logs/?bizType=&itemId=&page= 14余额/积分明细列表
      * @apiName listBalanceLogs
      * @apiGroup User
      * @apiParam itemId 1现金 2积分
@@ -701,7 +701,7 @@ public class MemberController extends BaseController {
     }
 
     /**
-     * @api {POST} /v1/user/change_phone_number/ 31修改手机号码
+     * @api {POST} /v1/user/change_phone_number/ 15修改手机号码
      * @apiName changePhoneNumber
      * @apiGroup User
      * @apiParam {String} [note]备注，需要分两步，第一步，为输入密码【可选】，以及新手机号与新手机号短信验证码，第二步，请求原手机号的短信验证码，调用这个接口，
@@ -753,7 +753,7 @@ public class MemberController extends BaseController {
     }
 
     /**
-     * @api {GET} /v1/user/msg_list/?page=&msgType= 40我的消息列表
+     * @api {GET} /v1/user/msg_list/?page=&msgType= 16我的消息列表
      * @apiName listMsg
      * @apiGroup User
      * @apiSuccess (Success 200) {int} code 200
@@ -796,7 +796,7 @@ public class MemberController extends BaseController {
     }
 
     /**
-     * @api {POST} /v1/user/clear_all_msg/ 41清除全部消息列表
+     * @api {POST} /v1/user/clear_all_msg/ 17清除全部消息列表
      * @apiName clearMsg
      * @apiGroup User
      * @apiSuccess (Success 200) {int} code 200
@@ -817,7 +817,7 @@ public class MemberController extends BaseController {
     }
 
     /**
-     * @api {POST} /v1/user/clear_selected_msg/ 42清除选中消息列表
+     * @api {POST} /v1/user/clear_selected_msg/ 18清除选中消息列表
      * @apiName clearSelectedMsg
      * @apiGroup User
      * @apiParam {Array} list

@@ -17,8 +17,10 @@ import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
+import utils.EncodeUtils;
 import utils.ValidationUtil;
 
+import javax.inject.Inject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
@@ -34,6 +36,8 @@ import static constants.RedisKeyConstant.*;
 public class ArticleController extends BaseController {
 
     Logger.ALogger logger = Logger.of(ArticleController.class);
+    @Inject
+    EncodeUtils encodeUtils;
 
 
     /**
@@ -437,13 +441,25 @@ public class ArticleController extends BaseController {
                     return ok(node);
                 }
             }
-            ParamConfig paramConfig = ParamConfig.find.query().where()
-                    .eq("key", key).setMaxRows(1).findOne();
-            if (null == paramConfig) return okCustomJson(CODE40001, "该参数不存在");
+
+            ParamConfig config = ParamConfig.find.query().where()
+                    .eq("key", key)
+                    .orderBy().asc("id")
+                    .setMaxRows(1).findOne();
+            if (null == config) return okCustomJson(CODE40001, "该参数不存在");
+            String value = "";
+            if (!ValidationUtil.isEmpty(config.value)) {
+                if (config.isEncrypt) {
+                    value = encodeUtils.decrypt(config.value);
+                } else {
+                    value = config.value;
+                }
+            }
+
             ObjectNode resultNode = Json.newObject();
             resultNode.put(CODE, CODE200);
-            resultNode.put("value", paramConfig.value);
-            redis.set(jsonKey, paramConfig.value, 30 * 24 * 60 * 60);
+            resultNode.put("value", value);
+            redis.set(jsonKey, value, 30 * 24 * 60 * 60);
             return ok(resultNode);
         });
     }

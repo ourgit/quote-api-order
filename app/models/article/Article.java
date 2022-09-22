@@ -3,7 +3,6 @@ package models.article;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.ebean.Finder;
 import io.ebean.Model;
-import models.product.Product;
 import myannotation.EscapeHtmlSerializer;
 import myannotation.EscapeHtmlSerializerForKeepSomeHtml;
 
@@ -111,9 +110,6 @@ public class Article extends Model {
 
     @Transient
     private String publishDay;//文章发布日期，只显示几号
-
-    @Transient
-    public List<Product> productList = new ArrayList<>();
 
     public static Finder<Long, Article> find = new Finder<>(Article.class);
 

@@ -4,7 +4,6 @@ import io.ebean.Ebean;
 import io.ebean.SqlUpdate;
 import models.log.BalanceLog;
 import models.msg.Msg;
-import models.order.Order;
 import models.user.MemberBalance;
 import play.Logger;
 
@@ -113,18 +112,4 @@ public class BalanceUtils {
 
     }
 
-    public void subtractScoreGave(Order order, long operatorId) {
-        if (order.scoreGave > 0) {
-            BalanceParam param = new BalanceParam.Builder()
-                    .changeAmount(order.scoreGave)
-                    .itemId(BusinessItem.SCORE)
-                    .leftBalance(-order.scoreGave)
-                    .totalBalance(-order.scoreGave)
-                    .memberId(order.uid)
-                    .desc(dateUtils.formatToYMD(dateUtils.getCurrentTimeBySecond()) + "取消订单扣除赠送的消费积分:" + order.scoreGave)
-                    .operatorId(operatorId)
-                    .bizType(TRANSACTION_TYPE_SUBTRACT_SCORE_GAVE_FOR_CANCEL_ORDER).build();
-            saveChangeBalance(param, true);
-        }
-    }
 }

@@ -1,10 +1,53 @@
 [
   {
+    "type": "post",
+    "url": "/v1/p/articles/fav/",
+    "title": "06收藏",
+    "name": "fav",
+    "group": "Article",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "boolean",
+            "optional": false,
+            "field": "enable",
+            "description": "<p>true收藏 false取消收藏</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": false,
+            "field": "articleId",
+            "description": "<p>文章ID</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200成功修改</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/ArticleController.java",
+    "groupTitle": "Article"
+  },
+  {
     "type": "GET",
-    "url": "/v1/o/group_order/:id/",
-    "title": "05团购订单详情",
-    "name": "getGroupOrder",
-    "group": "Group-Order",
+    "url": "/v1/p/articles/:articleId/",
+    "title": "04文章详情",
+    "name": "getArticle",
+    "group": "Article",
     "success": {
       "fields": {
         "Success 200": [
@@ -20,93 +63,149 @@
             "type": "long",
             "optional": false,
             "field": "id",
-            "description": "<p>商品id</p>"
+            "description": "<p>文章id</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "name",
-            "description": "<p>名称</p>"
+            "field": "title",
+            "description": "<p>文章标题</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "author",
+            "description": "<p>文章作者</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "digest",
+            "description": "<p>文章摘要</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "headPic",
+            "description": "<p>文图</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "content",
+            "description": "<p>内容</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "categoryId",
+            "description": "<p>分类ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "categoryName",
+            "description": "<p>分类名字</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "views",
+            "description": "<p>阅读数</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "favs",
+            "description": "<p>收藏数</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "comments",
+            "description": "<p>评论数</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "shares",
+            "description": "<p>分享数</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "boolean",
+            "optional": false,
+            "field": "isFav",
+            "description": "<p>是否已收藏 ，true收藏 ，false未收藏</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "createTime",
+            "description": "<p>时间</p>"
           }
         ]
       }
     },
     "version": "0.0.0",
-    "filename": "app/controllers/GroupOrderController.java",
-    "groupTitle": "Group-Order"
+    "filename": "app/controllers/ArticleController.java",
+    "groupTitle": "Article"
   },
   {
     "type": "GET",
-    "url": "/v1/o/group_order_stat/:productId/",
-    "title": "07统计数据",
-    "name": "groupOrderStat",
-    "group": "Group-Order",
+    "url": "/v1/p/param_config/?key=",
+    "title": "07获取参数配置",
+    "name": "getParamConfig",
+    "group": "Article",
     "success": {
       "fields": {
         "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "productName",
-            "description": ""
-          },
-          {
-            "group": "Success 200",
-            "type": "long",
-            "optional": false,
-            "field": "orders",
-            "description": "<p>订单数量</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "long",
-            "optional": false,
-            "field": "totalMoney",
-            "description": "<p>订单总金额</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "long",
-            "optional": false,
-            "field": "buyers",
-            "description": "<p>购买人数</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "long",
-            "optional": false,
-            "field": "directInviteOrders",
-            "description": "<p>老客订单数</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "long",
-            "optional": false,
-            "field": "indirectInviteOrders",
-            "description": "<p>新客订单数</p>"
-          },
           {
             "group": "Success 200",
             "type": "int",
             "optional": false,
             "field": "code",
-            "description": "<p>200成功修改</p>"
+            "description": "<p>200 请求成功</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "value",
+            "description": "<p>值</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "note",
+            "description": "<p>中文备注</p>"
           }
         ]
       }
     },
     "version": "0.0.0",
-    "filename": "app/controllers/GroupOrderController.java",
-    "groupTitle": "Group-Order"
+    "filename": "app/controllers/ArticleController.java",
+    "groupTitle": "Article"
   },
   {
     "type": "GET",
-    "url": "/v1/o/group_orders/?page=",
-    "title": "01订单列表",
-    "name": "listGroupOrders",
-    "group": "Group-Order",
+    "url": "/v1/p/articles_by_category_id/?page=&categoryId=",
+    "title": "02根据分类id获取文章列表",
+    "name": "listArticles",
+    "group": "Article",
     "success": {
       "fields": {
         "Success 200": [
@@ -114,3419 +213,78 @@
             "group": "Success 200",
             "type": "int",
             "optional": false,
-            "field": "pages",
-            "description": "<p>页数</p>"
+            "field": "code",
+            "description": "<p>200 请求成功</p>"
           },
           {
             "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "list",
-            "description": "<p>订单列表</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/GroupOrderController.java",
-    "groupTitle": "Group-Order"
-  },
-  {
-    "type": "GET",
-    "url": "/v1/o/my_customer_orders/?page=&filter=",
-    "title": "06我的客户团购列表",
-    "name": "listMyCustomerOrders",
-    "group": "Group-Order",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Array",
+            "type": "JsonObject",
             "optional": false,
             "field": "list",
             "description": "<p>列表</p>"
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "long",
             "optional": false,
-            "field": "userName",
-            "description": "<p>用户名字</p>"
+            "field": "articleId",
+            "description": "<p>文章id</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "dealerName",
-            "description": "<p>推荐人</p>"
+            "field": "title",
+            "description": "<p>文章标题</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "avatar",
-            "description": "<p>头像</p>"
+            "field": "author",
+            "description": "<p>文章作者</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "source",
-            "description": "<p>来源</p>"
+            "description": "<p>文章来源</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "phoneNumber",
-            "description": "<p>手机号码</p>"
+            "field": "publishTime",
+            "description": "<p>文章发布时间</p>"
           },
           {
             "group": "Success 200",
-            "type": "long",
+            "type": "String",
             "optional": false,
-            "field": "createTime",
-            "description": "<p>下单时间</p>"
+            "field": "categoryName",
+            "description": "<p>所属分类</p>"
           },
           {
             "group": "Success 200",
-            "type": "int",
+            "type": "String",
             "optional": false,
-            "field": "orderType",
-            "description": "<p>1为单购  2为团购</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "grouponId",
-            "description": "<p>0为开团  1为参团</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "grouponStatus",
-            "description": "<p>拼团状态</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200成功修改</p>"
+            "field": "publishStatusName",
+            "description": "<p>发布状态</p>"
           }
         ]
       }
     },
     "version": "0.0.0",
-    "filename": "app/controllers/GroupOrderController.java",
-    "groupTitle": "Group-Order"
+    "filename": "app/controllers/ArticleController.java",
+    "groupTitle": "Article"
   },
   {
     "type": "GET",
-    "url": "/v1/o/my_group_orders/?page=",
-    "title": "02我的团购订单列表",
-    "name": "listMyGroupOrders",
-    "group": "Group-Order",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "pages",
-            "description": "<p>页数</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "list",
-            "description": "<p>订单列表</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/GroupOrderController.java",
-    "groupTitle": "Group-Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/pay_group_order/",
-    "title": "04支付订单",
-    "name": "payGroupOrder",
-    "group": "Group-Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "orderId",
-            "description": "<p>订单ID</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/GroupOrderController.java",
-    "groupTitle": "Group-Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/groupon_order/new/",
-    "title": "03团购下单",
-    "name": "placeGrouponOrder",
-    "group": "Group-Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": true,
-            "field": "productId",
-            "description": "<p>商品ID 团购发起人需要送productId这个参数</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": true,
-            "field": "grouponId",
-            "description": "<p>团购ID 参与团购需要送grouponId这个参数</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": true,
-            "field": "dealerId",
-            "description": "<p>dealerId</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "int",
-            "optional": false,
-            "field": "orderType",
-            "description": "<p>1单购 2团购</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "transactionId",
-            "description": "<p>流水号</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/GroupOrderController.java",
-    "groupTitle": "Group-Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/part_return_order_detail/",
-    "title": "02申请/取消部分退货",
-    "name": "applyReturnOrderDetail",
-    "group": "OrderReturn",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "orderId",
-            "description": "<p>订单ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": true,
-            "field": "returnOrderId",
-            "description": "<p>售后ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "int",
-            "optional": false,
-            "field": "status",
-            "description": "<p>10申请售后 -1取消售后</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": false,
-            "field": "list",
-            "description": "<p>list</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "orderDetailId",
-            "description": "<p>orderDetailId</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "returnNumber",
-            "description": "<p>退货数量</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderReturnController.java",
-    "groupTitle": "OrderReturn"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/part_return_order_detail/",
-    "title": "02申请/取消部分退货",
-    "name": "applyReturnOrderDetail",
-    "group": "OrderReturn",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "orderId",
-            "description": "<p>订单ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": true,
-            "field": "returnOrderId",
-            "description": "<p>售后ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "int",
-            "optional": false,
-            "field": "status",
-            "description": "<p>10申请售后 -1取消售后</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": false,
-            "field": "list",
-            "description": "<p>list</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "orderDetailId",
-            "description": "<p>orderDetailId</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "returnNumber",
-            "description": "<p>退货数量</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderReturnController.java",
-    "groupTitle": "OrderReturn"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/calc_part_return_money/",
-    "title": "03计算退货金额",
-    "name": "calcReturnMoney",
-    "group": "OrderReturn",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "orderId",
-            "description": "<p>订单ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": false,
-            "field": "list",
-            "description": "<p>list</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "orderDetailId",
-            "description": "<p>orderDetailId</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "returnNumber",
-            "description": "<p>退货数量</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderReturnController.java",
-    "groupTitle": "OrderReturn"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/calc_part_return_money/",
-    "title": "03计算退货金额",
-    "name": "calcReturnMoney",
-    "group": "OrderReturn",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "orderId",
-            "description": "<p>订单ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": false,
-            "field": "list",
-            "description": "<p>list</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "orderDetailId",
-            "description": "<p>orderDetailId</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "returnNumber",
-            "description": "<p>退货数量</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderReturnController.java",
-    "groupTitle": "OrderReturn"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/cancel_order/",
-    "title": "01取消订单",
-    "name": "cancelOrder",
-    "group": "OrderReturn",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "orderId",
-            "description": "<p>订单Id</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "operation",
-            "description": "<p>为cancel取消</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 交易密码错误</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderReturnController.java",
-    "groupTitle": "OrderReturn"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/cancel_order/",
-    "title": "01取消订单",
-    "name": "cancelOrder",
-    "group": "OrderReturn",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "orderId",
-            "description": "<p>订单Id</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "operation",
-            "description": "<p>为cancel取消</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 交易密码错误</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderReturnController.java",
-    "groupTitle": "OrderReturn"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/return_order_logis/",
-    "title": "06填写退货物流",
-    "name": "fillOutLogisForReturnOrder",
-    "group": "OrderReturn",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "returnsNo",
-            "description": "<p>退货ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "logisNo",
-            "description": "<p>物流单号</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "logisName",
-            "description": "<p>物流公司</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "note",
-            "description": "<p>备注</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderReturnController.java",
-    "groupTitle": "OrderReturn"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/return_order_logis/",
-    "title": "06填写退货物流",
-    "name": "fillOutLogisForReturnOrder",
-    "group": "OrderReturn",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "returnsNo",
-            "description": "<p>退货ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "logisNo",
-            "description": "<p>物流单号</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "logisName",
-            "description": "<p>物流公司</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "note",
-            "description": "<p>备注</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderReturnController.java",
-    "groupTitle": "OrderReturn"
-  },
-  {
-    "type": "GET",
-    "url": "/v1/o/return_orders_list/:returnOrderId/",
-    "title": "10退货单详情",
-    "name": "getReturnOrderDetail",
-    "group": "OrderReturn",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "returnsNo",
-            "description": "<p>退货单号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "expressNo",
-            "description": "<p>快递单号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisName",
-            "description": "<p>物流公司</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisticsLastDesc",
-            "description": "<p>物流最后状态描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "orderNo",
-            "description": "<p>订单编号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "totalMoney",
-            "description": "<p>总金额</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "realPay",
-            "description": "<p>实付</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisticsFee",
-            "description": "<p>运费</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "productCount",
-            "description": "<p>商品数量</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "statusName",
-            "description": "<p>状态名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "description",
-            "description": "<p>描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "detailList",
-            "description": "<p>商品列表</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productName",
-            "description": "<p>商品名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productImgUrl",
-            "description": "<p>商品图片</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "skuName",
-            "description": "<p>商品属性描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "long",
-            "optional": false,
-            "field": "returnSubmitTime",
-            "description": "<p>申请时间</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "long",
-            "optional": false,
-            "field": "handlingReturnEndTime",
-            "description": "<p>售后申请最长处理时间</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "long",
-            "optional": false,
-            "field": "returnSubmitEndTime",
-            "description": "<p>退货最长寄回时间</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "long",
-            "optional": false,
-            "field": "handlingRefundTime",
-            "description": "<p>退款时间</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "long",
-            "optional": false,
-            "field": "handlingRefundEndTime",
-            "description": "<p>退款最长处理时间</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "status",
-            "description": "<p>-3拒绝退款  -2 申请被驳回  -1取消退货  10退货退款待审核  20待退回  30退款待审核  40已退款  200处理完毕</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "state",
-            "description": "<p>1仅退款 2退货退款</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderReturnController.java",
-    "groupTitle": "OrderReturn"
-  },
-  {
-    "type": "GET",
-    "url": "/v1/o/return_orders_list/:returnOrderId/",
-    "title": "10退货单详情",
-    "name": "getReturnOrderDetail",
-    "group": "OrderReturn",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "returnsNo",
-            "description": "<p>退货单号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "expressNo",
-            "description": "<p>快递单号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisName",
-            "description": "<p>物流公司</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisticsLastDesc",
-            "description": "<p>物流最后状态描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "orderNo",
-            "description": "<p>订单编号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "totalMoney",
-            "description": "<p>总金额</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "realPay",
-            "description": "<p>实付</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisticsFee",
-            "description": "<p>运费</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "productCount",
-            "description": "<p>商品数量</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "statusName",
-            "description": "<p>状态名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "description",
-            "description": "<p>描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "detailList",
-            "description": "<p>商品列表</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productName",
-            "description": "<p>商品名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productImgUrl",
-            "description": "<p>商品图片</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "skuName",
-            "description": "<p>商品属性描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "long",
-            "optional": false,
-            "field": "returnSubmitTime",
-            "description": "<p>申请时间</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "long",
-            "optional": false,
-            "field": "handlingReturnEndTime",
-            "description": "<p>售后申请最长处理时间</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "long",
-            "optional": false,
-            "field": "returnSubmitEndTime",
-            "description": "<p>退货最长寄回时间</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "long",
-            "optional": false,
-            "field": "handlingRefundTime",
-            "description": "<p>退款时间</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "long",
-            "optional": false,
-            "field": "handlingRefundEndTime",
-            "description": "<p>退款最长处理时间</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "status",
-            "description": "<p>-3拒绝退款  -2 申请被驳回  -1取消退货  10退货退款待审核  20待退回  30退款待审核  40已退款  200处理完毕</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "state",
-            "description": "<p>1仅退款 2退货退款</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderReturnController.java",
-    "groupTitle": "OrderReturn"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/handle_order_refund/",
-    "title": "07处理退款",
-    "name": "handleOrderRefund",
-    "group": "OrderReturn",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "returnOrderId",
-            "description": "<p>退货id</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200 请求成功</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 该退货不存在</p>"
-          }
-        ],
-        "Error 40004": [
-          {
-            "group": "Error 40004",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40004 该退货申请不是处于可同意退货的状态</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderReturnController.java",
-    "groupTitle": "OrderReturn"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/handle_order_refund/",
-    "title": "07处理退款",
-    "name": "handleOrderRefund",
-    "group": "OrderReturn",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "returnOrderId",
-            "description": "<p>退货id</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200 请求成功</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 该退货不存在</p>"
-          }
-        ],
-        "Error 40004": [
-          {
-            "group": "Error 40004",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40004 该退货申请不是处于可同意退货的状态</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderReturnController.java",
-    "groupTitle": "OrderReturn"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/handle_order_return/",
-    "title": "05处理退货",
-    "name": "handleOrderReturn",
-    "group": "OrderReturn",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "returnOrderId",
-            "description": "<p>退货id</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "int",
-            "optional": false,
-            "field": "returnOrderStatus",
-            "description": "<p>20同意退货 -2拒绝退货</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "auditReason",
-            "description": "<p>拒绝原因</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "auditRemark",
-            "description": "<p>拒绝备注</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200 请求成功</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 该退货不存在</p>"
-          }
-        ],
-        "Error 40004": [
-          {
-            "group": "Error 40004",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40004 该退货申请不是处于可同意退货的状态</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderReturnController.java",
-    "groupTitle": "OrderReturn"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/handle_order_return/",
-    "title": "05处理退货",
-    "name": "handleOrderReturn",
-    "group": "OrderReturn",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "returnOrderId",
-            "description": "<p>退货id</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "int",
-            "optional": false,
-            "field": "returnOrderStatus",
-            "description": "<p>20同意退货 -2拒绝退货</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "auditReason",
-            "description": "<p>拒绝原因</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "auditRemark",
-            "description": "<p>拒绝备注</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200 请求成功</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 该退货不存在</p>"
-          }
-        ],
-        "Error 40004": [
-          {
-            "group": "Error 40004",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40004 该退货申请不是处于可同意退货的状态</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderReturnController.java",
-    "groupTitle": "OrderReturn"
-  },
-  {
-    "type": "GET",
-    "url": "/v1/o/return_orders_lists/",
-    "title": "08我的退货列表",
-    "name": "listReturnOrders",
-    "group": "OrderReturn",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "pages",
-            "description": "<p>页数</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "list",
-            "description": "<p>订单列表</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "returnsNo",
-            "description": "<p>退货单号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "expressNo",
-            "description": "<p>快递单号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisName",
-            "description": "<p>物流公司</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisticsLastDesc",
-            "description": "<p>物流最后状态描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "orderNo",
-            "description": "<p>订单编号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "totalMoney",
-            "description": "<p>总金额</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "realPay",
-            "description": "<p>实付</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisticsFee",
-            "description": "<p>运费</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "productCount",
-            "description": "<p>商品数量</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "statusName",
-            "description": "<p>状态名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "description",
-            "description": "<p>描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "detailList",
-            "description": "<p>商品列表</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productName",
-            "description": "<p>商品名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productImgUrl",
-            "description": "<p>商品图片</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "skuName",
-            "description": "<p>商品属性描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "status",
-            "description": "<p>0未付款,1已付款,2已发货,3已签收,-1退货申请,-2退货中,-3已退货,-4取消交易 -5撤销申请</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderReturnController.java",
-    "groupTitle": "OrderReturn"
-  },
-  {
-    "type": "GET",
-    "url": "/v1/o/return_orders_lists/",
-    "title": "08我的退货列表",
-    "name": "listReturnOrders",
-    "group": "OrderReturn",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "pages",
-            "description": "<p>页数</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "list",
-            "description": "<p>订单列表</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "returnsNo",
-            "description": "<p>退货单号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "expressNo",
-            "description": "<p>快递单号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisName",
-            "description": "<p>物流公司</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisticsLastDesc",
-            "description": "<p>物流最后状态描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "orderNo",
-            "description": "<p>订单编号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "totalMoney",
-            "description": "<p>总金额</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "realPay",
-            "description": "<p>实付</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisticsFee",
-            "description": "<p>运费</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "productCount",
-            "description": "<p>商品数量</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "statusName",
-            "description": "<p>状态名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "description",
-            "description": "<p>描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "detailList",
-            "description": "<p>商品列表</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productName",
-            "description": "<p>商品名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productImgUrl",
-            "description": "<p>商品图片</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "skuName",
-            "description": "<p>商品属性描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "status",
-            "description": "<p>0未付款,1已付款,2已发货,3已签收,-1退货申请,-2退货中,-3已退货,-4取消交易 -5撤销申请</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderReturnController.java",
-    "groupTitle": "OrderReturn"
-  },
-  {
-    "type": "GET",
-    "url": "/v1/o/shop_return_orders/",
-    "title": "09店铺退货列表",
-    "name": "listShopReturnOrders",
-    "group": "OrderReturn",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "pages",
-            "description": "<p>页数</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "list",
-            "description": "<p>订单列表</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "returnsNo",
-            "description": "<p>退货单号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "expressNo",
-            "description": "<p>快递单号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisName",
-            "description": "<p>物流公司</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisticsLastDesc",
-            "description": "<p>物流最后状态描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "orderNo",
-            "description": "<p>订单编号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "totalMoney",
-            "description": "<p>总金额</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "realPay",
-            "description": "<p>实付</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisticsFee",
-            "description": "<p>运费</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "productCount",
-            "description": "<p>商品数量</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "statusName",
-            "description": "<p>状态名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "description",
-            "description": "<p>描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "detailList",
-            "description": "<p>商品列表</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productName",
-            "description": "<p>商品名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productImgUrl",
-            "description": "<p>商品图片</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "skuName",
-            "description": "<p>商品属性描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "status",
-            "description": "<p>0未付款,1已付款,2已发货,3已签收,-1退货申请,-2退货中,-3已退货,-4取消交易 -5撤销申请</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderReturnController.java",
-    "groupTitle": "OrderReturn"
-  },
-  {
-    "type": "GET",
-    "url": "/v1/o/shop_return_orders/",
-    "title": "09店铺退货列表",
-    "name": "listShopReturnOrders",
-    "group": "OrderReturn",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "pages",
-            "description": "<p>页数</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "list",
-            "description": "<p>订单列表</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "returnsNo",
-            "description": "<p>退货单号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "expressNo",
-            "description": "<p>快递单号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisName",
-            "description": "<p>物流公司</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisticsLastDesc",
-            "description": "<p>物流最后状态描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "orderNo",
-            "description": "<p>订单编号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "totalMoney",
-            "description": "<p>总金额</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "realPay",
-            "description": "<p>实付</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisticsFee",
-            "description": "<p>运费</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "productCount",
-            "description": "<p>商品数量</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "statusName",
-            "description": "<p>状态名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "description",
-            "description": "<p>描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "detailList",
-            "description": "<p>商品列表</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productName",
-            "description": "<p>商品名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productImgUrl",
-            "description": "<p>商品图片</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "skuName",
-            "description": "<p>商品属性描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "status",
-            "description": "<p>0未付款,1已付款,2已发货,3已签收,-1退货申请,-2退货中,-3已退货,-4取消交易 -5撤销申请</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderReturnController.java",
-    "groupTitle": "OrderReturn"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/reject_order_refund/",
-    "title": "08驳回退款请求",
-    "name": "rejectOrderRefund",
-    "group": "OrderReturn",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "returnOrderId",
-            "description": "<p>退货id</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200 请求成功</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 该退货不存在</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderReturnController.java",
-    "groupTitle": "OrderReturn"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/reject_order_refund/",
-    "title": "08驳回退款请求",
-    "name": "rejectOrderRefund",
-    "group": "OrderReturn",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "returnOrderId",
-            "description": "<p>退货id</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200 请求成功</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 该退货不存在</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderReturnController.java",
-    "groupTitle": "OrderReturn"
-  },
-  {
-    "type": "GET",
-    "url": "/v1/o/orders_by_no/:orderNo/",
-    "title": "02订单详情",
-    "name": "getOrderDetailByOrderNo",
-    "group": "Order_H5",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "orderNo",
-            "description": "<p>订单编号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "totalMoney",
-            "description": "<p>总金额</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "realPay",
-            "description": "<p>实付</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisticsFee",
-            "description": "<p>运费</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "productCount",
-            "description": "<p>商品数量</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "statusName",
-            "description": "<p>状态名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "description",
-            "description": "<p>描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "detailList",
-            "description": "<p>商品列表</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productName",
-            "description": "<p>商品名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productImgUrl",
-            "description": "<p>商品图片</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "skuName",
-            "description": "<p>商品属性描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "state",
-            "description": "<p>售后状态 0 未发起售后 1 申请售后 -1 售后已取消 2 处理中 200 处理完毕</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "status",
-            "description": "<p>0未付款,1已付款,2已发货,3已签收,-1退货申请,-2退货中,-3已退货,-4取消交易 -5撤销申请</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "isMix",
-            "description": "<p>是否混搭</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 找不到该订单</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderNoAuthController.java",
-    "groupTitle": "Order_H5"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/pay_order_no/",
-    "title": "01支付代客订单",
-    "name": "payOrder",
-    "group": "Order_H5",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "orderId",
-            "description": "<p>订单ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "int",
-            "optional": false,
-            "field": "payMethod",
-            "description": "<p>1银行卡支付2支付宝支付3微信支付 6微信支付H5 7支付宝H5支付8小程序支付</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "note",
-            "description": "<p>如果是支付宝直接跳到支付宝支付的网页，如果是微信支付返回一个待支付的二维码，字段名codeUrl</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 该订单不存在</p>"
-          }
-        ],
-        "Error 40003": [
-          {
-            "group": "Error 40003",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40003 该订单不是待支付状态,不能支付</p>"
-          }
-        ],
-        "Error 40004": [
-          {
-            "group": "Error 40004",
-            "type": "int",
-            "optional": false,
-            "field": "errCodeDesc",
-            "description": "<p>微信支付错误提示</p>"
-          }
-        ],
-        "Error 40005": [
-          {
-            "group": "Error 40005",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40005 请输入短信验证码</p>"
-          }
-        ],
-        "Error 40006": [
-          {
-            "group": "Error 40006",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40006 余额不足</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderNoAuthController.java",
-    "groupTitle": "Order_H5"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/calc_order/",
-    "title": "17计算下单金额与优惠",
-    "name": "calcOrder",
-    "group": "Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": true,
-            "field": "description",
-            "description": "<p>备注</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "list",
-            "description": "<p>购买的商品列表</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "productId",
-            "description": "<p>商品ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "skuId",
-            "description": "<p>商品skuID,为0时表示只有一个标准的产品，没有sku</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "amount",
-            "description": "<p>购买数量</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "remark",
-            "description": "<p>备注，每个单品的备注，预留</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": true,
-            "field": "memberCouponId",
-            "description": "<p>用户优惠券ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "int",
-            "optional": true,
-            "field": "payMethod",
-            "description": "<p>支付方式，余额支付时传入</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "transactionId",
-            "description": "<p>流水号</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/store/calc_order/",
-    "title": "12计算下单金额与优惠",
-    "name": "calcOrder",
-    "group": "Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": true,
-            "field": "description",
-            "description": "<p>备注</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "list",
-            "description": "<p>购买的商品列表</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "productId",
-            "description": "<p>商品ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "skuId",
-            "description": "<p>商品skuID,为0时表示只有一个标准的产品，没有sku</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "amount",
-            "description": "<p>购买数量</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "remark",
-            "description": "<p>备注，每个单品的备注，预留</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": true,
-            "field": "memberCouponId",
-            "description": "<p>用户优惠券ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "int",
-            "optional": true,
-            "field": "payMethod",
-            "description": "<p>支付方式，余额支付时传入</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "transactionId",
-            "description": "<p>流水号</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/cancel_order/",
-    "title": "07取消订单",
-    "name": "cancelOrder",
-    "group": "Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "orderId",
-            "description": "<p>订单Id</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "operation",
-            "description": "<p>为cancel取消</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 交易密码错误</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/store/cancel_order/",
-    "title": "07取消订单",
-    "name": "cancelOrder",
-    "group": "Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "orderId",
-            "description": "<p>订单Id</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "operation",
-            "description": "<p>为cancel取消</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 交易密码错误</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/product_orders/:orderId/",
-    "title": "04确认收货",
-    "name": "confirmOrder",
-    "group": "Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "location",
-            "description": "<p>location</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 只能确认自己的订单</p>"
-          }
-        ],
-        "Error 40003": [
-          {
-            "group": "Error 40003",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40003 该商品不存在</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/store/product_orders/:orderId/",
-    "title": "04确认收货",
-    "name": "confirmOrder",
-    "group": "Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "location",
-            "description": "<p>location</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 只能确认自己的订单</p>"
-          }
-        ],
-        "Error 40003": [
-          {
-            "group": "Error 40003",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40003 该商品不存在</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/delete_order/",
-    "title": "45删除订单",
-    "name": "deleteOrder",
-    "group": "Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "orderId",
-            "description": "<p>订单Id</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "operation",
-            "description": "<p>为delete删除</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 交易密码错误</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/store/delete_order/",
-    "title": "17删除订单",
-    "name": "deleteOrder",
-    "group": "Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "orderId",
-            "description": "<p>订单Id</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "operation",
-            "description": "<p>为delete删除</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 交易密码错误</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/exchange/",
-    "title": "43积分兑换",
-    "name": "exchange",
-    "group": "Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": true,
-            "field": "description",
-            "description": "<p>备注</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "skuId",
-            "description": "<p>商品skuID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "addressId",
-            "description": "<p>地址ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "amount",
-            "description": "<p>购买数量</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "remark",
-            "description": "<p>备注，每个单品的备注，预留</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "transactionId",
-            "description": "<p>流水号</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 该收货地址不存在</p>"
-          }
-        ],
-        "Error 40003": [
-          {
-            "group": "Error 40003",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40003 该商品不存在</p>"
-          }
-        ],
-        "Error 40004": [
-          {
-            "group": "Error 40004",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40004 正在下单中,请稍等</p>"
-          }
-        ],
-        "Error 40005": [
-          {
-            "group": "Error 40005",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40005 余额不足,请先充值</p>"
-          }
-        ],
-        "Error 40006": [
-          {
-            "group": "Error 40006",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40005 该商品已售完</p>"
-          }
-        ],
-        "Error 40007": [
-          {
-            "group": "Error 40007",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40007 库存只剩下*件</p>"
-          }
-        ],
-        "Error 40009": [
-          {
-            "group": "Error 40009",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40009 交易密码错误</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "GET",
-    "url": "/v1/o/express_query/?deliveryNo=&phoneNumber=",
-    "title": "46物流查询",
-    "name": "expressQuery",
-    "group": "Order",
-    "description": "<p>{&quot;status&quot;:0,&quot;msg&quot;:&quot;ok&quot;,&quot;result&quot;:{&quot;number&quot;:&quot;SF1407021096548&quot;,&quot;type&quot;:&quot;sfexpress&quot;,&quot;typename&quot;:&quot;顺丰速运&quot;,&quot;logo&quot;:&quot;https://api.jisuapi.com/express/static/images/logo/80/sfexpress.png&quot;,&quot;list&quot;:[{&quot;time&quot;:&quot;2021-05-19 11:33:19&quot;,&quot;status&quot;:&quot;在官网&quot;运单资料&amp;签收图&quot;,可查看签收人信息&quot;},{&quot;time&quot;:&quot;2021-05-19 11:33:18&quot;,&quot;status&quot;:&quot;您的快件已签收，如有疑问请电联快递员【王诗洁，电话：13695058037】。疫情期间顺丰每日对网点消毒、快递员每日测温、配戴口罩，感谢您使用顺丰，期待再次为您服务。（主单总件数：1件）&quot;},{&quot;time&quot;:&quot;2021-05-19 09:03:02&quot;,&quot;status&quot;:&quot;快件交给王诗洁,正在派送途中（联系电话：13695058037,顺丰已开启“安全呼叫”保护您的电话隐私,请放心接听！）（主单总件数：1件）&quot;},{&quot;time&quot;:&quot;2021-05-19 08:33:04&quot;,&quot;status&quot;:&quot;正在派送途中,请您准备签收(派件人:王诗洁,电话:13695058037)&quot;},{&quot;time&quot;:&quot;2021-05-19 07:46:23&quot;,&quot;status&quot;:&quot;快件到达 【南平邵武元隆大厦营业点】&quot;},{&quot;time&quot;:&quot;2021-05-19 05:20:59&quot;,&quot;status&quot;:&quot;快件已发车&quot;},{&quot;time&quot;:&quot;2021-05-19 05:20:42&quot;,&quot;status&quot;:&quot;快件在【南平延平集散点】完成分拣,准备发往 【南平邵武元隆大厦营业点】&quot;},{&quot;time&quot;:&quot;2021-05-19 04:09:11&quot;,&quot;status&quot;:&quot;快件到达 【南平延平集散点】&quot;},{&quot;time&quot;:&quot;2021-05-19 01:19:15&quot;,&quot;status&quot;:&quot;快件已发车&quot;},{&quot;time&quot;:&quot;2021-05-19 00:53:13&quot;,&quot;status&quot;:&quot;快件在【福州兰圃中转场】完成分拣,准备发往 【南平延平集散点】&quot;},{&quot;time&quot;:&quot;2021-05-18 22:18:29&quot;,&quot;status&quot;:&quot;快件已发车&quot;},{&quot;time&quot;:&quot;2021-05-18 22:09:00&quot;,&quot;status&quot;:&quot;快件在【阳下速运营业点】完成分拣,准备发往 【福州兰圃中转场】&quot;},{&quot;time&quot;:&quot;2021-05-18 19:35:38&quot;,&quot;status&quot;:&quot;顺丰速运 已收取快件&quot;},{&quot;time&quot;:&quot;2021-05-18 19:11:40&quot;,&quot;status&quot;:&quot;顺丰速运 已收取快件&quot;}],&quot;deliverystatus&quot;:3,&quot;issign&quot;:1},&quot;code&quot;:200}</p>",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 只能确认自己的订单</p>"
-          }
-        ],
-        "Error 40003": [
-          {
-            "group": "Error 40003",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40003 该商品不存在</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/KDController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "GET",
-    "url": "/v1/o/orders/:orderId/",
-    "title": "05订单详情",
-    "name": "getOrder",
-    "group": "Order",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "orderNo",
-            "description": "<p>订单编号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "totalMoney",
-            "description": "<p>总金额</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "realPay",
-            "description": "<p>实付</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisticsFee",
-            "description": "<p>运费</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "productCount",
-            "description": "<p>商品数量</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "statusName",
-            "description": "<p>状态名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "description",
-            "description": "<p>描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "detailList",
-            "description": "<p>商品列表</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productName",
-            "description": "<p>商品名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productImgUrl",
-            "description": "<p>商品图片</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "skuName",
-            "description": "<p>商品属性描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "state",
-            "description": "<p>售后状态 0 未发起售后 1 申请售后 -1 售后已取消 2 处理中 200 处理完毕</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "status",
-            "description": "<p>0未付款,1已付款,2已发货,3已签收,-1退货申请,-2退货中,-3已退货,-4取消交易 -5撤销申请</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "isMix",
-            "description": "<p>是否混搭</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 找不到该订单</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "GET",
-    "url": "/v1/o/store/orders/:orderId/",
-    "title": "05订单详情",
-    "name": "getOrder",
-    "group": "Order",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "orderNo",
-            "description": "<p>订单编号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "totalMoney",
-            "description": "<p>总金额</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "realPay",
-            "description": "<p>实付</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisticsFee",
-            "description": "<p>运费</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "productCount",
-            "description": "<p>商品数量</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "statusName",
-            "description": "<p>状态名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "description",
-            "description": "<p>描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "detailList",
-            "description": "<p>商品列表</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productName",
-            "description": "<p>商品名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productImgUrl",
-            "description": "<p>商品图片</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "skuName",
-            "description": "<p>商品属性描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "state",
-            "description": "<p>售后状态 0 未发起售后 1 申请售后 -1 售后已取消 2 处理中 200 处理完毕</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "status",
-            "description": "<p>0未付款,1已付款,2已发货,3已签收,-1退货申请,-2退货中,-3已退货,-4取消交易 -5撤销申请</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "isMix",
-            "description": "<p>是否混搭</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 找不到该订单</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "GET",
-    "url": "/v1/o/order_pay_result/:orderId/",
-    "title": "06查询订单状态",
-    "name": "getPayResult",
-    "group": "Order",
+    "url": "/v1/p/articles/?page=&size=",
+    "title": "03根据分类名字获取文章列表",
+    "name": "listArticles",
+    "group": "Article",
     "success": {
       "fields": {
         "Success 200": [
@@ -3539,492 +297,73 @@
           },
           {
             "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "status",
-            "description": "<p>支付状态</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 找不到该订单</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "GET",
-    "url": "/v1/o/order_count/",
-    "title": "18分类订单数量",
-    "name": "listMyOrderCount",
-    "group": "Order",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "unpayOrders",
-            "description": "<p>未付款订单数</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "paidOrders",
-            "description": "<p>待发货订单数</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "delieveredOrders",
-            "description": "<p>待收货订单数</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "toCommentOrders",
-            "description": "<p>待评价订单数</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "postServiceOrders",
-            "description": "<p>售后订单数</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "GET",
-    "url": "/v1/o/store/order_count/",
-    "title": "13分类订单数量",
-    "name": "listMyOrderCount",
-    "group": "Order",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "unpayOrders",
-            "description": "<p>未付款订单数</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "paidOrders",
-            "description": "<p>待发货订单数</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "delieveredOrders",
-            "description": "<p>待收货订单数</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "toCommentOrders",
-            "description": "<p>待评价订单数</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "postServiceOrders",
-            "description": "<p>售后订单数</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/orders/",
-    "title": "01我的订单列表",
-    "name": "listMyOrders",
-    "group": "Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "optional": false,
-            "field": "status",
-            "description": "<p>0全部，1待付款 3待发货 5待收货 7待评价 9已评价 -1退货申请,-2退货中,-3已退货,-4取消交易 -5撤销申请 -6系统取消 -7退款 -8支付超时关闭</p>"
-          },
-          {
-            "group": "Parameter",
-            "optional": false,
-            "field": "page",
-            "description": "<p>page</p>"
-          },
-          {
-            "group": "Parameter",
-            "optional": false,
-            "field": "size",
-            "description": "<p>size</p>"
-          },
-          {
-            "group": "Parameter",
-            "optional": false,
-            "field": "orderType",
-            "description": "<p>orderType 订单类型</p>"
-          },
-          {
-            "group": "Parameter",
-            "optional": false,
-            "field": "deliveryType",
-            "description": "<p>deliveryType 配送类型</p>"
-          },
-          {
-            "group": "Parameter",
-            "optional": false,
-            "field": "filter",
-            "description": "<p>订单关键字</p>"
-          },
-          {
-            "group": "Parameter",
-            "optional": false,
-            "field": "productName",
-            "description": "<p>商品名字</p>"
-          },
-          {
-            "group": "Parameter",
-            "optional": false,
-            "field": "payBeingTime",
-            "description": "<p>付款开始时间</p>"
-          },
-          {
-            "group": "Parameter",
-            "optional": false,
-            "field": "payEndTime",
-            "description": "<p>付款结束时间</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "pages",
-            "description": "<p>页数</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
+            "type": "JsonObject",
             "optional": false,
             "field": "list",
-            "description": "<p>订单列表</p>"
+            "description": "<p>列表</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "articleId",
+            "description": "<p>文章id</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "orderNo",
-            "description": "<p>订单编号</p>"
+            "field": "title",
+            "description": "<p>文章标题</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "totalMoney",
-            "description": "<p>总金额</p>"
+            "field": "author",
+            "description": "<p>文章作者</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "realPay",
-            "description": "<p>实付</p>"
+            "field": "source",
+            "description": "<p>文章来源</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "logisticsFee",
-            "description": "<p>运费</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "productCount",
-            "description": "<p>商品数量</p>"
+            "field": "publishTime",
+            "description": "<p>文章发布时间</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "statusName",
-            "description": "<p>状态名字</p>"
+            "field": "categoryName",
+            "description": "<p>所属分类</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "description",
-            "description": "<p>描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "detailList",
-            "description": "<p>商品列表</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productName",
-            "description": "<p>商品名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productImgUrl",
-            "description": "<p>商品图片</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "skuName",
-            "description": "<p>商品属性描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "status",
-            "description": "<p>状态</p>"
+            "field": "publishStatusName",
+            "description": "<p>发布状态</p>"
           }
         ]
       }
     },
     "version": "0.0.0",
-    "filename": "app/controllers/OrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/store/orders/",
-    "title": "01我的订单列表",
-    "name": "listMyOrders",
-    "group": "Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "optional": false,
-            "field": "status",
-            "description": "<p>0全部，1待付款 3待发货 5待收货 7待评价 9已评价 -1退货申请,-2退货中,-3已退货,-4取消交易 -5撤销申请 -6系统取消 -7退款 -8支付超时关闭</p>"
-          },
-          {
-            "group": "Parameter",
-            "optional": false,
-            "field": "page",
-            "description": "<p>page</p>"
-          },
-          {
-            "group": "Parameter",
-            "optional": false,
-            "field": "size",
-            "description": "<p>size</p>"
-          },
-          {
-            "group": "Parameter",
-            "optional": false,
-            "field": "orderType",
-            "description": "<p>orderType 订单类型</p>"
-          },
-          {
-            "group": "Parameter",
-            "optional": false,
-            "field": "deliveryType",
-            "description": "<p>deliveryType 配送类型</p>"
-          },
-          {
-            "group": "Parameter",
-            "optional": false,
-            "field": "filter",
-            "description": "<p>订单关键字</p>"
-          },
-          {
-            "group": "Parameter",
-            "optional": false,
-            "field": "productName",
-            "description": "<p>商品名字</p>"
-          },
-          {
-            "group": "Parameter",
-            "optional": false,
-            "field": "payBeingTime",
-            "description": "<p>付款开始时间</p>"
-          },
-          {
-            "group": "Parameter",
-            "optional": false,
-            "field": "payEndTime",
-            "description": "<p>付款结束时间</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "pages",
-            "description": "<p>页数</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "list",
-            "description": "<p>订单列表</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "orderNo",
-            "description": "<p>订单编号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "totalMoney",
-            "description": "<p>总金额</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "realPay",
-            "description": "<p>实付</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisticsFee",
-            "description": "<p>运费</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "productCount",
-            "description": "<p>商品数量</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "statusName",
-            "description": "<p>状态名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "description",
-            "description": "<p>描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "detailList",
-            "description": "<p>商品列表</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productName",
-            "description": "<p>商品名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productImgUrl",
-            "description": "<p>商品图片</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "skuName",
-            "description": "<p>商品属性描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "status",
-            "description": "<p>状态</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderController.java",
-    "groupTitle": "Order"
+    "filename": "app/controllers/ArticleController.java",
+    "groupTitle": "Article"
   },
   {
     "type": "GET",
-    "url": "/v1/o/order_stat/",
-    "title": "09订单数统计",
-    "name": "listOrderStat",
-    "group": "Order",
+    "url": "/v1/p/discovery_list/",
+    "title": "01发现列表",
+    "name": "listDiscovery",
+    "group": "Article",
     "success": {
       "fields": {
         "Success 200": [
@@ -4037,45 +376,73 @@
           },
           {
             "group": "Success 200",
-            "type": "int",
+            "type": "JsonObject",
             "optional": false,
-            "field": "unpaySize",
-            "description": "<p>待支付订单数</p>"
+            "field": "list",
+            "description": "<p>列表</p>"
           },
           {
             "group": "Success 200",
-            "type": "int",
+            "type": "long",
             "optional": false,
-            "field": "toMailSize",
-            "description": "<p>待发货订单数</p>"
+            "field": "articleId",
+            "description": "<p>文章id</p>"
           },
           {
             "group": "Success 200",
-            "type": "int",
+            "type": "String",
             "optional": false,
-            "field": "toConfirmSize",
-            "description": "<p>待收货订单数</p>"
+            "field": "title",
+            "description": "<p>文章标题</p>"
           },
           {
             "group": "Success 200",
-            "type": "int",
+            "type": "String",
             "optional": false,
-            "field": "toCommentSize",
-            "description": "<p>待评论订单数</p>"
+            "field": "author",
+            "description": "<p>文章作者</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "source",
+            "description": "<p>文章来源</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "publishTime",
+            "description": "<p>文章发布时间</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "categoryName",
+            "description": "<p>所属分类</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "publishStatusName",
+            "description": "<p>发布状态</p>"
           }
         ]
       }
     },
     "version": "0.0.0",
-    "filename": "app/controllers/OrderController.java",
-    "groupTitle": "Order"
+    "filename": "app/controllers/ArticleController.java",
+    "groupTitle": "Article"
   },
   {
     "type": "GET",
-    "url": "/v1/o/store/order_stat/",
-    "title": "08订单数统计",
-    "name": "listOrderStat",
-    "group": "Order",
+    "url": "/v1/p/recommend_articles/",
+    "title": "05精选文章列表",
+    "name": "listRecommendArticles",
+    "group": "Article",
     "success": {
       "fields": {
         "Success 200": [
@@ -4088,321 +455,73 @@
           },
           {
             "group": "Success 200",
-            "type": "int",
+            "type": "JsonObject",
             "optional": false,
-            "field": "unpaySize",
-            "description": "<p>待支付订单数</p>"
+            "field": "list",
+            "description": "<p>列表</p>"
           },
           {
             "group": "Success 200",
-            "type": "int",
+            "type": "long",
             "optional": false,
-            "field": "toMailSize",
-            "description": "<p>待发货订单数</p>"
+            "field": "articleId",
+            "description": "<p>文章id</p>"
           },
           {
             "group": "Success 200",
-            "type": "int",
+            "type": "String",
             "optional": false,
-            "field": "toConfirmSize",
-            "description": "<p>待收货订单数</p>"
+            "field": "title",
+            "description": "<p>文章标题</p>"
           },
           {
             "group": "Success 200",
-            "type": "int",
+            "type": "String",
             "optional": false,
-            "field": "toCommentSize",
-            "description": "<p>待评论订单数</p>"
+            "field": "author",
+            "description": "<p>文章作者</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "source",
+            "description": "<p>文章来源</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "publishTime",
+            "description": "<p>文章发布时间</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "categoryName",
+            "description": "<p>所属分类</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "publishStatusName",
+            "description": "<p>发布状态</p>"
           }
         ]
       }
     },
     "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderController.java",
-    "groupTitle": "Order"
+    "filename": "app/controllers/ArticleController.java",
+    "groupTitle": "Article"
   },
   {
     "type": "GET",
-    "url": "/v1/o/shop_orders/?page=&status=",
-    "title": "28店铺订单列表",
-    "name": "listShopOrders",
-    "group": "Order",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "pages",
-            "description": "<p>页数</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "list",
-            "description": "<p>订单列表</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "orderNo",
-            "description": "<p>订单编号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "totalMoney",
-            "description": "<p>总金额</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "realPay",
-            "description": "<p>实付</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisticsFee",
-            "description": "<p>运费</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "productCount",
-            "description": "<p>商品数量</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "statusName",
-            "description": "<p>状态名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "description",
-            "description": "<p>描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "detailList",
-            "description": "<p>商品列表</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productName",
-            "description": "<p>商品名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productImgUrl",
-            "description": "<p>商品图片</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "skuName",
-            "description": "<p>商品属性描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "status",
-            "description": "<p>状态</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "GET",
-    "url": "/v1/o/store/store_orders/?page=&status=",
-    "title": "14店铺订单列表",
-    "name": "listStoreOrders",
-    "group": "Order",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "pages",
-            "description": "<p>页数</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "list",
-            "description": "<p>订单列表</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "orderNo",
-            "description": "<p>订单编号</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "totalMoney",
-            "description": "<p>总金额</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "realPay",
-            "description": "<p>实付</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "logisticsFee",
-            "description": "<p>运费</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "productCount",
-            "description": "<p>商品数量</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "statusName",
-            "description": "<p>状态名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "description",
-            "description": "<p>描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "detailList",
-            "description": "<p>商品列表</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productName",
-            "description": "<p>商品名字</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "productImgUrl",
-            "description": "<p>商品图片</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "skuName",
-            "description": "<p>商品属性描述</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "status",
-            "description": "<p>状态</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/pay_order/",
-    "title": "03支付订单",
-    "name": "payOrder",
-    "group": "Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "orderId",
-            "description": "<p>订单ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "int",
-            "optional": false,
-            "field": "payMethod",
-            "description": "<p>1银行卡支付2支付宝支付3微信支付4余额支付6微信支付H5 7支付宝H5支付8小程序支付 10储值卡</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "openId",
-            "description": "<p>微信公众号支付时需要传入</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "password",
-            "description": "<p>余额支付时需要密码，这个密码为登录密码</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "vcode",
-            "description": "<p>余额支付时需要短信验证码</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "int",
-            "optional": true,
-            "field": "useScore",
-            "description": "<p>0不使用 1使用</p>"
-          }
-        ]
-      }
-    },
+    "url": "/v1/n/carousels/?regionCode=&bizType=&clientType=",
+    "title": "01查看轮播列表",
+    "name": "listCarousel",
+    "group": "Carousel",
     "success": {
       "fields": {
         "Success 200": [
@@ -4411,1054 +530,86 @@
             "type": "int",
             "optional": false,
             "field": "code",
-            "description": "<p>200</p>"
+            "description": "<p>200 请求成功</p>"
           },
           {
             "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "note",
-            "description": "<p>如果是支付宝直接跳到支付宝支付的网页，如果是微信支付返回一个待支付的二维码，字段名codeUrl</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 该订单不存在</p>"
-          }
-        ],
-        "Error 40003": [
-          {
-            "group": "Error 40003",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40003 该订单不是待支付状态,不能支付</p>"
-          }
-        ],
-        "Error 40004": [
-          {
-            "group": "Error 40004",
-            "type": "int",
-            "optional": false,
-            "field": "errCodeDesc",
-            "description": "<p>微信支付错误提示</p>"
-          }
-        ],
-        "Error 40005": [
-          {
-            "group": "Error 40005",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40005 请输入短信验证码</p>"
-          }
-        ],
-        "Error 40006": [
-          {
-            "group": "Error 40006",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40006 余额不足</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/store/pay_order/",
-    "title": "03支付订单",
-    "name": "payOrder",
-    "group": "Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "orderId",
-            "description": "<p>订单ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "int",
-            "optional": false,
-            "field": "payMethod",
-            "description": "<p>1银行卡支付2支付宝支付3微信支付4余额支付6微信支付H5 7支付宝H5支付8小程序支付 10储值卡</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "openId",
-            "description": "<p>微信公众号支付时需要传入</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "password",
-            "description": "<p>余额支付时需要密码，这个密码为登录密码</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "vcode",
-            "description": "<p>余额支付时需要短信验证码</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "int",
-            "optional": true,
-            "field": "useScore",
-            "description": "<p>0不使用 1使用</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "note",
-            "description": "<p>如果是支付宝直接跳到支付宝支付的网页，如果是微信支付返回一个待支付的二维码，字段名codeUrl</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 该订单不存在</p>"
-          }
-        ],
-        "Error 40003": [
-          {
-            "group": "Error 40003",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40003 该订单不是待支付状态,不能支付</p>"
-          }
-        ],
-        "Error 40004": [
-          {
-            "group": "Error 40004",
-            "type": "int",
-            "optional": false,
-            "field": "errCodeDesc",
-            "description": "<p>微信支付错误提示</p>"
-          }
-        ],
-        "Error 40005": [
-          {
-            "group": "Error 40005",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40005 请输入短信验证码</p>"
-          }
-        ],
-        "Error 40006": [
-          {
-            "group": "Error 40006",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40006 余额不足</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/orders/new/",
-    "title": "02下单",
-    "name": "placeOrder",
-    "group": "Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "memberCouponId",
-            "description": "<p>平台优惠券D</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "addressId",
-            "description": "<p>收货地址ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "dealerCode",
-            "description": "<p>推荐人code</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": true,
-            "field": "dealerUid",
-            "description": "<p>推荐人uid 与dealerCode 二者任选一个</p>"
-          },
-          {
-            "group": "Parameter",
             "type": "JsonArray",
             "optional": false,
             "field": "list",
             "description": "<p>列表</p>"
           },
           {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "shopId",
-            "description": "<p>shopId</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "deliveryMethod",
-            "description": "<p>配送方式 1自提 2跑腿 3邮寄</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "remark",
-            "description": "<p>备注，每个单品的备注，预留</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "int",
-            "optional": true,
-            "field": "payMethod",
-            "description": "<p>支付方式，余额支付时传入</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "productList",
-            "description": "<p>商品列表</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "productId",
-            "description": "<p>商品ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "skuId",
-            "description": "<p>商品skuID,为0时表示只有一个标准的产品，没有sku</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "amount",
-            "description": "<p>购买数量</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
             "group": "Success 200",
             "type": "int",
             "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
+            "field": "id",
+            "description": "<p>轮播id</p>"
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "string",
             "optional": false,
-            "field": "transactionId",
-            "description": "<p>流水号</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 该收货地址不存在</p>"
-          }
-        ],
-        "Error 40003": [
-          {
-            "group": "Error 40003",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40003 该商品不存在</p>"
-          }
-        ],
-        "Error 40004": [
-          {
-            "group": "Error 40004",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40004 正在下单中,请稍等</p>"
-          }
-        ],
-        "Error 40005": [
-          {
-            "group": "Error 40005",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40005 余额不足,请先充值</p>"
-          }
-        ],
-        "Error 40006": [
-          {
-            "group": "Error 40006",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40005 该商品已售完</p>"
-          }
-        ],
-        "Error 40007": [
-          {
-            "group": "Error 40007",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40007 库存只剩下*件</p>"
-          }
-        ],
-        "Error 40009": [
-          {
-            "group": "Error 40009",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40009 交易密码错误</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/store/orders/new/",
-    "title": "02下单",
-    "name": "placeOrder",
-    "group": "Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "addressId",
-            "description": "<p>收货地址ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "dealerCode",
-            "description": "<p>推荐人code</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": true,
-            "field": "dealerUid",
-            "description": "<p>推荐人uid 与dealerCode 二者任选一个</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "list",
-            "description": "<p>列表</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "shopId",
-            "description": "<p>shopId</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "deliveryMethod",
-            "description": "<p>配送方式 1自提 2跑腿 3邮寄</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "remark",
-            "description": "<p>备注，每个单品的备注，预留</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": true,
-            "field": "memberCouponId",
-            "description": "<p>用户优惠券ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "int",
-            "optional": true,
-            "field": "payMethod",
-            "description": "<p>支付方式，余额支付时传入</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "productList",
-            "description": "<p>商品列表</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "productId",
-            "description": "<p>商品ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "skuId",
-            "description": "<p>商品skuID,为0时表示只有一个标准的产品，没有sku</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "amount",
-            "description": "<p>购买数量</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
+            "field": "name",
+            "description": "<p>轮播名称</p>"
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "string",
             "optional": false,
-            "field": "transactionId",
-            "description": "<p>流水号</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 该收货地址不存在</p>"
-          }
-        ],
-        "Error 40003": [
-          {
-            "group": "Error 40003",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40003 该商品不存在</p>"
-          }
-        ],
-        "Error 40004": [
-          {
-            "group": "Error 40004",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40004 正在下单中,请稍等</p>"
-          }
-        ],
-        "Error 40005": [
-          {
-            "group": "Error 40005",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40005 余额不足,请先充值</p>"
-          }
-        ],
-        "Error 40006": [
-          {
-            "group": "Error 40006",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40005 该商品已售完</p>"
-          }
-        ],
-        "Error 40007": [
-          {
-            "group": "Error 40007",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40007 库存只剩下*件</p>"
-          }
-        ],
-        "Error 40009": [
-          {
-            "group": "Error 40009",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40009 交易密码错误</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/order_delievered/",
-    "title": "44设置订单已发货",
-    "name": "setOrderDelivered",
-    "group": "Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "orderId",
-            "description": "<p>单号</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "expressNo",
-            "description": "<p>物流单号</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "expressCompany",
-            "description": "<p>物流公司</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 找不到该订单</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/store/order_delievered/",
-    "title": "16设置订单已发货",
-    "name": "setOrderDelivered",
-    "group": "Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "orderId",
-            "description": "<p>单号</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "expressNo",
-            "description": "<p>物流单号</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "expressCompany",
-            "description": "<p>物流公司</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ],
-        "Error 40001": [
-          {
-            "group": "Error 40001",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40001 参数错误</p>"
-          }
-        ],
-        "Error 40002": [
-          {
-            "group": "Error 40002",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>40002 找不到该订单</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "GET",
-    "url": "/v1/o/shop_stat/",
-    "title": "42店铺统计",
-    "name": "shopStat",
-    "group": "Order",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200 请求成功</p>"
+            "field": "imgUrl",
+            "description": "<p>图片链接地址</p>"
           },
           {
             "group": "Success 200",
-            "type": "long",
+            "type": "string",
             "optional": false,
-            "field": "regCount",
-            "description": "<p>今日注册人数</p>"
+            "field": "linkUrl",
+            "description": "<p>链接地址</p>"
           },
           {
             "group": "Success 200",
-            "type": "long",
+            "type": "string",
             "optional": false,
-            "field": "orders",
-            "description": "<p>今日订单数</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "long",
-            "optional": false,
-            "field": "totalMoney",
-            "description": "<p>今日订单总额</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "long",
-            "optional": false,
-            "field": "products",
-            "description": "<p>今日售出商品数</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "JsonArray",
-            "optional": false,
-            "field": "list",
-            "description": "<p>最新30条统计数据</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/subscribe_miniapp_msg/",
-    "title": "29订阅小程序通知",
-    "name": "subscribeWeappMsg",
-    "group": "Order",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/change_order_address/",
-    "title": "39修改订单地址",
-    "name": "updateOrderContactAddress",
-    "group": "Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "orderId",
-            "description": "<p>orderId</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "addressId",
-            "description": "<p>addressId</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/store/change_order_address/",
-    "title": "15修改订单地址",
-    "name": "updateOrderContactAddress",
-    "group": "Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "orderId",
-            "description": "<p>orderId</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "addressId",
-            "description": "<p>addressId</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/order_return/:id/",
-    "title": "11申请售后修改",
-    "name": "updateOrderReturns",
-    "group": "Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "reason",
-            "description": "<p>理由</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "returnMoney",
-            "description": "<p>退款金额</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "note",
+            "field": "description",
             "description": "<p>备注</p>"
           },
           {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "imgList",
-            "description": "<p>图片地址的数组</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "regionCode",
+            "description": "<p>区域编号</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "regionName",
+            "description": "<p>区域名字</p>"
+          },
           {
             "group": "Success 200",
             "type": "int",
             "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/OrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/o/store/order_return/:id/",
-    "title": "11申请售后修改",
-    "name": "updateOrderReturns",
-    "group": "Order",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "reason",
-            "description": "<p>理由</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "long",
-            "optional": false,
-            "field": "returnMoney",
-            "description": "<p>退款金额</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "note",
-            "description": "<p>备注</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "imgList",
-            "description": "<p>图片地址的数组</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/store/StoreOrderController.java",
-    "groupTitle": "Order"
-  },
-  {
-    "type": "POST",
-    "url": "/v1/alipay_notify/",
-    "title": "01支付宝回调接口",
-    "name": "handlePagePayNotify",
-    "group": "Pay",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int",
-            "optional": false,
-            "field": "code",
-            "description": "<p>200</p>"
+            "field": "sort",
+            "description": "<p>显示顺序</p>"
           }
         ],
-        "Error 40008": [
+        "Error 500": [
           {
-            "group": "Error 40008",
+            "group": "Error 500",
             "type": "int",
             "optional": false,
             "field": "code",
-            "description": "<p>40008 交易密码错误</p>"
+            "description": "<p>500 未知错误</p>"
           }
         ]
       }
     },
     "version": "0.0.0",
-    "filename": "app/controllers/AliPayController.java",
-    "groupTitle": "Pay"
+    "filename": "app/controllers/CarouselController.java",
+    "groupTitle": "Carousel"
   },
   {
     "type": "POST",
@@ -5484,11 +635,451 @@
     "groupTitle": "Pay"
   },
   {
+    "type": "POST",
+    "url": "/v1/user/change_phone_number/",
+    "title": "15修改手机号码",
+    "name": "changePhoneNumber",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "note",
+            "description": "<p>备注，需要分两步，第一步，为输入密码【可选】，以及新手机号与新手机号短信验证码，第二步，请求原手机号的短信验证码，调用这个接口， /v1/user/request_user_vcode/ 03请求给用户号码发短信，最终将所有参数一起送过来</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "password",
+            "description": "<p>密码，如果有设置的话</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "newPhoneNumber",
+            "description": "<p>新手机号</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "oldPhoneNumberVcode",
+            "description": "<p>原手机号短信验证码</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "newPhoneNumberVcode",
+            "description": "<p>新手机号短信验证码</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001无效的参数</p>"
+          }
+        ],
+        "Error 40002": [
+          {
+            "group": "Error 40002",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40002 无效的短信验证码</p>"
+          }
+        ],
+        "Error 40003": [
+          {
+            "group": "Error 40003",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40003 密码错误</p>"
+          }
+        ],
+        "Error 40004": [
+          {
+            "group": "Error 40004",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40004无效的手机号码</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
+  },
+  {
+    "type": "POST",
+    "url": "/v1/user/clear_all_msg/",
+    "title": "17清除全部消息列表",
+    "name": "clearMsg",
+    "group": "User",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
+  },
+  {
+    "type": "POST",
+    "url": "/v1/user/clear_selected_msg/",
+    "title": "18清除选中消息列表",
+    "name": "clearSelectedMsg",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": false,
+            "field": "list",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
+  },
+  {
     "type": "GET",
-    "url": "/v1/alipay_verify/",
-    "title": "02支付宝回调验签接口",
-    "name": "verifySign",
-    "group": "Pay",
+    "url": "/v1/user/member_balance/?balanceType=",
+    "title": "11用户余额信息",
+    "name": "getMemberBalance",
+    "group": "User",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>请求返回码</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "JsonArray",
+            "optional": false,
+            "field": "list",
+            "description": "<p>所持有币种的余额列表</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "BigDecimal",
+            "optional": false,
+            "field": "leftBalance",
+            "description": "<p>可用余额</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "BigDecimal",
+            "optional": false,
+            "field": "freezeBalance",
+            "description": "<p>冻结余额</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "BigDecimal",
+            "optional": false,
+            "field": "totalBalance",
+            "description": "<p>总额</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "BigDecimal",
+            "optional": false,
+            "field": "expireTime",
+            "description": "<p>失效时间</p>"
+          }
+        ],
+        "Error 403": [
+          {
+            "group": "Error 403",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>403 没有权限使用该功能</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
+  },
+  {
+    "type": "get",
+    "url": "/v1/user/?code=",
+    "title": "05获取用户信息",
+    "name": "getUser",
+    "group": "User",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "phoneNumber",
+            "description": "<p>手机号</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "score",
+            "description": "<p>积分</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "leftMoney",
+            "description": "<p>余额</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "authStatus",
+            "description": "<p>认证状态  -1已拒绝 0未申请  1进行中 2已通过</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "levelName",
+            "description": "<p>等级</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "realName",
+            "description": "<p>实名</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "nickName",
+            "description": "<p>昵称</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "uid",
+            "description": "<p>用户Id</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "birthday",
+            "description": "<p>生日</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "idCardNo",
+            "description": "<p>身份证号码</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "licenseNo",
+            "description": "<p>营业执照</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "gender",
+            "description": "<p>0：未知、1：男、2：女</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "city",
+            "description": "<p>城市</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "province",
+            "description": "<p>省份</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "country",
+            "description": "<p>国家</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "shopName",
+            "description": "<p>品牌</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "contactPhoneNumber",
+            "description": "<p>联系电话</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "contactAddress",
+            "description": "<p>联系地址</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "businessItems",
+            "description": "<p>经营类目</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "images",
+            "description": "<p>图片，多张，以逗号隔开</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "dealerCode",
+            "description": "<p>业务员/代理商编号(如果自己是代理商或业务员才会有这个字段)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "dealerName",
+            "description": "<p>绑定的业务员名字</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "dealerPhoneNumber",
+            "description": "<p>绑定的业务员联系电话</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "couponCount",
+            "description": "<p>可用优惠券数量</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "profile",
+            "description": "<p>用户认证相关对象</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "applyTime",
+            "description": "<p>申请时间</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "approveTime",
+            "description": "<p>认证通过时间</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001 未找到对应的用户</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
+  },
+  {
+    "type": "GET",
+    "url": "/v1/user/is_login/",
+    "title": "13是否已登录",
+    "name": "isLogin",
+    "group": "User",
     "success": {
       "fields": {
         "Success 200": [
@@ -5503,14 +1094,1011 @@
             "group": "Success 200",
             "type": "boolean",
             "optional": false,
-            "field": "result",
-            "description": "<p>true为正确签名，false为假签名</p>"
+            "field": "login",
+            "description": "<p>true已登录 false未登录</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001 参数错误</p>"
           }
         ]
       }
     },
     "version": "0.0.0",
-    "filename": "app/controllers/AliPayController.java",
-    "groupTitle": "Pay"
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
+  },
+  {
+    "type": "GET",
+    "url": "/v1/user/is_valid_account/:accountName/",
+    "title": "08检验帐号是否有效",
+    "examples": [
+      {
+        "title": "说明:1个ip一天限制10个该请求",
+        "content": "http://192.168.2.100/v1/is_valid_account/:accountName/",
+        "type": "json"
+      }
+    ],
+    "name": "isValidAccount",
+    "group": "User",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001该手机号未注册</p>"
+          }
+        ],
+        "Error 40002": [
+          {
+            "group": "Error 40002",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40002超过当日最大调用次数</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
+  },
+  {
+    "type": "GET",
+    "url": "/v1/user/is_phonenumber_used/:phoneNumber/",
+    "title": "06检测手机号码是否已被注册",
+    "name": "is_phonenumber_used",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "phoneNumber",
+            "description": "<p>手机号</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200 未注册</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "boolean",
+            "optional": false,
+            "field": "used",
+            "description": "<p>true已注册，false未注册</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001 无效的手机号码</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
+  },
+  {
+    "type": "GET",
+    "url": "/v1/user/balance_logs/?bizType=&itemId=&page=",
+    "title": "14余额/积分明细列表",
+    "name": "listBalanceLogs",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "optional": false,
+            "field": "itemId",
+            "description": "<p>1现金 2积分</p>"
+          },
+          {
+            "group": "Parameter",
+            "optional": false,
+            "field": "bizType",
+            "description": "<p>99积分奖励 100团购返现</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200成功修改</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "JsonArray",
+            "optional": false,
+            "field": "list",
+            "description": "<p>列表</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "double",
+            "optional": false,
+            "field": "leftBalance",
+            "description": "<p>可用余额</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "double",
+            "optional": false,
+            "field": "freezeBalance",
+            "description": "<p>冻结余额</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "double",
+            "optional": false,
+            "field": "totalBalance",
+            "description": "<p>总额</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "double",
+            "optional": false,
+            "field": "changeAmount",
+            "description": "<p>当次变动金额</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "note",
+            "description": "<p>备注</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "createTime",
+            "description": "<p>时间</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
+  },
+  {
+    "type": "GET",
+    "url": "/v1/user/msg_list/?page=&msgType=",
+    "title": "16我的消息列表",
+    "name": "listMsg",
+    "group": "User",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "JsonArray",
+            "optional": false,
+            "field": "list",
+            "description": "<p>列表</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "status",
+            "description": "<p>1未读 2已读</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>标题</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "content",
+            "description": "<p>内容</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "linkUrl",
+            "description": "<p>链接地址</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "msgType",
+            "description": "<p>消息类型 1余额变动 2交易提醒 3系统通知</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "itemId",
+            "description": "<p>余额类型，跟余额中的一样</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "changeAmount",
+            "description": "<p>余额变动数量</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "createTime",
+            "description": "<p>时间</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
+  },
+  {
+    "type": "GET",
+    "url": "/v1/user/my_login_logs/?page=",
+    "title": "12我的登录日志",
+    "name": "listMyLoginLog",
+    "group": "User",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200 请求成功</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "JsonArray",
+            "optional": false,
+            "field": "list",
+            "description": "<p>列表</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "id",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "memberId",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "loginIp",
+            "description": "<p>登录ip</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "loginPlace",
+            "description": "<p>登录地点</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "createdTime",
+            "description": "<p>登录时间</p>"
+          }
+        ],
+        "Success 403": [
+          {
+            "group": "Success 403",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>没有权限使用该功能</p>"
+          }
+        ],
+        "Error 505": [
+          {
+            "group": "Error 505",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>未知错误</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
+  },
+  {
+    "type": "POST",
+    "url": "/v1/user/login/",
+    "title": "02登录",
+    "name": "login",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "username",
+            "description": "<p>用户名</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "password",
+            "description": "<p>密码</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "vCode",
+            "description": "<p>短信验证码，短信登录的时候使用</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "id",
+            "description": "<p>用户id</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "accountName",
+            "description": "<p>帐号名</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "status",
+            "description": "<p>用户状态 1正常2锁定</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "realName",
+            "description": "<p>真实姓名</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "phoneNumber",
+            "description": "<p>手机号</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001 传进来的参数有误</p>"
+          }
+        ],
+        "Error 40003": [
+          {
+            "group": "Error 40003",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40003 用户名或密码错误</p>"
+          }
+        ],
+        "Error 40005": [
+          {
+            "group": "Error 40005",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40005 用户被锁定</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
+  },
+  {
+    "type": "POST",
+    "url": "/v1/user/loginPassword/",
+    "title": "04修改登录密码",
+    "name": "loginPassword",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "oldPassword",
+            "description": "<p>旧密码</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "newPassword",
+            "description": "<p>新密码</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200 成功修改</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001 密码不合法6-20位</p>"
+          }
+        ],
+        "Error 40002": [
+          {
+            "group": "Error 40002",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40002 旧密码验证不通过</p>"
+          }
+        ],
+        "Error 40004": [
+          {
+            "group": "Error 40004",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40004 用户不存在</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
+  },
+  {
+    "type": "POST",
+    "url": "/v1/user/logout/",
+    "title": "03注销",
+    "name": "logout",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": false,
+            "field": "id",
+            "description": "<p>用户id</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200 注销成功.</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001 参数错误,未提供token</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
+  },
+  {
+    "type": "POST",
+    "url": "/v1/user/reset_login_password/",
+    "title": "09重置登录密码",
+    "name": "resetLoginPassword",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "accountName",
+            "description": "<p>帐号</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "vcode",
+            "description": "<p>短信验证码</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "newPassword",
+            "description": "<p>新密码</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001无效的参数</p>"
+          }
+        ],
+        "Error 40002": [
+          {
+            "group": "Error 40002",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40002 无效的短信验证码</p>"
+          }
+        ],
+        "Error 40003": [
+          {
+            "group": "Error 40003",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40003 无效的密码</p>"
+          }
+        ],
+        "Error 40004": [
+          {
+            "group": "Error 40004",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40004无效的手机号码</p>"
+          }
+        ],
+        "Error 40005": [
+          {
+            "group": "Error 40005",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40005 该帐号不存在</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
+  },
+  {
+    "type": "POST",
+    "url": "/v1/user/set_login_password/",
+    "title": "10设置/修改登录密码",
+    "name": "setLoginPassword",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "oldPassword",
+            "description": "<p>旧密码</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "password",
+            "description": "<p>新密码</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "vcode",
+            "description": "<p>短信验证码</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": false,
+            "field": "uid",
+            "description": "<p>用戶Id</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001 无效的参数</p>"
+          }
+        ],
+        "Error 40004": [
+          {
+            "group": "Error 40004",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40004 该帐号不存在</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
+  },
+  {
+    "type": "post",
+    "url": "/v1/user/new/",
+    "title": "01用户注册",
+    "name": "signUp",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "phoneNumber",
+            "description": "<p>手机号</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "vCode",
+            "description": "<p>短信验证码，预留</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "loginPassword",
+            "description": "<p>登录密码 6-20位，不允许包含非法字符</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "dealerCode",
+            "description": "<p>业务员编号</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "name",
+            "description": "<p>昵称或名字，最长10个字符</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200成功创建</p>"
+          }
+        ],
+        "Error 40003": [
+          {
+            "group": "Error 40003",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001 参数错误</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40002 帐号已被注册</p>"
+          }
+        ],
+        "Error 40002": [
+          {
+            "group": "Error 40002",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40003 无效的短信验证码</p>"
+          }
+        ],
+        "Error 40004": [
+          {
+            "group": "Error 40004",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40004 登录密码无效</p>"
+          }
+        ],
+        "Error 40006": [
+          {
+            "group": "Error 40006",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40006 无效的手机号码</p>"
+          }
+        ],
+        "Error 40007": [
+          {
+            "group": "Error 40007",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40007 达到注册的限制次数</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
+  },
+  {
+    "type": "post",
+    "url": "/v1/user/",
+    "title": "07修改用户资料",
+    "name": "updateUser",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "realName",
+            "description": "<p>姓名 不超过6位</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "nickName",
+            "description": "<p>昵称 不超过10位</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "birthday",
+            "description": "<p>生日</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "avatar",
+            "description": "<p>头像</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": true,
+            "field": "gender",
+            "description": "<p>性别 0：未知、1：男、2：女</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "city",
+            "description": "<p>城市</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "province",
+            "description": "<p>省份</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "country",
+            "description": "<p>国家</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200成功修改</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001 参数错误</p>"
+          }
+        ],
+        "Error 40002": [
+          {
+            "group": "Error 40002",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40002 密码无效，密码为6到20位</p>"
+          }
+        ],
+        "Error 403": [
+          {
+            "group": "Error 403",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>403 没有权限，请重新登录</p>"
+          }
+        ],
+        "Error 40004": [
+          {
+            "group": "Error 40004",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40004 用户不存在</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
   }
 ]

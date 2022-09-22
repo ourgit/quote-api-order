@@ -1,6 +1,5 @@
 package controllers;
 
-import actor.ActorProtocol;
 import akka.actor.ActorRef;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,9 +11,6 @@ import com.wechat.pay.contrib.apache.httpclient.auth.WechatPay2Credentials;
 import com.wechat.pay.contrib.apache.httpclient.auth.WechatPay2Validator;
 import com.wechat.pay.contrib.apache.httpclient.util.PemUtil;
 import com.wechat.pay.contrib.apache.httpclient.util.RsaCryptoUtil;
-import constants.BusinessConstant;
-import models.order.Order;
-import models.store.StoreOrder;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -55,13 +51,6 @@ public class WechatPayV3Controller extends BaseNoAuthController {
     Logger.ALogger logger = Logger.of(WechatPayV3Controller.class);
 
     public static final int TAG_LENGTH_BIT = 128;
-    @Inject
-    @Named("groupOrderActor")
-    private ActorRef groupOrderActorActor;
-    @Inject
-    @Named("storeOrderActor")
-    private ActorRef storeOrderActorRef;
-
     public CompletionStage<Result> wechatPay(PayParam payParam) {
         return CompletableFuture.supplyAsync(() -> {
             try {
@@ -210,42 +199,7 @@ public class WechatPayV3Controller extends BaseNoAuthController {
                     JsonNode amount = realData.findPath("amount");
                     if (!ValidationUtil.isEmpty(orderNo) && null != amount) {
                         long payerTotal = amount.findPath("payer_total").asLong();
-
-                        if (orderNo.contains("G")) {
-                            ActorProtocol.PLACE_ORDER_GROUP_BY_PAID param = new ActorProtocol.PLACE_ORDER_GROUP_BY_PAID(orderNo, txId);
-                            groupOrderActorActor.tell(param, ActorRef.noSender());
-                        } else if (orderNo.contains("S")) {
-                            StoreOrder order = StoreOrder.find.query().where().eq("orderNo", orderNo)
-                                    .orderBy().asc("id")
-                                    .setMaxRows(1)
-                                    .findOne();
-                            if (null != order && order.status == Order.ORDER_STATUS_UNPAY && payerTotal >= order.realPay) {
-                                order.setPayTxNo(txId);
-                                long currentTime = dateUtils.getCurrentTimeBySecond();
-                                order.setUpdateTime(currentTime);
-                                order.setPayTime(currentTime);
-                                order.setStatus(Order.ORDER_STATUS_TO_DELIEVERY);
-                                order.setPayDetail(result);
-                                order.setAccountSettle(0);
-                                order.save();
-                            }
-                        } else {
-                            Order order = Order.find.query().where().eq("orderNo", orderNo)
-                                    .orderBy().asc("id")
-                                    .setMaxRows(1)
-                                    .findOne();
-                            if (null != order && order.status == Order.ORDER_STATUS_UNPAY && payerTotal >= order.realPay) {
-                                order.setPayTxNo(txId);
-                                long currentTime = dateUtils.getCurrentTimeBySecond();
-                                order.setUpdateTime(currentTime);
-                                order.setPayTime(currentTime);
-                                order.setStatus(Order.ORDER_STATUS_PAID);
-                                order.setPayDetail(result);
-                                order.setAccountSettle(Order.ACCOUNT_SETTLE_NEED);
-                                order.save();
-                                businessUtils.handleOrderPaid(order.orderNo, txId, BusinessConstant.PAYMENT_WEPAY, "");
-                            }
-                        }
+                        //TODO
                     }
                 }
             }

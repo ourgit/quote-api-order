@@ -25,8 +25,6 @@ public class Member extends Model {
      */
     public static final int MEMBER_STATUS_LOCK = 2;
 
-
-
     @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,6 +66,13 @@ public class Member extends Model {
     @Column(name = "avatar")
     @JsonDeserialize(using = EscapeHtmlSerializer.class)
     public String avatar;//头像
+
+    @Column(name = "shop_id")
+    public long shopId;
+
+    @Column(name = "shop_name")
+    @JsonDeserialize(using = EscapeHtmlSerializer.class)
+    public String shopName;//头像
 
     @Column(name = "user_type")
     public int userType;
@@ -160,5 +165,21 @@ public class Member extends Model {
 
     public void setUserType(int userType) {
         this.userType = userType;
+    }
+
+    public long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(long shopId) {
+        this.shopId = shopId;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
     }
 }

@@ -17,8 +17,6 @@ import java.util.concurrent.CompletionStage;
  * 轮播控制类
  */
 public class CarouselController extends BaseController {
-    @Inject
-    protected AsyncCacheApi asyncCacheApi;
 
     /**
      * @api {GET} /v1/n/carousels/?regionCode=&bizType=&clientType= 01查看轮播列表
@@ -38,7 +36,7 @@ public class CarouselController extends BaseController {
      */
     public CompletionStage<Result> listCarousel(Http.Request request, int bizType, int clientType) {
         String key = cacheUtils.getCarouselJsonCache(bizType, clientType);
-        return asyncCacheApi.getOptional(key).thenApplyAsync((json) -> {
+        return redis.get(key).thenApplyAsync((json) -> {
             if (json.isPresent()) {
                 String jsonCache = (String) json.get();
                 if (!ValidationUtil.isEmpty(jsonCache)) {
@@ -54,7 +52,7 @@ public class CarouselController extends BaseController {
             ObjectNode result = Json.newObject();
             result.put(CODE, CODE200);
             result.set("list", Json.toJson(list));
-            asyncCacheApi.set(key, Json.stringify(result), 60);
+            redis.set(key, Json.stringify(result), 120);
             return ok(result);
         });
     }
