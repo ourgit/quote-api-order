@@ -7,8 +7,6 @@ import myannotation.EscapeHtmlSerializer;
 import myannotation.EscapeHtmlSerializerForKeepSomeHtml;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 文章表

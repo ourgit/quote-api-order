@@ -15,6 +15,8 @@ import models.msg.Msg;
 import models.user.Member;
 import models.user.MemberBalance;
 import play.Logger;
+import play.i18n.Messages;
+import play.i18n.MessagesApi;
 import play.libs.Json;
 import play.libs.ws.WSClient;
 import play.mvc.BodyParser;
@@ -45,7 +47,8 @@ public class MemberController extends BaseController {
     HttpRequestDeviceUtils httpRequestDeviceUtils;
     @Inject
     IPUtil ipUtil;
-
+    @Inject
+    MessagesApi messagesApi;
     private static final int CHANGE_LOGIN_PASSWORD = 1;
     private static final int CHANGE_PAY_PASSWORD = 2;
 
@@ -828,7 +831,9 @@ public class MemberController extends BaseController {
     public CompletionStage<Result> clearSelectedMsg(Http.Request request) {
         return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
             JsonNode jsonNode = request.body().asJson();
-            if (null == jsonNode) return okCustomJson(CODE40001, "参数错误");
+            Messages messages = this.messagesApi.preferred(request);
+            String baseArgumentError = messages.at("base.argument.error");
+            if (null == jsonNode) return okCustomJson(CODE40001, baseArgumentError);
             if (uid < 1) return unauth403();
             if (!jsonNode.has("list")) return okCustomJson(CODE40001, "list参数错误");
             ArrayNode nodes = (ArrayNode) jsonNode.findPath("list");

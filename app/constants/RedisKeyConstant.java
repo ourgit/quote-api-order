@@ -166,7 +166,6 @@ public class RedisKeyConstant {
     /**
      * 分类每一页单独缓存
      */
-    public static final String MERCHANTS_CATEGORIES_LIST_CACHE_KEY_PREFIX = "MERCHANTS_CATEGORIES_LIST_CACHE_KEY_PREFIX:";
 
     public static final String MERCHANTS_SOLD_AMOUNT_CACHE_KEY = "MERCHANTS_SOLD_AMOUNT_CACHE_KEY:";
 
@@ -229,4 +228,7 @@ public class RedisKeyConstant {
     public static final String COMMENT_JSON_CACHE = "COMMENT_JSON_CACHE:";
     public static final String ARTICLE_CATEGORY_KEY_PREFIX = "ARTICLE_CATEGORY_KEY_PREFIX:";
     public static final String ARTICLE_CATEGORY_KEY_BY_ID_PREFIX = "ARTICLE_CATEGORY_KEY_BY_ID_PREFIX:";
+
+    public static final String POST_CATEGORIES_LIST_CACHE_KEY_PREFIX = "POST_CATEGORIES_LIST_CACHE_KEY_PREFIX:";
+    public static final String POST_CATEGORIES_LIST_BY_CATEGORY_ID = "POST_CATEGORIES_LIST_BY_CATEGORY_ID:";
 }
