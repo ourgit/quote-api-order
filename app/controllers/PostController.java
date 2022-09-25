@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.ebean.ExpressionList;
 import io.ebean.PagedList;
-import models.post.Category;
 import models.post.Post;
+import models.post.PostCategory;
 import models.post.PostLike;
 import models.post.Reply;
 import models.user.Member;
@@ -35,8 +35,8 @@ public class PostController extends BaseController {
     MessagesApi messagesApi;
 
     /**
-     * @api {GET} /v1/user/categories/?filter&cateType= 01帖子分类列表
-     * @apiName listCategories
+     * @api {GET} /v1/user/post_categories/?filter&cateType= 01帖子分类列表
+     * @apiName listPostCategories
      * @apiGroup Post
      * @apiSuccess (Success 200) {int} code 200 请求成功
      * @apiSuccess (Success 200) {int} pages 页数
@@ -51,7 +51,7 @@ public class PostController extends BaseController {
      * @apiSuccess (Success 200){JsonArray} children 子分类列表
      * @apiSuccess (Success 200){string} updateTime 更新时间
      */
-    public CompletionStage<Result> listCategories(final String filter, int cateType) {
+    public CompletionStage<Result> listPostCategories(final String filter, int cateType) {
         return CompletableFuture.supplyAsync(() -> {
             String key = cacheUtils.getCategoryJsonCache(cateType);
             //第一页从缓存读取
@@ -62,11 +62,11 @@ public class PostController extends BaseController {
                     if (ValidationUtil.isEmpty(node)) return ok(Json.parse(node));
                 }
             }
-            ExpressionList<Category> expressionList = Category.find.query().where()
-                    .eq("show", Category.SHOW_CATEGORY)
+            ExpressionList<PostCategory> expressionList = PostCategory.find.query().where()
+                    .eq("show", PostCategory.SHOW_CATEGORY)
                     .eq("cateType", cateType);
             if (!ValidationUtil.isEmpty(filter)) expressionList.icontains("name", filter);
-            List<Category> list = expressionList.orderBy()
+            List<PostCategory> list = expressionList.orderBy()
                     .asc("path")
                     .orderBy().desc("sort")
                     .orderBy().asc("id")
@@ -191,7 +191,7 @@ public class PostController extends BaseController {
             if (!ValidationUtil.isEmpty(post.title)) return okCustomJson(CODE40001, "请输入标题");
             if (!ValidationUtil.isEmpty(post.content)) return okCustomJson(CODE40001, "请输入内容");
             if (post.categoryId < 1) return okCustomJson(CODE40001, "请选择分类");
-            Category category = Category.find.byId(post.categoryId);
+            PostCategory category = PostCategory.find.byId(post.categoryId);
             if (null == category) return okCustomJson(CODE40001, "请选择分类");
             post.setUid(uid);
             post.setUserName(member.nickName);

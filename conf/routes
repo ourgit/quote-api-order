@@ -37,7 +37,7 @@ GET        /v1/p/articles_by_category_id/                    controllers.Article
 GET        /v1/p/recommend_articles/                         controllers.ArticleController.listRecommendArticles
 GET        /v1/p/carousels/                                  controllers.CarouselController.listCarousel(request: Request,bizType:Int?=0,clientType:Int?=0)
 
-GET        /v1/user/categories/                              controllers.PostController.listCategories(filter:String?="",cateType:Int?=0)
+GET        /v1/user/post_categories/                         controllers.PostController.listPostCategories(filter:String?="",cateType:Int?=0)
 GET        /v1/user/post_list/                               controllers.PostController.listPosts(request: Request,categoryId:Int?=0,page:Int?=1)
 GET        /v1/user/posts/:id/                               controllers.PostController.getPost(request: Request,id:Long)
 POST        /v1/user/post/new/                               controllers.PostController.newPost(request: Request)
@@ -46,6 +46,7 @@ POST        /v1/user/post/reply/                             controllers.PostCon
 POST        /v1/user/post/                                   controllers.PostController.deletePost(request: Request)
 GET        /v1/user/my_posts/                                controllers.PostController.myPosts(request: Request,page:Int?=1)
 
+GET        /v1/user/categories/                              controllers.CategoryController.listCategories(filter:String?="",cateType:Int?=0)
 
 ################################################################################################################################
 #GET            /v1/actor/:name/                                                  controllers.message.ActorController.sayHello(name:String)
