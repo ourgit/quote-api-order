@@ -29,6 +29,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 import static constants.RedisKeyConstant.*;
+import static models.system.ParamConfig.SOURCE_FRONTEND;
 
 /**
  * 用户控制类
@@ -433,17 +434,12 @@ public class ArticleController extends BaseController {
             String jsonKey = cacheUtils.getParamConfigCacheKey() + key;
             Optional<String> jsonCache = redis.sync().get(jsonKey);
             if (jsonCache.isPresent()) {
-                String value = jsonCache.get();
-                if (!ValidationUtil.isEmpty(value)) {
-                    ObjectNode node = Json.newObject();
-                    node.put(CODE, CODE200);
-                    node.put("value", value);
-                    return ok(node);
-                }
+                String result = jsonCache.get();
+                if (!ValidationUtil.isEmpty(result)) return ok(Json.parse(result));
             }
-
             ParamConfig config = ParamConfig.find.query().where()
                     .eq("key", key)
+                    .eq("source", SOURCE_FRONTEND)
                     .orderBy().asc("id")
                     .setMaxRows(1).findOne();
             if (null == config) return okCustomJson(CODE40001, "该参数不存在");
@@ -459,7 +455,7 @@ public class ArticleController extends BaseController {
             ObjectNode resultNode = Json.newObject();
             resultNode.put(CODE, CODE200);
             resultNode.put("value", value);
-            redis.set(jsonKey, value, 30 * 24 * 60 * 60);
+            redis.set(jsonKey, Json.stringify(resultNode), 30 * 24 * 60 * 60);
             return ok(resultNode);
         });
     }
