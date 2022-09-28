@@ -10,6 +10,7 @@ import play.mvc.Result;
 import utils.ValidationUtil;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -59,13 +60,40 @@ public class CategoryController extends BaseController {
                     .orderBy().desc("sort")
                     .orderBy().asc("id")
                     .findList();
+            List<Category> resultList = convertListToTreeNode(list);
             ObjectNode result = Json.newObject();
             result.put(CODE, CODE200);
-            result.set("list", Json.toJson(list));
+            result.set("list", Json.toJson(resultList));
             if (ValidationUtil.isEmpty(filter)) redis.set(key, Json.stringify(result), 30 * 60);
             return ok(result);
         });
     }
 
+    public List<Category> convertListToTreeNode(List<Category> categoryList) {
+        List<Category> nodeList = new ArrayList<>();
+        if (null == categoryList) return nodeList;
+        for (Category node : categoryList) {
+            if (null != node) {
+                if (!ValidationUtil.isEmpty(node.path) && node.path.equalsIgnoreCase("/")) {
+                    //根目录
+                    nodeList.add(node);
+                } else {
+                    updateChildren(node, categoryList);
+                }
+            }
 
+        }
+        return nodeList;
+    }
+
+
+    private void updateChildren(Category category, List<Category> nodeList) {
+        for (Category parentCategory : nodeList) {
+            if (null != parentCategory && category.parentId == parentCategory.id) {
+                if (parentCategory.children == null) parentCategory.children = new ArrayList<>();
+                parentCategory.children.add(category);
+                break;
+            }
+        }
+    }
 }
