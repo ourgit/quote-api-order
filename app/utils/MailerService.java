@@ -15,14 +15,14 @@ public class MailerService {
         String cid = "1234";
         Email email = new Email()
                 .setSubject("Simple email")
-                .setFrom("Mister FROM <from@email.com>")
-                .addTo("Miss TO <to@email.com>")
+                .setFrom("Mister FROM <ray.Renoseeker@gmail.com>")
+                .addTo("Miss TO <157579114@qq.com>")
                 // adds attachment
-                .addAttachment("attachment.pdf", new File("/some/path/attachment.pdf"))
-                // adds inline attachment from byte array
-                .addAttachment("data.txt", "data".getBytes(), "text/plain", "Simple data", EmailAttachment.INLINE)
-                // adds cid attachment
-                .addAttachment("image.jpg", new File("/some/path/image.jpg"), cid)
+//                .addAttachment("attachment.pdf", new File("/some/path/attachment.pdf"))
+//                // adds inline attachment from byte array
+//                .addAttachment("data.txt", "data".getBytes(), "text/plain", "Simple data", EmailAttachment.INLINE)
+//                // adds cid attachment
+//                .addAttachment("image.jpg", new File("/some/path/image.jpg"), cid)
                 // sends text, HTML or both...
                 .setBodyText("A text message")
                 .setBodyHtml("<html><body><p>An <b>html</b> message with cid <img src=\"cid:" + cid + "\"></p></body></html>");

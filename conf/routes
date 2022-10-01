@@ -1,52 +1,53 @@
+GET         /v1/user/send_mail/                               controllers.TestController.sendMail
 +nocsrf
-POST        /v1/user/new/                                    controllers.MemberController.signUp(request: Request)
+POST        /v1/user/new/                                     controllers.MemberController.signUp(request: Request)
 +nocsrf
-POST        /v1/user/login/                                  controllers.MemberController.login(request: Request)
-POST        /v1/user/logout/                                 controllers.MemberController.logout(request: Request)
+POST        /v1/user/login/                                   controllers.MemberController.login(request: Request)
+POST        /v1/user/logout/                                  controllers.MemberController.logout(request: Request)
 #modify login password
-POST        /v1/user/loginPassword/                          controllers.MemberController.changeLoginPassword(request: Request)
-GET        /v1/user/                                         controllers.MemberController.getUser(request: Request)
+POST        /v1/user/loginPassword/                           controllers.MemberController.changeLoginPassword(request: Request)
+GET         /v1/user/                                         controllers.MemberController.getUser(request: Request)
 #is phonenumber used
-GET        /v1/user/is_phonenumber_used/:phoneNumber/        controllers.MemberController.isPhoneNumberUsed(phoneNumber:String)
+GET         /v1/user/is_phonenumber_used/:phoneNumber/        controllers.MemberController.isPhoneNumberUsed(phoneNumber:String)
 #modify user infomation
-POST        /v1/user/                                        controllers.MemberController.update(request: Request)
-POST        /v1/user/reset_login_password/                   controllers.MemberController.resetLoginPassword(request: Request)
-POST        /v1/user/set_login_password/                     controllers.MemberController.setLoginPassword(request: Request)
-GET        /v1/user/member_balance/                          controllers.MemberController.getBalance(request: Request,balanceType:Int?=0)
-GET        /v1/user/my_login_logs/                           controllers.MemberController.listMyLoginLog(request: Request,page:Int?=1)
+POST        /v1/user/                                         controllers.MemberController.update(request: Request)
+POST        /v1/user/reset_login_password/                    controllers.MemberController.resetLoginPassword(request: Request)
+POST        /v1/user/set_login_password/                      controllers.MemberController.setLoginPassword(request: Request)
+GET         /v1/user/member_balance/                          controllers.MemberController.getBalance(request: Request,balanceType:Int?=0)
+GET         /v1/user/my_login_logs/                           controllers.MemberController.listMyLoginLog(request: Request,page:Int?=1)
 
-GET        /v1/user/balance_logs/                            controllers.MemberController.listBalanceLogs(request: Request,bizType:Int?=0,itemId:Int?=0,page:Int?=1)
-GET        /v1/user/is_valid_account/:accountName/           controllers.MemberController.isValidAccount(request: Request,accountName:String)
-GET        /v1/user/is_login/                                controllers.MemberController.isLogin(request: Request)
-POST        /v1/user/change_phone_number/                    controllers.MemberController.changePhoneNumber(request: Request)
-GET        /v1/user/msg_list/                                controllers.MemberController.listMsg(request: Request,page:Int?=1,size:Int?=10,msgType:Int?=0)
-POST        /v1/user/clear_all_msg/                          controllers.MemberController.clearMsg(request: Request)
-POST        /v1/user/clear_selected_msg/                     controllers.MemberController.clearSelectedMsg(request: Request)
+GET         /v1/user/balance_logs/                            controllers.MemberController.listBalanceLogs(request: Request,bizType:Int?=0,itemId:Int?=0,page:Int?=1)
+GET         /v1/user/is_valid_account/:accountName/           controllers.MemberController.isValidAccount(request: Request,accountName:String)
+GET         /v1/user/is_login/                                controllers.MemberController.isLogin(request: Request)
+POST        /v1/user/change_phone_number/                     controllers.MemberController.changePhoneNumber(request: Request)
+GET         /v1/user/msg_list/                                controllers.MemberController.listMsg(request: Request,page:Int?=1,size:Int?=10,msgType:Int?=0)
+POST        /v1/user/clear_all_msg/                           controllers.MemberController.clearMsg(request: Request)
+POST        /v1/user/clear_selected_msg/                      controllers.MemberController.clearSelectedMsg(request: Request)
 
 ###################################################################################################################################
-POST        /v1/o/wechat/pay_notify/                         controllers.WechatPayV3Controller.handleWechatPayNotify(request:Request)
+POST        /v1/o/wechat/pay_notify/                          controllers.WechatPayV3Controller.handleWechatPayNotify(request:Request)
 
 
 
-GET        /v1/p/articles/                                   controllers.ArticleController.listArticles(page:Int?=1,cateName:String,size:Int?=10)
-GET        /v1/p/articles/:articleId/                        controllers.ArticleController.getArticle(request: Request,articleId:Long)
-POST        /v1/p/articles/fav/                              controllers.ArticleController.fav(request: Request)
-GET        /v1/p/param_config/                               controllers.ArticleController.getParamConfig(key:String)
-GET        /v1/p/discovery_list/                             controllers.ArticleController.listDiscovery(request: Request)
-GET        /v1/p/articles_by_category_id/                    controllers.ArticleController.listArticlesByCategoryId(categoryId:Long,page:Int?=1)
-GET        /v1/p/recommend_articles/                         controllers.ArticleController.listRecommendArticles
-GET        /v1/p/carousels/                                  controllers.CarouselController.listCarousel(request: Request,bizType:Int?=0,clientType:Int?=0)
+GET         /v1/p/articles/                                   controllers.ArticleController.listArticles(page:Int?=1,cateName:String,size:Int?=10)
+GET         /v1/p/articles/:articleId/                        controllers.ArticleController.getArticle(request: Request,articleId:Long)
+POST        /v1/p/articles/fav/                               controllers.ArticleController.fav(request: Request)
+GET         /v1/p/param_config/                               controllers.ArticleController.getParamConfig(key:String)
+GET         /v1/p/discovery_list/                             controllers.ArticleController.listDiscovery(request: Request)
+GET         /v1/p/articles_by_category_id/                    controllers.ArticleController.listArticlesByCategoryId(categoryId:Long,page:Int?=1)
+GET         /v1/p/recommend_articles/                         controllers.ArticleController.listRecommendArticles
+GET         /v1/p/carousels/                                  controllers.CarouselController.listCarousel(request: Request,bizType:Int?=0,clientType:Int?=0)
 
-GET        /v1/user/post_categories/                         controllers.PostController.listPostCategories(filter:String?="",cateType:Int?=0)
-GET        /v1/user/post_list/                               controllers.PostController.listPosts(request: Request,categoryId:Int?=0,page:Int?=1)
-GET        /v1/user/posts/:id/                               controllers.PostController.getPost(request: Request,id:Long)
-POST        /v1/user/post/new/                               controllers.PostController.newPost(request: Request)
-POST        /v1/user/post/like/                              controllers.PostController.likePost(request: Request)
-POST        /v1/user/post/reply/                             controllers.PostController.replyPost(request: Request)
-POST        /v1/user/post/                                   controllers.PostController.deletePost(request: Request)
-GET        /v1/user/my_posts/                                controllers.PostController.myPosts(request: Request,page:Int?=1)
+GET         /v1/user/post_categories/                         controllers.PostController.listPostCategories(filter:String?="",cateType:Int?=0)
+GET         /v1/user/post_list/                               controllers.PostController.listPosts(request: Request,categoryId:Int?=0,page:Int?=1)
+GET         /v1/user/posts/:id/                               controllers.PostController.getPost(request: Request,id:Long)
+POST        /v1/user/post/new/                                controllers.PostController.newPost(request: Request)
+POST        /v1/user/post/like/                               controllers.PostController.likePost(request: Request)
+POST        /v1/user/post/reply/                              controllers.PostController.replyPost(request: Request)
+POST        /v1/user/post/                                    controllers.PostController.deletePost(request: Request)
+GET         /v1/user/my_posts/                                controllers.PostController.myPosts(request: Request,page:Int?=1)
 
-GET        /v1/user/categories/                              controllers.CategoryController.listCategories(filter:String?="",cateType:Int?=0)
+GET         /v1/user/categories/                              controllers.CategoryController.listCategories(filter:String?="",cateType:Int?=0)
 
 ################################################################################################################################
 #GET            /v1/actor/:name/                                                  controllers.message.ActorController.sayHello(name:String)
