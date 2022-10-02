@@ -12,6 +12,7 @@ import io.ebean.annotation.Transactional;
 import models.log.BalanceLog;
 import models.log.LoginLog;
 import models.msg.Msg;
+import models.shop.ShopApplyLog;
 import models.user.Member;
 import models.user.MemberBalance;
 import play.Logger;
@@ -852,6 +853,157 @@ public class MemberController extends BaseController {
             });
             if (updateList.size() > 0) DB.deleteAll(updateList);
             return okJSON200();
+        });
+    }
+
+
+    /**
+     * @api {post} /v1/user/apply_auth/ 19提交认证审核
+     * @apiName applyAuth
+     * @apiGroup User
+     * @apiParam {string} [licenseUrl] 营业执照 图片地址
+     * @apiParam {string} [licenseNo] 营业执照，认证后不可修改
+     * @apiParam {string} [shopName] 店铺名
+     * @apiParam {string} [phoneNumber] 联系电话
+     * @apiParam {string} [realName] 联系人名字
+     * @apiParam {string} [address] 联系地址
+     * @apiParam {string} [businessItems] 经营类目
+     * @apiParam {string} [images] 认证图片，可选 ，如门店照等 多张图片地址，以逗号隔开
+     * @apiParam {string} [shopLink] 网店链接
+     * @apiParam {string} [description] 备注
+     * @apiParam {String} name 名字(法人)
+     * @apiParam {String} nationality 国家
+     * @apiParam {String} num 身份证号 法人
+     * @apiParam {String} sex 姓别 法人
+     * @apiParam {String} birth 出生 法人
+     * @apiParam {String} startDate 发证起始日期 法人
+     * @apiParam {String} endDate 发证结束日期 法人
+     * @apiParam {String} issue 发证机构 法人
+     * @apiParam {String} monthSalesAmount 月销量
+     * @apiSuccess (Success 200) {int} code 200成功修改
+     * @apiSuccess (Error 40001)  {int} code 40001 参数错误
+     * @apiSuccess (Error 40002)  {int} code 40002 密码无效，密码为6到20位
+     * @apiSuccess (Error 403)  {int} code 403 没有权限，请重新登录
+     * @apiSuccess (Error 40004)  {int} code 40004 用户不存在
+     */
+    @Security.Authenticated(Secured.class)
+    @BodyParser.Of(BodyParser.Json.class)
+    public CompletionStage<Result> applyAuth(Http.Request request) {
+        return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
+            if (uid < 1) return unauth403();
+            JsonNode jsonNode = request.body().asJson();
+            if (jsonNode == null) return okCustomJson(40001, "参数错误");
+            Member member = Member.find.byId(uid);
+            if (null == member) return okCustomJson(CODE40001, "该用户不存在");
+            if (member.authStatus == Member.AUTH_STATUS_AUTHED) return okCustomJson(CODE40001, "您已认证");
+
+            long currentTime = dateUtils.getCurrentTimeBySecond();
+            String address = jsonNode.findPath("address").asText();
+            String name = jsonNode.findPath("name").asText();
+            String nationality = jsonNode.findPath("nationality").asText();
+            String num = jsonNode.findPath("num").asText();
+            String sex = jsonNode.findPath("sex").asText();
+            String birth = jsonNode.findPath("birth").asText();
+            String startDate = jsonNode.findPath("startDate").asText();
+            String endDate = jsonNode.findPath("endDate").asText();
+            String issue = jsonNode.findPath("issue").asText();
+            String idCardFrontUrl = jsonNode.findPath("idCardFrontUrl").asText();
+            String idCardBackUrl = jsonNode.findPath("idCardBackUrl").asText();
+            String licenseUrl = jsonNode.findPath("licenseUrl").asText();
+            String licenseNo = jsonNode.findPath("licenseNo").asText();
+            String logo = jsonNode.findPath("logo").asText();
+            String contactPhoneNumber = jsonNode.findPath("contactPhoneNumber").asText();
+            String contactAddress = jsonNode.findPath("contactAddress").asText();
+            String idCardNo = jsonNode.findPath("idCardNo").asText();
+            String shopName = jsonNode.findPath("shopName").asText();
+            String companyName = jsonNode.findPath("companyName").asText();
+
+
+            String realName = jsonNode.findPath("realName").asText();
+            if (ValidationUtil.isEmpty(realName)) return okCustomJson(CODE40001, "请输入姓名");
+            member.setRealName(realName);
+
+            if (ValidationUtil.isEmpty(licenseNo)) {
+                return okCustomJson(CODE40001, "请输入营业执照");
+            }
+
+            ShopApplyLog storeApplyLog = ShopApplyLog.find.query().where()
+                    .eq("uid", uid)
+                    .orderBy().desc("id")
+                    .setMaxRows(1)
+                    .findOne();
+            if (null != storeApplyLog && storeApplyLog.status > ShopApplyLog.STATUS_TO_AUDIT) {
+                return okCustomJson(CODE40001, "请等待审核");
+            }
+
+            if (ValidationUtil.isEmpty(contactAddress)) return okCustomJson(CODE40001, "请输入联系地址");
+            if (ValidationUtil.isEmpty(contactPhoneNumber)) return okCustomJson(CODE40001, "请输入联系");
+            if (ValidationUtil.isEmpty(name)) return okCustomJson(CODE40001, "名字有误");
+            if (ValidationUtil.isEmpty(shopName)) return okCustomJson(CODE40001, "请输入店铺名字");
+            if (ValidationUtil.isEmpty(nationality)) return okCustomJson(CODE40001, "国籍有误");
+            if (ValidationUtil.isEmpty(sex)) return okCustomJson(CODE40001, "姓别有误");
+            if (ValidationUtil.isEmpty(birth)) return okCustomJson(CODE40001, "出生日期有误");
+            if (ValidationUtil.isEmpty(startDate)) return okCustomJson(CODE40001, "证件起始日期有误");
+            if (ValidationUtil.isEmpty(endDate)) return okCustomJson(CODE40001, "证件有效日期有误");
+            if (ValidationUtil.isEmpty(issue)) return okCustomJson(CODE40001, "发证机构有误");
+            if (ValidationUtil.isEmpty(idCardFrontUrl)) return okCustomJson(CODE40001, "请上传身份证正面图片地址");
+            if (ValidationUtil.isEmpty(idCardBackUrl)) return okCustomJson(CODE40001, "请上传身份证背面图片地址");
+            if (ValidationUtil.isEmpty(licenseUrl)) return okCustomJson(CODE40001, "请上传营业执照");
+
+
+            ShopApplyLog log = new ShopApplyLog();
+            log.setUid(uid);
+            log.setLogo(logo);
+            log.setPhoneNumber(contactPhoneNumber);
+            log.setAddress(contactAddress);
+            log.setShopName(shopName);
+            log.setUserName(name);
+            log.setAuditNote("");
+            log.setAuditorUid(0);
+            log.setAuditorName("");
+            log.setCreateTime(currentTime);
+            log.setAuditTime(0);
+            log.setIdCardFrontUrl(idCardFrontUrl);
+            log.setIdCardBackUrl(idCardBackUrl);
+            log.setLicenseUrl(licenseUrl);
+            log.setLicenseNo(licenseNo);
+            log.setCompanyName(companyName);
+            log.setStatus(ShopApplyLog.STATUS_TO_AUDIT);
+            log.save();
+
+            member.setAuthStatus(Member.AUTH_STATUS_PROCESSING);
+            member.save();
+            member.setLoginPassword("");
+            member.setPayPassword("");
+            return okJSON200();
+        });
+    }
+
+
+    /**
+     * @api {GET} /v1/user/my_apply_log/ 20我的申请单
+     * @apiName myApplyLog
+     * @apiGroup User
+     * @apiSuccess (Success 200){int} code 200
+     */
+    @Transactional
+    public CompletionStage<Result> myApplyLog(Http.Request request) {
+        return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
+            if (uid < 1) return unauth403();
+            Member member = Member.find.byId(uid);
+            if (null == member) return unauth403();
+            ObjectNode result = Json.newObject();
+            result.put(CODE, CODE200);
+
+            ShopApplyLog storeApplyLog = ShopApplyLog.find.query().where()
+                    .eq("uid", uid)
+                    .orderBy().desc("id")
+                    .setMaxRows(1)
+                    .findOne();
+            if (null != storeApplyLog) {
+                result.set("storeApplyLog", Json.toJson(storeApplyLog));
+            }
+            return ok(result);
         });
     }
 

@@ -51,6 +51,14 @@ GET         /v1/user/my_posts/                                controllers.PostCo
 
 GET         /v1/user/categories/                              controllers.CategoryController.listCategories(filter:String?="")
 
+GET         /v1/user/show_case_list/                          controllers.ShowCaseController.listShowCase(request: Request,shopId:Long?=0,page:Int?=1,title:String?="")
+GET         /v1/user/show_case_list/:id/                      controllers.ShowCaseController.getShowCase(request: Request,id:Long)
+POST        /v1/user/show_case/new/                           controllers.ShowCaseController.addShowCase(request: Request)
+POST        /v1/user/show_case/:id/                           controllers.ShowCaseController.updateShowCase(request: Request,id:Long)
+POST        /v1/user/show_case/                               controllers.ShowCaseController.deleteShowcase(request: Request)
+
+POST        /v1/user/apply_auth/                              controllers.MemberController.applyAuth(request: Request)
+GET         /v1/user/my_apply_log/                            controllers.MemberController.myApplyLog(request: Request)
 
 ################################################################################################################################
 #GET            /v1/actor/:name/                                                  controllers.message.ActorController.sayHello(name:String)
