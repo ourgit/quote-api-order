@@ -61,6 +61,9 @@ public class Post extends Model {
 
     @Column(name = "status")
     public int status;
+
+    @Column(name = "place_top")
+    public boolean placeTop;
     @Column(name = "likes")
     public long likes;
 
@@ -191,5 +194,13 @@ public class Post extends Model {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public boolean isPlaceTop() {
+        return placeTop;
+    }
+
+    public void setPlaceTop(boolean placeTop) {
+        this.placeTop = placeTop;
     }
 }

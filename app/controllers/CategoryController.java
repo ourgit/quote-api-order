@@ -40,9 +40,9 @@ public class CategoryController extends BaseController {
      * @apiSuccess (Success 200){JsonArray} children 子分类列表
      * @apiSuccess (Success 200){string} updateTime 更新时间
      */
-    public CompletionStage<Result> listCategories(final String filter, int cateType) {
+    public CompletionStage<Result> listCategories(final String filter) {
         return CompletableFuture.supplyAsync(() -> {
-            String key = cacheUtils.getCategoryJsonCache(cateType);
+            String key = cacheUtils.getCategoryJsonCache();
             //第一页从缓存读取
             if (ValidationUtil.isEmpty(filter)) {
                 Optional<String> cacheOptional = redis.sync().get(key);
@@ -52,8 +52,7 @@ public class CategoryController extends BaseController {
                 }
             }
             ExpressionList<Category> expressionList = Category.find.query().where()
-                    .eq("show", Category.SHOW_CATEGORY)
-                    .eq("cateType", cateType);
+                    .eq("show", Category.SHOW_CATEGORY);
             if (!ValidationUtil.isEmpty(filter)) expressionList.icontains("name", filter);
             List<Category> list = expressionList.orderBy()
                     .asc("path")
@@ -96,4 +95,6 @@ public class CategoryController extends BaseController {
             }
         }
     }
+
+
 }

@@ -49,7 +49,13 @@ public class CacheUtils {
         return RedisKeyConstant.CAROUSEL_JSON_CACHE + ":" + bizType + ":" + clientType;
     }
 
-    public String getCategoryJsonCache(int cateType) {
-        return RedisKeyConstant.POST_CATEGORIES_LIST_CACHE_KEY_PREFIX + cateType;
+    public String getCategoryJsonCache() {
+        return RedisKeyConstant.CATEGORIES_LIST_CACHE_KEY_PREFIX;
+    }
+    public String getPostCategoryJsonCache() {
+        return RedisKeyConstant.POST_CATEGORIES_LIST_CACHE_KEY_PREFIX;
+    }
+    public String getCategoryWithPostsJsonCache() {
+        return RedisKeyConstant.CATEGORIES_POSTS_LIST_CACHE_KEY_PREFIX;
     }
 }

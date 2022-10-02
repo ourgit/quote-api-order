@@ -994,6 +994,106 @@
   },
   {
     "type": "GET",
+    "url": "/v1/user/categories_posts/",
+    "title": "02帖子分类列表带贴子",
+    "name": "listPostCategoriesWithPosts",
+    "group": "Post",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200 请求成功</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "pages",
+            "description": "<p>页数</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "JsonArray",
+            "optional": false,
+            "field": "list",
+            "description": "<p>列表</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "id",
+            "description": "<p>分类id</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>名称</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "imgUrl",
+            "description": "<p>图片</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "poster",
+            "description": "<p>海报图片</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "soldAmount",
+            "description": "<p>已售数量</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "show",
+            "description": "<p>1显示2不显示</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "sort",
+            "description": "<p>排序顺序</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "JsonArray",
+            "optional": false,
+            "field": "children",
+            "description": "<p>子分类列表</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "updateTime",
+            "description": "<p>更新时间</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/PostController.java",
+    "groupTitle": "Post"
+  },
+  {
+    "type": "GET",
     "url": "/v1/user/post_list/?categoryId=",
     "title": "02贴子列表",
     "name": "listPosts",

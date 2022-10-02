@@ -43,7 +43,12 @@ public class TestController extends Controller {
                     // sends text, HTML or both...
                     .setBodyText("A text message")
                     .setBodyHtml("<html><body><p>An <b>html</b> message with cid <img src=\"cid:" + cid + "\"></p></body></html>");
-            mailerClient.send(email);
+            try {
+                mailerClient.send(email);
+            } catch (Exception e) {
+                System.out.println(e.fillInStackTrace());
+            }
+
             ObjectNode node = Json.newObject();
             node.put("code", 200);
             node.put("result", "success");

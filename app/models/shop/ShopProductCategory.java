@@ -1,4 +1,4 @@
-package models.post;
+package models.shop;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.ebean.Finder;
@@ -6,25 +6,24 @@ import io.ebean.Model;
 import myannotation.EscapeHtmlSerializer;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 商品分类
  */
 @Entity
-@Table(name = "v1_post_category")
-public class PostCategory extends Model {
+@Table(name = "v1_shop_category")
+public class ShopProductCategory extends Model {
 
     public static final int SHOW_CATEGORY = 1;
     public static final int HIDE_CATEGORY = 2;
-
-    public static final int CATE_TYPE_POST = 1;
-    public static final int CATE_TYPE_SCORE = 2;
     @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long id;
+
+    @Column(name = "shop_id")
+    public long shopId;//父类目ID=0时，代表的是一级的类目
 
     @Column(name = "parent_id")
     public long parentId;//父类目ID=0时，代表的是一级的类目
@@ -32,6 +31,10 @@ public class PostCategory extends Model {
     @Column(name = "name")
     @JsonDeserialize(using = EscapeHtmlSerializer.class)
     public String name;
+
+    @Column(name = "path_name")
+    @JsonDeserialize(using = EscapeHtmlSerializer.class)
+    public String pathName;
 
     @Column(name = "img_url")
     @JsonDeserialize(using = EscapeHtmlSerializer.class)
@@ -45,27 +48,12 @@ public class PostCategory extends Model {
     @JsonDeserialize(using = EscapeHtmlSerializer.class)
     public String path;
 
-    @Column(name = "path_name")
-    @JsonDeserialize(using = EscapeHtmlSerializer.class)
-    public String pathName;
-
     @Column(name = "pinyin_abbr")
     @JsonDeserialize(using = EscapeHtmlSerializer.class)
     public String pinyinAbbr;
 
-    @Column(name = "seo_keyword")
-    @JsonDeserialize(using = EscapeHtmlSerializer.class)
-    public String seoKeyword;
-
-    @Column(name = "seo_description")
-    @JsonDeserialize(using = EscapeHtmlSerializer.class)
-    public String seoDescription;
-
     @Column(name = "is_shown")
     public int show;
-
-    @Column(name = "cate_type")
-    public int cateType;
 
     @Column(name = "sort")
     public int sort;
@@ -73,19 +61,13 @@ public class PostCategory extends Model {
     @Column(name = "sold_amount")
     public long soldAmount;
 
-    @Column(name = "posts")
-    public long posts;
-
     @Column(name = "create_time")
     public long createTime;
 
     @Transient
-    public List<PostCategory> children;
+    public List<ShopProductCategory> children;
 
-    @Transient
-    public List<Post> postList = new ArrayList<>();
-
-    public static Finder<Long, PostCategory> find = new Finder<>(PostCategory.class);
+    public static Finder<Long, ShopProductCategory> find = new Finder<>(ShopProductCategory.class);
 
     public void setId(long id) {
         this.id = id;
@@ -167,11 +149,11 @@ public class PostCategory extends Model {
         return createTime;
     }
 
-    public List<PostCategory> getChildren() {
+    public List<ShopProductCategory> getChildren() {
         return children;
     }
 
-    public void setChildren(List<PostCategory> children) {
+    public void setChildren(List<ShopProductCategory> children) {
         this.children = children;
     }
 
@@ -183,12 +165,12 @@ public class PostCategory extends Model {
         this.pinyinAbbr = pinyinAbbr;
     }
 
-    public int getCateType() {
-        return cateType;
+    public long getShopId() {
+        return shopId;
     }
 
-    public void setCateType(int cateType) {
-        this.cateType = cateType;
+    public void setShopId(long shopId) {
+        this.shopId = shopId;
     }
 
     public String getPathName() {
@@ -197,29 +179,5 @@ public class PostCategory extends Model {
 
     public void setPathName(String pathName) {
         this.pathName = pathName;
-    }
-
-    public long getPosts() {
-        return posts;
-    }
-
-    public void setPosts(long posts) {
-        this.posts = posts;
-    }
-
-    public String getSeoKeyword() {
-        return seoKeyword;
-    }
-
-    public void setSeoKeyword(String seoKeyword) {
-        this.seoKeyword = seoKeyword;
-    }
-
-    public String getSeoDescription() {
-        return seoDescription;
-    }
-
-    public void setSeoDescription(String seoDescription) {
-        this.seoDescription = seoDescription;
     }
 }

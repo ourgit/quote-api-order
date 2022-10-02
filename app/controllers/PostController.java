@@ -51,9 +51,9 @@ public class PostController extends BaseController {
      * @apiSuccess (Success 200){JsonArray} children 子分类列表
      * @apiSuccess (Success 200){string} updateTime 更新时间
      */
-    public CompletionStage<Result> listPostCategories(final String filter, int cateType) {
+    public CompletionStage<Result> listPostCategories(final String filter) {
         return CompletableFuture.supplyAsync(() -> {
-            String key = cacheUtils.getCategoryJsonCache(cateType);
+            String key = cacheUtils.getPostCategoryJsonCache();
             //第一页从缓存读取
             if (ValidationUtil.isEmpty(filter)) {
                 Optional<String> cacheOptional = redis.sync().get(key);
@@ -63,8 +63,7 @@ public class PostController extends BaseController {
                 }
             }
             ExpressionList<PostCategory> expressionList = PostCategory.find.query().where()
-                    .eq("show", PostCategory.SHOW_CATEGORY)
-                    .eq("cateType", cateType);
+                    .eq("show", PostCategory.SHOW_CATEGORY);
             if (!ValidationUtil.isEmpty(filter)) expressionList.icontains("name", filter);
             List<PostCategory> list = expressionList.orderBy()
                     .asc("path")
@@ -75,6 +74,56 @@ public class PostController extends BaseController {
             result.put(CODE, CODE200);
             result.set("list", Json.toJson(list));
             if (ValidationUtil.isEmpty(filter)) redis.set(key, Json.stringify(result), 30 * 60);
+            return ok(result);
+        });
+    }
+
+    /**
+     * @api {GET} /v1/user/categories_posts/ 02帖子分类列表带贴子
+     * @apiName listPostCategoriesWithPosts
+     * @apiGroup Post
+     * @apiSuccess (Success 200) {int} code 200 请求成功
+     * @apiSuccess (Success 200) {int} pages 页数
+     * @apiSuccess (Success 200) {JsonArray} list 列表
+     * @apiSuccess (Success 200){long} id 分类id
+     * @apiSuccess (Success 200){String} name 名称
+     * @apiSuccess (Success 200){String} imgUrl 图片
+     * @apiSuccess (Success 200){String} poster 海报图片
+     * @apiSuccess (Success 200){long} soldAmount 已售数量
+     * @apiSuccess (Success 200){int} show 1显示2不显示
+     * @apiSuccess (Success 200){int} sort 排序顺序
+     * @apiSuccess (Success 200){JsonArray} children 子分类列表
+     * @apiSuccess (Success 200){string} updateTime 更新时间
+     */
+    public CompletionStage<Result> listPostCategoriesWithPosts() {
+        return CompletableFuture.supplyAsync(() -> {
+            String key = cacheUtils.getCategoryWithPostsJsonCache();
+            Optional<String> cacheOptional = redis.sync().get(key);
+            if (cacheOptional.isPresent()) {
+                String node = cacheOptional.get();
+                if (ValidationUtil.isEmpty(node)) return ok(Json.parse(node));
+            }
+            ExpressionList<PostCategory> expressionList = PostCategory.find.query().where()
+                    .eq("show", PostCategory.SHOW_CATEGORY);
+            List<PostCategory> list = expressionList.orderBy()
+                    .asc("path")
+                    .orderBy().desc("sort")
+                    .orderBy().asc("id")
+                    .findList();
+            list.parallelStream().forEach((postCategory) -> {
+                List<Post> postList = Post.find.query().where()
+                        .eq("categoryId", postCategory.id)
+                        .orderBy().desc("placeTop")
+                        .orderBy().desc("id")
+                        .setMaxRows(10)
+                        .findList();
+                postCategory.postList.addAll(postList);
+                //postList
+            });
+            ObjectNode result = Json.newObject();
+            result.put(CODE, CODE200);
+            result.set("list", Json.toJson(list));
+            redis.set(key, Json.stringify(result), 1);
             return ok(result);
         });
     }
@@ -206,6 +255,55 @@ public class PostController extends BaseController {
         });
     }
 
+    /**
+     * @api {POST} /v1/user/post/:id/ 04修改帖子
+     * @apiName updatePost
+     * @apiGroup Post
+     * @apiParam {String} title 标题
+     * @apiParam {String} content 内容
+     * @apiParam {long} categoryId 分类ID
+     */
+    @BodyParser.Of(BodyParser.Json.class)
+    public CompletionStage<Result> updatePost(Http.Request request, long id) {
+        return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
+            JsonNode jsonNode = request.body().asJson();
+            Messages messages = this.messagesApi.preferred(request);
+            String baseArgumentError = messages.at("base.argument.error");
+            if (null == jsonNode) return okCustomJson(CODE40001, baseArgumentError);
+            if (uid < 1) return unauth403();
+            Member member = Member.find.byId(uid);
+            if (null == member) return unauth403();
+            if (member.status == Member.MEMBER_STATUS_LOCK) return okCustomJson(CODE40001, "该帐号被锁定");
+            Post post = Post.find.byId(id);
+            if (null == post || uid != post.uid) return okCustomJson(CODE40001, "该贴子不存在");
+
+            Post param = Json.fromJson(jsonNode, Post.class);
+            if (!ValidationUtil.isEmpty(param.title)) {
+                post.setTitle(param.title);
+            }
+            if (!ValidationUtil.isEmpty(param.content)) {
+                post.setTitle(param.content);
+            }
+            if (param.categoryId > 0) {
+                PostCategory category = PostCategory.find.byId(post.categoryId);
+                if (null == category) return okCustomJson(CODE40001, "请选择分类");
+                post.setCategoryId(param.categoryId);
+                post.setCategoryName(category.name);
+            }
+
+            post.setUid(uid);
+            post.setUserName(member.nickName);
+            post.setAvatar(member.avatar);
+            long currentTime = dateUtils.getCurrentTimeBySecond();
+
+            post.setUpdateTime(currentTime);
+            post.setCreateTime(currentTime);
+            post.setStatus(Post.STATUS_NORMAL);
+            post.save();
+            return okJSON200();
+        });
+    }
+
 
     /**
      * @api {POST} /v1/user/post/like/ 04点赞
@@ -311,7 +409,7 @@ public class PostController extends BaseController {
 
     /**
      * @api {POST} /v1/user/post/ 06删除贴子/回复
-     * @apiName replyPost
+     * @apiName deletePost
      * @apiGroup Post
      * @apiParam {long} id id
      * @apiParam {int} postType 1主贴 2跟贴/回复
