@@ -2,7 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.ebean.ExpressionList;
-import models.Category.Category;
+import models.category.Category;
 import play.Logger;
 import play.i18n.MessagesApi;
 import play.libs.Json;
