@@ -6,7 +6,6 @@ import io.ebean.Model;
 import myannotation.EscapeHtmlSerializer;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * 商品分类

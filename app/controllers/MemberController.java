@@ -57,11 +57,9 @@ public class MemberController extends BaseController {
      * @api {post} /v1/user/new/ 01用户注册
      * @apiName signUp
      * @apiGroup User
-     * @apiParam {string} phoneNumber 手机号
+     * @apiParam {string} accountName 帐号 可手机号也可邮箱
      * @apiParam {string} [vCode] 短信验证码，预留
      * @apiParam {String} loginPassword 登录密码 6-20位，不允许包含非法字符
-     * @apiParam {String} [dealerCode] 业务员编号
-     * @apiParam {String} [name] 昵称或名字，最长10个字符
      * @apiSuccess (Success 200){int} code 200成功创建
      * @apiSuccess (Error 40003){int} code 40001 参数错误
      * @apiSuccess (Error 40001){int} code 40002 帐号已被注册
@@ -143,7 +141,7 @@ public class MemberController extends BaseController {
      * @api {POST} /v1/user/login/ 02登录
      * @apiName login
      * @apiGroup User
-     * @apiParam {string} username 用户名
+     * @apiParam {string} accountName 用户名
      * @apiParam {string} password 密码
      * @apiParam {string} [vCode] 短信验证码，短信登录的时候使用
      * @apiSuccess (Success 200){long} id 用户id
@@ -158,20 +156,20 @@ public class MemberController extends BaseController {
     @BodyParser.Of(BodyParser.Json.class)
     public CompletionStage<Result> login(Http.Request request) {
         JsonNode jsonNode = request.body().asJson();
-        String username = jsonNode.findPath("username").asText();
+        String accountName = jsonNode.findPath("accountName").asText();
         String vCode = jsonNode.findPath("vCode").asText();
         String ip = businessUtils.getRequestIP(request);
         Http.Session session = request.session();
         return CompletableFuture.supplyAsync(() -> {
-            if (ValidationUtil.isEmpty(username) || username.length() > 50)
+            if (ValidationUtil.isEmpty(accountName) || accountName.length() > 50)
                 return okCustomJson(CODE40001, "参数错误");
             String password = jsonNode.findPath("password").asText();
             if (ValidationUtil.isEmpty(password)) password = "";
             if (ValidationUtil.isEmpty(password)) return okCustomJson(CODE40001, "参数错误");
-            Member member = businessUtils.findByAccountNameAndPassword(username, password);
+            Member member = businessUtils.findByAccountNameAndPassword(accountName, password);
             if (null == member) return okCustomJson(CODE40003, "用户名或密码错误");
             if (null == member) {
-                member = saveMemberForNormalSignup(username, password, "", "");
+                member = saveMemberForNormalSignup(accountName, password, "", "");
             }
             if (member.status == Member.MEMBER_STATUS_LOCK) {
                 return okCustomJson(CODE40005, "用户被锁定");

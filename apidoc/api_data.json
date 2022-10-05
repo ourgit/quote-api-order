@@ -517,6 +517,43 @@
     "groupTitle": "Article"
   },
   {
+    "type": "POST",
+    "url": "/v1/user/bid_list/",
+    "title": "01报价列表",
+    "name": "listBid",
+    "group": "BID",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "JsonArray",
+            "optional": false,
+            "field": "list",
+            "description": "<p>列表</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "status",
+            "description": "<p>1未读 2已读</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/BidController.java",
+    "groupTitle": "BID"
+  },
+  {
     "type": "GET",
     "url": "/v1/n/carousels/?regionCode=&bizType=&clientType=",
     "title": "01查看轮播列表",
@@ -733,6 +770,36 @@
     "version": "0.0.0",
     "filename": "app/controllers/WechatPayV3Controller.java",
     "groupTitle": "Pay"
+  },
+  {
+    "type": "POST",
+    "url": "/v1/user/post/",
+    "title": "06删除贴子/回复",
+    "name": "deletePost",
+    "group": "Post",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": false,
+            "field": "id",
+            "description": "<p>id</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "postType",
+            "description": "<p>1主贴 2跟贴/回复</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/PostController.java",
+    "groupTitle": "Post"
   },
   {
     "type": "GET",
@@ -1382,26 +1449,33 @@
   },
   {
     "type": "POST",
-    "url": "/v1/user/post/",
-    "title": "06删除贴子/回复",
-    "name": "replyPost",
+    "url": "/v1/user/post/:id/",
+    "title": "04修改帖子",
+    "name": "updatePost",
     "group": "Post",
     "parameter": {
       "fields": {
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "long",
+            "type": "String",
             "optional": false,
-            "field": "id",
-            "description": "<p>id</p>"
+            "field": "title",
+            "description": "<p>标题</p>"
           },
           {
             "group": "Parameter",
-            "type": "int",
+            "type": "String",
             "optional": false,
-            "field": "postType",
-            "description": "<p>1主贴 2跟贴/回复</p>"
+            "field": "content",
+            "description": "<p>内容</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": false,
+            "field": "categoryId",
+            "description": "<p>分类ID</p>"
           }
         ]
       }
@@ -1409,6 +1483,568 @@
     "version": "0.0.0",
     "filename": "app/controllers/PostController.java",
     "groupTitle": "Post"
+  },
+  {
+    "type": "POST",
+    "url": "/v1/user/show_case/new/",
+    "title": "03添加案例图片",
+    "name": "addShowCase",
+    "group": "SHOW-CASE",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>标题</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "tags",
+            "description": "<p>标签</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "images",
+            "description": "<p>图片</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": false,
+            "field": "shopId",
+            "description": "<p>店铺ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": false,
+            "field": "imageCount",
+            "description": "<p>图片数</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001 参数错误</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/ShowCaseController.java",
+    "groupTitle": "SHOW-CASE"
+  },
+  {
+    "type": "POST",
+    "url": "/v1/user/show_case/",
+    "title": "05删除案例图片",
+    "name": "deleteShowcase",
+    "group": "SHOW-CASE",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "id",
+            "description": "<p>案例id</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "operation",
+            "description": "<p>操作,&quot;del&quot;为删除</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200 请求成功</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001 参数错误</p>"
+          }
+        ],
+        "Error 40002": [
+          {
+            "group": "Error 40002",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40002 商品属性不存在</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/ShowCaseController.java",
+    "groupTitle": "SHOW-CASE"
+  },
+  {
+    "type": "GET",
+    "url": "/v1/user/show_case_list/:id/",
+    "title": "02案例图片详情",
+    "name": "getShowCase",
+    "group": "SHOW-CASE",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>标题</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "tags",
+            "description": "<p>标签</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "images",
+            "description": "<p>图片</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "shopName",
+            "description": "<p>店铺名字</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "shopId",
+            "description": "<p>店铺ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "imageCount",
+            "description": "<p>图片数</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001 参数错误</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/ShowCaseController.java",
+    "groupTitle": "SHOW-CASE"
+  },
+  {
+    "type": "GET",
+    "url": "/v1/user/show_case_list/?shopId=&page=&title=",
+    "title": "01案例图片",
+    "name": "listShowCase",
+    "group": "SHOW-CASE",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Array",
+            "optional": false,
+            "field": "list",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>标题</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "tags",
+            "description": "<p>标签</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "images",
+            "description": "<p>图片</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "shopName",
+            "description": "<p>店铺名字</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "shopId",
+            "description": "<p>店铺ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "imageCount",
+            "description": "<p>图片数</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001 参数错误</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/ShowCaseController.java",
+    "groupTitle": "SHOW-CASE"
+  },
+  {
+    "type": "POST",
+    "url": "/v1/user/show_case/:id/",
+    "title": "04修改案例",
+    "name": "updateShowCase",
+    "group": "SHOW-CASE",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>标题</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "tags",
+            "description": "<p>标签</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "images",
+            "description": "<p>图片</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": false,
+            "field": "imageCount",
+            "description": "<p>图片数</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001 参数错误</p>"
+          }
+        ],
+        "Error 40002": [
+          {
+            "group": "Error 40002",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40002 案例图片不存在</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/ShowCaseController.java",
+    "groupTitle": "SHOW-CASE"
+  },
+  {
+    "type": "post",
+    "url": "/v1/user/apply_auth/",
+    "title": "19提交认证审核",
+    "name": "applyAuth",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "licenseUrl",
+            "description": "<p>营业执照 图片地址</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "licenseNo",
+            "description": "<p>营业执照，认证后不可修改</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "shopName",
+            "description": "<p>店铺名</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "phoneNumber",
+            "description": "<p>联系电话</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "realName",
+            "description": "<p>联系人名字</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "address",
+            "description": "<p>联系地址</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "businessItems",
+            "description": "<p>经营类目</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "images",
+            "description": "<p>认证图片，可选 ，如门店照等 多张图片地址，以逗号隔开</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "shopLink",
+            "description": "<p>网店链接</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "description",
+            "description": "<p>备注</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>名字(法人)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "nationality",
+            "description": "<p>国家</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "num",
+            "description": "<p>身份证号 法人</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "sex",
+            "description": "<p>姓别 法人</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "birth",
+            "description": "<p>出生 法人</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "startDate",
+            "description": "<p>发证起始日期 法人</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "endDate",
+            "description": "<p>发证结束日期 法人</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "issue",
+            "description": "<p>发证机构 法人</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "monthSalesAmount",
+            "description": "<p>月销量</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200成功修改</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001 参数错误</p>"
+          }
+        ],
+        "Error 40002": [
+          {
+            "group": "Error 40002",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40002 密码无效，密码为6到20位</p>"
+          }
+        ],
+        "Error 403": [
+          {
+            "group": "Error 403",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>403 没有权限，请重新登录</p>"
+          }
+        ],
+        "Error 40004": [
+          {
+            "group": "Error 40004",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40004 用户不存在</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
   },
   {
     "type": "POST",
@@ -2261,7 +2897,7 @@
             "group": "Parameter",
             "type": "string",
             "optional": false,
-            "field": "username",
+            "field": "accountName",
             "description": "<p>用户名</p>"
           },
           {
@@ -2469,6 +3105,29 @@
     "groupTitle": "User"
   },
   {
+    "type": "GET",
+    "url": "/v1/user/my_apply_log/",
+    "title": "20我的申请单",
+    "name": "myApplyLog",
+    "group": "User",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
+  },
+  {
     "type": "POST",
     "url": "/v1/user/reset_login_password/",
     "title": "09重置登录密码",
@@ -2651,8 +3310,8 @@
             "group": "Parameter",
             "type": "string",
             "optional": false,
-            "field": "phoneNumber",
-            "description": "<p>手机号</p>"
+            "field": "accountName",
+            "description": "<p>帐号 可手机号也可邮箱</p>"
           },
           {
             "group": "Parameter",
@@ -2667,20 +3326,6 @@
             "optional": false,
             "field": "loginPassword",
             "description": "<p>登录密码 6-20位，不允许包含非法字符</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "dealerCode",
-            "description": "<p>业务员编号</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "name",
-            "description": "<p>昵称或名字，最长10个字符</p>"
           }
         ]
       }
