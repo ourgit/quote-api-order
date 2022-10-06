@@ -7,9 +7,6 @@ import myannotation.EscapeHtmlSerializer;
 
 import javax.persistence.*;
 
-/**
- * 商品分类
- */
 @Entity
 @Table(name = "v1_bid")
 public class Bid extends Model {

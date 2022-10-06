@@ -6,6 +6,7 @@ import constants.BusinessConstant;
 import io.ebean.ExpressionList;
 import io.ebean.PagedList;
 import models.bid.Bid;
+import models.bid.BidDetail;
 import play.Logger;
 import play.i18n.Messages;
 import play.i18n.MessagesApi;
@@ -19,6 +20,8 @@ import security.Secured;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
+
+import static constants.BusinessConstant.OPERATION_PLACE_BID;
 
 /**
  * 报价控制类
@@ -80,9 +83,7 @@ public class BidController extends BaseController {
         return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
             if (uid < 1) return unauth403();
             Bid bid = Bid.find.byId(id);
-            if (null == bid) {
-                return okCustomJson(CODE40001, "该报价不存在");
-            }
+            if (null == bid) return okCustomJson(CODE40001, "该报价不存在");
             ObjectNode result = (ObjectNode) Json.toJson(bid);
             result.put(CODE, CODE200);
             return ok(result);
@@ -90,5 +91,74 @@ public class BidController extends BaseController {
     }
 
 
+    /**
+     * @api {POST} /v1/user/ask_bid/ 03请求报价
+     * @apiName askBid
+     * @apiGroup BID
+     * @apiParam {long} price 价格
+     * @apiParam {string} [note] 备注
+     * @apiSuccess (Success 200) {int} code 200
+     */
+    @Security.Authenticated(Secured.class)
+    @BodyParser.Of(BodyParser.Json.class)
+    public CompletionStage<Result> askBid(Http.Request request) {
+        return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
+            if (uid < 1) return unauth403();
+            JsonNode jsonNode = request.body().asJson();
+            Messages messages = this.messagesApi.preferred(request);
+            String baseArgumentError = messages.at("base.argument.error");
+            if (null == jsonNode) return okCustomJson(CODE40001, baseArgumentError);
 
+            ObjectNode result = Json.newObject();
+            result.put(CODE, CODE200);
+            return ok(result);
+        });
+    }
+
+    /**
+     * @api {POST} /v1/user/place_bid/ 04报价
+     * @apiName placeBid
+     * @apiGroup BID
+     * @apiParam {long} id id
+     * @apiParam {long} price 价格
+     * @apiParam {string} [note] 备注
+     * @apiSuccess (Success 200) {int} code 200
+     */
+    @Security.Authenticated(Secured.class)
+    @BodyParser.Of(BodyParser.Json.class)
+    public CompletionStage<Result> placeBid(Http.Request request) {
+        return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
+            if (uid < 1) return unauth403();
+            JsonNode jsonNode = request.body().asJson();
+            Messages messages = this.messagesApi.preferred(request);
+            String baseArgumentError = messages.at("base.argument.error");
+            if (null == jsonNode) return okCustomJson(CODE40001, baseArgumentError);
+            long id = jsonNode.findPath("id").asLong();
+            long price = jsonNode.findPath("price").asLong();
+            String note = jsonNode.findPath("note").asText();
+            Bid bid = Bid.find.byId(id);
+            if (null == bid) return okCustomJson(CODE40001, "该报价不存在");
+            if (!businessUtils.setLock(String.valueOf(uid), OPERATION_PLACE_BID))
+                return okCustomJson(CODE40004, "正在操作中，请稍等");
+            BidDetail bidDetail = BidDetail.find.query().where()
+                    .eq("bidId", id)
+                    .eq("bidderUid", uid)
+                    .setMaxRows(1)
+                    .findOne();
+            long currentTime = dateUtils.getCurrentTimeBySecond();
+            if (price < 1) return okCustomJson(CODE40001, "请设置报价的价格");
+            if (null == bidDetail) {
+                bidDetail = new BidDetail();
+                bidDetail.setCreateTime(currentTime);
+            }
+            bidDetail.setPrice(price);
+            bidDetail.setNote(note);
+            bidDetail.setUpdateTime(currentTime);
+            bidDetail.save();
+            ObjectNode result = Json.newObject();
+            result.put(CODE, CODE200);
+            businessUtils.unLock(String.valueOf(uid), OPERATION_PLACE_BID);
+            return ok(result);
+        });
+    }
 }

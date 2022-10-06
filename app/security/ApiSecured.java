@@ -65,15 +65,24 @@ public class ApiSecured extends Security.Authenticator {
                 return Optional.empty();
             long timeStampLong = Long.parseLong(timeStamp);
             long currentTime = System.currentTimeMillis() / 1000;
-            if (currentTime > timeStampLong + 30) return Optional.empty();
+            if (currentTime > timeStampLong + 30) {
+//                logger.info("uri 1:" + uri);
+                return Optional.empty();
+            }
 //            if (nonce.length() != 18) return Optional.empty();
             String key = API_NONE_KEY + nonce;
             Optional<Object> nonceKeyOptional = redis.sync().get(key);
-            if (nonceKeyOptional.isPresent()) return Optional.empty();
+            if (nonceKeyOptional.isPresent()) {
+//                logger.info("uri 2:" + uri);
+                return Optional.empty();
+            }
             String salt = authToken + EncodeUtils.API_SALT + timeStamp + nonce;
             String md5FirstTime = encodeUtils.getMd5(salt);
             String md5SecondTime = encodeUtils.getMd5(authToken + md5FirstTime);
-            if (!md5.equals(md5SecondTime)) return Optional.empty();
+            if (!md5.equals(md5SecondTime)) {
+//                logger.info("uri 3:" + uri);
+                return Optional.empty();
+            }
             redis.set(key, key, 24 * 3600);
         }
         return Optional.of("YES");

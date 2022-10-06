@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.ebean.Finder;
 import io.ebean.Model;
 import myannotation.EscapeHtmlSerializer;
+import myannotation.EscapeHtmlSerializerForKeepSomeHtml;
 
 import javax.persistence.*;
 import java.util.List;
@@ -40,7 +41,7 @@ public class Post extends Model {
     public String title;
 
     @Column(name = "content")
-    @JsonDeserialize(using = EscapeHtmlSerializer.class)
+    @JsonDeserialize(using = EscapeHtmlSerializerForKeepSomeHtml.class)
     public String content;
 
     @Column(name = "category_id")

@@ -2,6 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.ebean.Expr;
 import io.ebean.ExpressionList;
 import io.ebean.PagedList;
 import models.post.Post;
@@ -129,9 +130,12 @@ public class PostController extends BaseController {
     }
 
     /**
-     * @api {GET} /v1/user/post_list/?categoryId= 02贴子列表
+     * @api {POST} /v1/user/post_list/ 02贴子列表
      * @apiName listPosts
      * @apiGroup Post
+     * @apiParam {String} filter filter
+     * @apiParam {long} categoryId categoryId
+     * @apiParam {int} orderType orderType 1最新发表 2最新回复 3最多回复
      * @apiSuccess (Success 200) {int} code 200 请求成功
      * @apiSuccess (Success 200) {JsonObject} list 列表
      * @apiSuccess (Success 200){String} title 标题
@@ -147,20 +151,41 @@ public class PostController extends BaseController {
      * @apiSuccess (Success 200){String} updateTime 更新时间
      * @apiSuccess (Success 200){String} createTime 创建时间
      */
-    public CompletionStage<Result> listPosts(Http.Request request, int categoryId, int page) {
+    public CompletionStage<Result> listPosts(Http.Request request) {
         return CompletableFuture.supplyAsync(() -> {
             //缓存2分钟
-            String key = POST_CATEGORIES_LIST_BY_CATEGORY_ID + categoryId;
-            Optional<String> jsonCache = redis.sync().get(key);
-            if (jsonCache.isPresent()) {
-                String result = jsonCache.get();
-                if (!ValidationUtil.isEmpty(result)) return ok(result);
-            }
+//            String key = POST_CATEGORIES_LIST_BY_CATEGORY_ID + categoryId;
+//            Optional<String> jsonCache = redis.sync().get(key);
+//            if (jsonCache.isPresent()) {
+//                String result = jsonCache.get();
+//                if (!ValidationUtil.isEmpty(result)) return ok(result);
+//            }
+            JsonNode jsonNode = request.body().asJson();
+            Messages messages = this.messagesApi.preferred(request);
+            String baseArgumentError = messages.at("base.argument.error");
+            if (null == jsonNode) return okCustomJson(CODE40001, baseArgumentError);
+            String filter = jsonNode.findPath("filter").asText();
+            long categoryId = jsonNode.findPath("categoryId").asLong();
+            int orderType = jsonNode.findPath("orderType").asInt();
+            int page = jsonNode.findPath("page").asInt();
+            if (page < 1) page = 1;
             ExpressionList<Post> expressionList = Post.find.query().where()
                     .eq("status", Post.STATUS_NORMAL);
             if (categoryId > 0) expressionList.eq("categoryId", categoryId);
+            if (!ValidationUtil.isEmpty(filter)) {
+                expressionList.or(Expr.icontains("title", filter), Expr.icontains("content", filter));
+            }
+            if (orderType == 1) {
+                expressionList.orderBy().desc("id");
+            } else if (orderType == 2) {
+                expressionList.orderBy().desc("updateTime");
+            } else if (orderType == 3) {
+                expressionList.orderBy().desc("replies");
+            } else {
+                expressionList
+                        .orderBy().desc("id");
+            }
             PagedList<Post> pagedList = expressionList
-                    .orderBy().desc("id")
                     .setFirstRow((page - 1) * PAGE_SIZE_10)
                     .setMaxRows(PAGE_SIZE_10)
                     .findPagedList();
@@ -168,7 +193,7 @@ public class PostController extends BaseController {
             node.put(CODE, CODE200);
             node.put("hasNext", pagedList.hasNext());
             node.set("list", Json.toJson(pagedList.getList()));
-            redis.set(key, Json.stringify(node), 2 * 60);
+//            redis.set(key, Json.stringify(node), 2 * 60);
             return ok(node);
         });
     }
@@ -237,8 +262,8 @@ public class PostController extends BaseController {
             if (null == member) return unauth403();
             if (member.status == Member.MEMBER_STATUS_LOCK) return okCustomJson(CODE40001, "该帐号被锁定");
             Post post = Json.fromJson(jsonNode, Post.class);
-            if (!ValidationUtil.isEmpty(post.title)) return okCustomJson(CODE40001, "请输入标题");
-            if (!ValidationUtil.isEmpty(post.content)) return okCustomJson(CODE40001, "请输入内容");
+            if (ValidationUtil.isEmpty(post.title)) return okCustomJson(CODE40001, "请输入标题");
+            if (ValidationUtil.isEmpty(post.content)) return okCustomJson(CODE40001, "请输入内容");
             if (post.categoryId < 1) return okCustomJson(CODE40001, "请选择分类");
             PostCategory category = PostCategory.find.byId(post.categoryId);
             if (null == category) return okCustomJson(CODE40001, "请选择分类");

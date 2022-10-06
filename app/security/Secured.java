@@ -34,6 +34,7 @@ public class Secured extends Security.Authenticator {
      */
     @Override
     public Optional<String> getUsername(Http.Request request) {
+        String uri = request.uri();
         String uidToken = businessUtils.getUIDFromRequest(request);
         if (ValidationUtil.isEmpty(uidToken)) return Optional.empty();
         try {
@@ -61,19 +62,34 @@ public class Secured extends Security.Authenticator {
                 return Optional.empty();
             long timeStampLong = Long.parseLong(timeStamp);
             long currentTime = System.currentTimeMillis() / 1000;
-            if (currentTime > timeStampLong + 30) return Optional.empty();//请求时间超出8秒置错
+            if (currentTime > timeStampLong + 30) {
+//                logger.info("uri 11:" + uri);
+                return Optional.empty();//请求时间超出8秒置错
+            }
             String salt = authToken + EncodeUtils.API_SALT + timeStamp + nonce;
             String md5FirstTime = encodeUtils.getMd5(salt);
 
             String md5SecondTime = encodeUtils.getMd5(authToken + md5FirstTime);
-            if (!md5.equals(md5SecondTime)) return Optional.empty();
+            if (!md5.equals(md5SecondTime)) {
+//                logger.info("uri 22:" + uri);
+                return Optional.empty();
+            }
 
             Optional<Object> platformKeyOptional = redis.sync().get(authToken);
-            if (!platformKeyOptional.isPresent()) return Optional.empty();
+            if (!platformKeyOptional.isPresent()) {
+//                logger.info("uri 33:" + uri);
+                return Optional.empty();
+            }
             String platformKey = (String) platformKeyOptional.get();
-            if (ValidationUtil.isEmpty(platformKey)) return Optional.empty();
+            if (ValidationUtil.isEmpty(platformKey)) {
+//                logger.info("uri 44:" + uri);
+                return Optional.empty();
+            }
             Optional<Long> optional = redis.sync().get(platformKey);
-            if (!optional.isPresent()) return Optional.empty();
+            if (!optional.isPresent()) {
+//                logger.info("uri 55:" + uri);
+                return Optional.empty();
+            }
             Long uid = optional.get();
             return Optional.of(uid + "");
         } catch (Exception e) {

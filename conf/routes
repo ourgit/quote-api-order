@@ -40,10 +40,10 @@ GET         /v1/p/carousels/                                  controllers.Carous
 
 GET         /v1/user/post_categories/                         controllers.PostController.listPostCategories(filter:String?="")
 GET         /v1/user/categories_posts/                        controllers.PostController.listPostCategoriesWithPosts
-GET         /v1/user/post_list/                               controllers.PostController.listPosts(request: Request,categoryId:Int?=0,page:Int?=1)
+POST        /v1/user/post_list/                               controllers.PostController.listPosts(request: Request)
 GET         /v1/user/posts/:id/                               controllers.PostController.getPost(request: Request,id:Long)
-POST        /v1/user/post/:id/                                controllers.PostController.updatePost(request: Request,id:Long)
 POST        /v1/user/post/new/                                controllers.PostController.newPost(request: Request)
+POST        /v1/user/post/:id/                                controllers.PostController.updatePost(request: Request,id:Long)
 POST        /v1/user/post/like/                               controllers.PostController.likePost(request: Request)
 POST        /v1/user/post/reply/                              controllers.PostController.replyPost(request: Request)
 POST        /v1/user/post/                                    controllers.PostController.deletePost(request: Request)

@@ -147,6 +147,8 @@ public class BusinessConstant {
     public static final String OPERATION_ADMIN_HANDLE_WITHDRAW = "OPERATION_ADMIN_HANDLE_WITHDRAW";
     public static final String OPERATION_SUBMIT_ENROLL = "OPERATION_SUBMIT_ENROLL";
 
+    public static final String OPERATION_PLACE_BID = "OPERATION_PLACE_BID";
+
     /**
      * 短信限制时效，目前为一天
      */
