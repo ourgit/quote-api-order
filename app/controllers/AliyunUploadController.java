@@ -27,7 +27,7 @@ public class AliyunUploadController extends BaseSecurityController {
     Logger.ALogger logger = Logger.of(AliyunUploadController.class);
     public static final String END_POINT = "https://oss-cn-hangzhou.aliyuncs.com";
     public static String bucketName = "renoseeker";
-    public static String IMG_URL_PREFIX = "https://dsyd2.oss-cn-hangzhou.aliyuncs.com/";
+    public static String IMG_URL_PREFIX = "https://renoseeker.oss-cn-hangzhou.aliyuncs.com/";
 
     /**
      * @api {POST} /v1/user/upload/ 上传
