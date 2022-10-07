@@ -68,6 +68,7 @@ public class ShowCaseController extends BaseSecurityController {
     public CompletionStage<Result> getShowCase(Http.Request request, long id) {
         return CompletableFuture.supplyAsync(() -> {
             Showcase showcase = Showcase.find.byId(id);
+            if (null == showcase) return okCustomJson(CODE40001, "该案例不存在");
             ObjectNode result = (ObjectNode) Json.toJson(showcase);
             result.put(CODE, CODE200);
             return ok(result);
@@ -81,6 +82,8 @@ public class ShowCaseController extends BaseSecurityController {
      * @apiParam {String} title 标题
      * @apiParam {String} tags 标签
      * @apiParam {String} images 图片
+     * @apiParam {String} content 内容
+     * @apiParam {long} [categoryId] 分类ID
      * @apiParam {long} shopId 店铺ID
      * @apiParam {long} imageCount 图片数
      * @apiSuccess (Success 200){int} code 200
@@ -106,7 +109,10 @@ public class ShowCaseController extends BaseSecurityController {
             if (null == shop) return okCustomJson(CODE40001, "请先申请入驻");
             showcase.setId(0);
             showcase.setShopName(shop.name);
-            showcase.setStatus(Showcase.STATUS_NOT_AUDIT);
+            showcase.setStatus(Showcase.STATUS_AUDIT);
+            showcase.setShopId(member.shopId);
+            showcase.setShopName(shop.name);
+            showcase.setShopLogo(shop.rectLogo);
             showcase.setCreateTime(dateUtils.getCurrentTimeBySecond());
             showcase.save();
             return okJSON200();
@@ -122,6 +128,8 @@ public class ShowCaseController extends BaseSecurityController {
      * @apiParam {String} tags 标签
      * @apiParam {String} images 图片
      * @apiParam {long} imageCount 图片数
+     * @apiParam {String} content 内容
+     * @apiParam {long} [categoryId] 分类ID
      * @apiSuccess (Success 200){int} code 200
      * @apiSuccess (Error 40001){int} code 40001 参数错误
      * @apiSuccess (Error 40002){int} code 40002 案例图片不存在
@@ -145,11 +153,15 @@ public class ShowCaseController extends BaseSecurityController {
             String title = jsonNode.findPath("title").asText();
             String tags = jsonNode.findPath("tags").asText();
             String images = jsonNode.findPath("images").asText();
+            String content = jsonNode.findPath("content").asText();
             long imageCount = jsonNode.findPath("imageCount").asLong();
+            long categoryId = jsonNode.findPath("categoryId").asLong();
             if (jsonNode.has("title")) showcase.setTitle(title);
             if (jsonNode.has("tags")) showcase.setTags(tags);
             if (jsonNode.has("images")) showcase.setImages(images);
             if (jsonNode.has("imageCount")) showcase.setImageCount(imageCount);
+            if (jsonNode.has("content")) showcase.setContent(content);
+            if (categoryId > 0) showcase.setCategoryId(categoryId);
             showcase.save();
             return okJSON200();
         });

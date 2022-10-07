@@ -23,7 +23,7 @@ public class Shop extends Model {
     @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int id;
+    public long id;
 
     @Column(name = "status")
     public int status;
@@ -157,12 +157,6 @@ public class Shop extends Model {
     @Column(name = "place_top")
     public boolean placeTop;
 
-    @Column(name = "dada_shop_id")
-    public String dadaShopId = "";
-
-    @Column(name = "dada_user_no")
-    public String dadaUserNo = "";
-
     @Column(name = "bulletin")
     public String bulletin = "";
 
@@ -210,69 +204,20 @@ public class Shop extends Model {
 
     public static Finder<Long, Shop> find = new Finder<>(Shop.class);
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
-    }
-
-    public void setContactName(String contactName) {
-        this.contactName = contactName;
-    }
-
-    public void setContactAddress(String contactAddress) {
-        this.contactAddress = contactAddress;
-    }
-
-    public void setLicenseNumber(String licenseNumber) {
-        this.licenseNumber = licenseNumber;
-    }
-
-    public void setLicenseImg(String licenseImg) {
-        this.licenseImg = licenseImg;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setUpdateTime(long updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public void setCreatorId(long creatorId) {
-        this.creatorId = creatorId;
-    }
-
-    public void setApproveNote(String approveNote) {
-        this.approveNote = approveNote;
-    }
-
-    public void setApproverId(long approverId) {
-        this.approverId = approverId;
-    }
-
-    public void setLog(String log) {
-        this.log = log;
-    }
-
-
-    public int getId() {
+    public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public int getStatus() {
         return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public int getRunType() {
@@ -283,68 +228,108 @@ public class Shop extends Model {
         this.runType = runType;
     }
 
+    public int getShopLevel() {
+        return shopLevel;
+    }
+
+    public void setShopLevel(int shopLevel) {
+        this.shopLevel = shopLevel;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDigest() {
+        return digest;
+    }
+
+    public void setDigest(String digest) {
+        this.digest = digest;
     }
 
     public String getContactNumber() {
         return contactNumber;
     }
 
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
     public String getContactName() {
         return contactName;
+    }
+
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
     }
 
     public String getContactAddress() {
         return contactAddress;
     }
 
+    public void setContactAddress(String contactAddress) {
+        this.contactAddress = contactAddress;
+    }
+
     public String getLicenseNumber() {
         return licenseNumber;
+    }
+
+    public void setLicenseNumber(String licenseNumber) {
+        this.licenseNumber = licenseNumber;
     }
 
     public String getLicenseImg() {
         return licenseImg;
     }
 
+    public void setLicenseImg(String licenseImg) {
+        this.licenseImg = licenseImg;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getApproveNote() {
         return approveNote;
     }
 
+    public void setApproveNote(String approveNote) {
+        this.approveNote = approveNote;
+    }
+
     public String getLog() {
         return log;
+    }
+
+    public void setLog(String log) {
+        this.log = log;
     }
 
     public long getCreatorId() {
         return creatorId;
     }
 
+    public void setCreatorId(long creatorId) {
+        this.creatorId = creatorId;
+    }
+
     public long getApproverId() {
         return approverId;
     }
 
-    public long getUpdateTime() {
-        return updateTime;
-    }
-
-    public long getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(long createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getFilter() {
-        return filter;
-    }
-
-    public void setFilter(String filter) {
-        this.filter = filter;
+    public void setApproverId(long approverId) {
+        this.approverId = approverId;
     }
 
     public double getLat() {
@@ -379,6 +364,30 @@ public class Shop extends Model {
         this.closeTime = closeTime;
     }
 
+    public long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(long updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getFilter() {
+        return filter;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
+
     public String getBusinessTime() {
         return businessTime;
     }
@@ -393,110 +402,6 @@ public class Shop extends Model {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
-    }
-
-    public String getImages() {
-        return images;
-    }
-
-    public void setImages(String images) {
-        this.images = images;
-    }
-
-    public String getDiscountStr() {
-        return discountStr;
-    }
-
-    public void setDiscountStr(String discountStr) {
-        this.discountStr = discountStr;
-    }
-
-    public int getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(int discount) {
-        this.discount = discount;
-    }
-
-    public int getAverageConsumption() {
-        return averageConsumption;
-    }
-
-    public void setAverageConsumption(int averageConsumption) {
-        this.averageConsumption = averageConsumption;
-    }
-
-    public long getOrderCount() {
-        return orderCount;
-    }
-
-    public void setOrderCount(long orderCount) {
-        this.orderCount = orderCount;
-    }
-
-    public String getBranches() {
-        return branches;
-    }
-
-    public void setBranches(String branches) {
-        this.branches = branches;
-    }
-
-    public int getSort() {
-        return sort;
-    }
-
-    public void setSort(int sort) {
-        this.sort = sort;
-    }
-
-    public int getBidDiscount() {
-        return bidDiscount;
-    }
-
-    public void setBidDiscount(int bidDiscount) {
-        this.bidDiscount = bidDiscount;
-    }
-
-    public String getDigest() {
-        return digest;
-    }
-
-    public void setDigest(String digest) {
-        this.digest = digest;
-    }
-
-    public boolean isPlaceTop() {
-        return placeTop;
-    }
-
-    public void setPlaceTop(boolean placeTop) {
-        this.placeTop = placeTop;
-    }
-
-    public String getDadaShopId() {
-        return dadaShopId;
-    }
-
-    public void setDadaShopId(String dadaShopId) {
-        this.dadaShopId = dadaShopId;
-    }
-
-    public String getDadaUserNo() {
-        return dadaUserNo;
-    }
-
-    public void setDadaUserNo(String dadaUserNo) {
-        this.dadaUserNo = dadaUserNo;
-    }
-
-    public int getShopLevel() {
-        return shopLevel;
-    }
-
-    public void setShopLevel(int shopLevel) {
-        this.shopLevel = shopLevel;
     }
 
     public String getRectLogo() {
@@ -529,6 +434,78 @@ public class Shop extends Model {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
+    }
+
+    public String getDiscountStr() {
+        return discountStr;
+    }
+
+    public void setDiscountStr(String discountStr) {
+        this.discountStr = discountStr;
+    }
+
+    public String getBranches() {
+        return branches;
+    }
+
+    public void setBranches(String branches) {
+        this.branches = branches;
+    }
+
+    public int getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
+    }
+
+    public int getBidDiscount() {
+        return bidDiscount;
+    }
+
+    public void setBidDiscount(int bidDiscount) {
+        this.bidDiscount = bidDiscount;
+    }
+
+    public int getAverageConsumption() {
+        return averageConsumption;
+    }
+
+    public void setAverageConsumption(int averageConsumption) {
+        this.averageConsumption = averageConsumption;
+    }
+
+    public long getOrderCount() {
+        return orderCount;
+    }
+
+    public void setOrderCount(long orderCount) {
+        this.orderCount = orderCount;
+    }
+
+    public int getSort() {
+        return sort;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
+    }
+
+    public boolean isPlaceTop() {
+        return placeTop;
+    }
+
+    public void setPlaceTop(boolean placeTop) {
+        this.placeTop = placeTop;
     }
 
     public String getBulletin() {
@@ -579,6 +556,14 @@ public class Shop extends Model {
         this.mailScore = mailScore;
     }
 
+    public long getTotalMoney() {
+        return totalMoney;
+    }
+
+    public void setTotalMoney(long totalMoney) {
+        this.totalMoney = totalMoney;
+    }
+
     public long getTotalCommentCount() {
         return totalCommentCount;
     }
@@ -611,11 +596,27 @@ public class Shop extends Model {
         this.qualifications = qualifications;
     }
 
-    public long getTotalMoney() {
-        return totalMoney;
+    public boolean isFav() {
+        return isFav;
     }
 
-    public void setTotalMoney(long totalMoney) {
-        this.totalMoney = totalMoney;
+    public void setFav(boolean fav) {
+        isFav = fav;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
     }
 }
