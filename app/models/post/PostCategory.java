@@ -79,6 +79,9 @@ public class PostCategory extends Model {
     @Column(name = "create_time")
     public long createTime;
 
+    @Column(name = "admin_list")
+    public String adminList;
+
     @Transient
     public List<PostCategory> children;
 
@@ -221,5 +224,13 @@ public class PostCategory extends Model {
 
     public void setSeoDescription(String seoDescription) {
         this.seoDescription = seoDescription;
+    }
+
+    public String getAdminList() {
+        return adminList;
+    }
+
+    public void setAdminList(String adminList) {
+        this.adminList = adminList;
     }
 }

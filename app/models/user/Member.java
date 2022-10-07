@@ -15,15 +15,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "v1_member")
 public class Member extends Model {
-
-    /**
-     * 用户的状态：正常
-     */
-    public static final int MEMBER_STATUS_NORMAL = 1;
-    /**
-     * 用户的状态：被锁定
-     */
-    public static final int MEMBER_STATUS_LOCK = 2;
+    public static final int MEMBER_STATUS_NOT_ACTIVATE = -1;
+    public static final int MEMBER_STATUS_NORMAL = 10;
+    public static final int MEMBER_STATUS_LOCK = -10;
 
     public static final int USER_TYPE_CUSTOMER = 1;
     public static final int USER_TYPE_STAFF = 10;
@@ -33,6 +27,9 @@ public class Member extends Model {
     public static final int AUTH_STATUS_PROCESSING = 1;
     public static final int AUTH_STATUS_PRE_AUTH = 2;
     public static final int AUTH_STATUS_AUTHED = 3;
+
+    public static final int ACCOUNT_TYPE_PHONE_NUMBER = 1;
+    public static final int ACCOUNT_TYPE_PHONE_EMAIL = 2;
 
     @Column(name = "id")
     @Id

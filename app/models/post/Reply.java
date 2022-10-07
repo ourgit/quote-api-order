@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.ebean.Finder;
 import io.ebean.Model;
 import myannotation.EscapeHtmlSerializer;
+import myannotation.EscapeHtmlSerializerForKeepSomeHtml;
 
 import javax.persistence.*;
 
@@ -34,8 +35,12 @@ public class Reply extends Model {
     public String avatar;
 
     @Column(name = "content")
-    @JsonDeserialize(using = EscapeHtmlSerializer.class)
+    @JsonDeserialize(using = EscapeHtmlSerializerForKeepSomeHtml.class)
     public String content;
+
+    @Column(name = "post_title")
+    @JsonDeserialize(using = EscapeHtmlSerializer.class)
+    public String postTitle;
 
     @Column(name = "post_id")
     public long postId;
@@ -154,5 +159,13 @@ public class Reply extends Model {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getPostTitle() {
+        return postTitle;
+    }
+
+    public void setPostTitle(String postTitle) {
+        this.postTitle = postTitle;
     }
 }

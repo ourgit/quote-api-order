@@ -19,7 +19,6 @@ import play.Logger;
 import play.i18n.Messages;
 import play.i18n.MessagesApi;
 import play.libs.Json;
-import play.libs.ws.WSClient;
 import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
@@ -33,6 +32,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 import static constants.BusinessConstant.*;
+import static models.user.Member.ACCOUNT_TYPE_PHONE_EMAIL;
 
 /**
  * 用户控制类
@@ -50,6 +50,9 @@ public class MemberController extends BaseController {
     IPUtil ipUtil;
     @Inject
     MessagesApi messagesApi;
+
+    @Inject
+    MailerService mailerService;
     private static final int CHANGE_LOGIN_PASSWORD = 1;
     private static final int CHANGE_PAY_PASSWORD = 2;
 
@@ -76,11 +79,21 @@ public class MemberController extends BaseController {
             if (null == json) return okCustomJson(40003, "参数错误");
             String accountName = json.findPath("accountName").asText();
             String nickName = json.findPath("nickName").asText();
-            if (!ValidationUtil.isValidEmailAddress(accountName))
-                return okCustomJson(40006, "无效的邮箱");
-
+            String vcode = json.findPath("vcode").asText();
+            int accountType = json.findPath("accountType").asInt();
+            if (accountType == ACCOUNT_TYPE_PHONE_EMAIL) {
+                if (!ValidationUtil.isValidEmailAddress(accountName))
+                    return okCustomJson(40006, "无效的邮箱");
+            }
             String loginPassword = json.findPath("loginPassword").asText();
             if (!ValidationUtil.isValidPassword(loginPassword)) return okCustomJson(40004, "无效的密码");
+            if (ValidationUtil.isEmpty(vcode)) return okCustomJson(40004, "请输入验证码");
+            String key = cacheUtils.getSMSLastVerifyCodeKey(accountName);
+            Optional<String> optional = redis.sync().get(key);
+            if (optional.isEmpty()) return okCustomJson(40004, "请先请求验证码");
+            String vcodeSend = optional.get();
+            if (!vcodeSend.equalsIgnoreCase(vcode)) return okCustomJson(40004, "验证码有误");
+
             Member foundMember = Member.find.query().where()
                     .eq("accountName", accountName.trim())
                     .setMaxRows(1).findOne();
@@ -134,6 +147,28 @@ public class MemberController extends BaseController {
         businessUtils.createBalance(member, BusinessItem.CASH);
         businessUtils.createBalance(member, BusinessItem.SCORE);
         businessUtils.createBalance(member, BusinessItem.AWARD);
+    }
+
+    /**
+     * @api {POST} /v1/user/signup_vcode/ 02请求注册激活码
+     * @apiName requestSignupVcode
+     * @apiGroup User
+     * @apiParam {string} accountName 帐号 可手机号也可邮箱
+     * @apiParam {String} accountType 1手机 2邮箱
+     */
+    @BodyParser.Of(BodyParser.Json.class)
+    public CompletionStage<Result> requestSignupVcode(Http.Request request) {
+        return CompletableFuture.supplyAsync(() -> {
+            JsonNode jsonNode = request.body().asJson();
+            String accountName = jsonNode.findPath("accountName").asText();
+            int accountType = jsonNode.findPath("accountType").asInt();
+            if (accountType == ACCOUNT_TYPE_PHONE_EMAIL) {
+                mailerService.sendVcode(accountName);
+            } else if (accountType == Member.ACCOUNT_TYPE_PHONE_NUMBER) {
+
+            }
+            return okJSON200();
+        });
     }
 
 

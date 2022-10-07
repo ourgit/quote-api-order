@@ -32,7 +32,7 @@ public class TestController extends Controller {
             String cid = "1234";
             Email email = new Email()
                     .setSubject("Simple email")
-                    .setFrom("Mister FROM <ray.Renoseeker@gmail.com>")
+                    .setFrom("Mister FROM <157579114@qq.com>")
                     .addTo("Miss TO <157579114@qq.com>")
                     // adds attachment
 //                .addAttachment("attachment.pdf", new File("/some/path/attachment.pdf"))

@@ -22,6 +22,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 import java.text.DecimalFormat;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -490,5 +491,11 @@ public class BizUtils {
 
         }
         return false;
+    }
+
+    public String generateVerificationCode() {
+        Random ran = new Random();
+        String code = String.valueOf(100000 + ran.nextInt(900000));
+        return code;
     }
 }

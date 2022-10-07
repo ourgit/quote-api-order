@@ -40,11 +40,11 @@ public class CategoryController extends BaseController {
      * @apiSuccess (Success 200){JsonArray} children 子分类列表
      * @apiSuccess (Success 200){string} updateTime 更新时间
      */
-    public CompletionStage<Result> listCategories(final String filter) {
+    public CompletionStage<Result> listCategories(final String filter, boolean needRecurrence) {
         return CompletableFuture.supplyAsync(() -> {
             String key = cacheUtils.getCategoryJsonCache();
             //第一页从缓存读取
-            if (ValidationUtil.isEmpty(filter)) {
+            if (ValidationUtil.isEmpty(filter) && !needRecurrence) {
                 Optional<String> cacheOptional = redis.sync().get(key);
                 if (cacheOptional.isPresent()) {
                     String node = cacheOptional.get();
@@ -59,10 +59,14 @@ public class CategoryController extends BaseController {
                     .orderBy().desc("sort")
                     .orderBy().asc("id")
                     .findList();
-            List<Category> resultList = convertListToTreeNode(list);
             ObjectNode result = Json.newObject();
             result.put(CODE, CODE200);
-            result.set("list", Json.toJson(resultList));
+            if (needRecurrence) {
+                result.set("list", Json.toJson(list));
+            } else {
+                List<Category> resultList = convertListToTreeNode(list);
+                result.set("list", Json.toJson(resultList));
+            }
             if (ValidationUtil.isEmpty(filter)) redis.set(key, Json.stringify(result), 30 * 60);
             return ok(result);
         });

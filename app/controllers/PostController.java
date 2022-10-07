@@ -26,7 +26,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 import static constants.BusinessConstant.PAGE_SIZE_10;
-import static constants.RedisKeyConstant.POST_CATEGORIES_LIST_BY_CATEGORY_ID;
 
 
 public class PostController extends BaseController {
@@ -192,6 +191,7 @@ public class PostController extends BaseController {
             ObjectNode node = Json.newObject();
             node.put(CODE, CODE200);
             node.put("hasNext", pagedList.hasNext());
+            node.put("pages", pagedList.getTotalPageCount());
             node.set("list", Json.toJson(pagedList.getList()));
 //            redis.set(key, Json.stringify(node), 2 * 60);
             return ok(node);
@@ -226,6 +226,8 @@ public class PostController extends BaseController {
             if (post.status == Post.STATUS_DISABLE) {
                 return okCustomJson(CODE40001, "该贴子被隐藏");
             }
+            post.setViews(post.views + 1);
+            post.save();
             List<Reply> replyList = Reply.find.query().where().eq("postId", id)
                     .orderBy().asc("id")
                     .findList();
@@ -237,8 +239,25 @@ public class PostController extends BaseController {
                 }
             });
             node.set("replyList", Json.toJson(replyList));
+            boolean isAdmin = isPostAdmin(request, post);
+            node.put("isAdmin", isAdmin);
             return ok(node);
         });
+    }
+
+    private boolean isPostAdmin(Http.Request request, Post post) {
+        boolean isAdmin = false;
+        long uid = businessUtils.getUserIdByAuthToken2(request);
+        if (uid > 0) {
+            PostCategory postCategory = PostCategory.find.byId(post.categoryId);
+            if (null != postCategory) {
+                String adminList = postCategory.getAdminList();
+                if (adminList.contains("/" + uid + "/")) {
+                    isAdmin = true;
+                }
+            }
+        }
+        return isAdmin;
     }
 
 
@@ -412,6 +431,7 @@ public class PostController extends BaseController {
             }
             Reply reply = new Reply();
             reply.setUid(uid);
+            reply.setPostTitle(post.title);
             reply.setUserName(member.nickName);
             reply.setAvatar(member.avatar);
             reply.setContent(content);
@@ -426,6 +446,7 @@ public class PostController extends BaseController {
                     .findSingleAttributeList();
             long count = replyUidList.stream().distinct().count();
             post.setParticipants(count);
+            post.setLastReplyTime(currentTime);
             post.save();
             return okJSON200();
         });
@@ -455,14 +476,16 @@ public class PostController extends BaseController {
             if (postType == 1) {
                 Post post = Post.find.byId(id);
                 if (null == post) return okCustomJson(CODE40001, "该贴子不存在");
-                if (uid != post.uid) return okCustomJson(CODE40001, "该贴子不存在");
+                if (uid != post.uid && !isPostAdmin(request, post)) return okCustomJson(CODE40001, "该贴子不存在");
                 post.setStatus(Post.STATUS_DELETE);
                 post.setUpdateTime(dateUtils.getCurrentTimeBySecond());
                 post.save();
             } else {
                 Reply reply = Reply.find.byId(id);
                 if (null == reply) return okCustomJson(CODE40001, "该回复不存在");
-                if (uid != reply.uid) return okCustomJson(CODE40001, "该贴子不存在");
+                Post post = Post.find.byId(reply.postId);
+                if (null == post) return okCustomJson(CODE40001, "该贴子不存在");
+                if (uid != reply.uid && !isPostAdmin(request, post)) return okCustomJson(CODE40001, "该贴子不存在");
                 reply.setStatus(Reply.STATUS_DELETE);
                 reply.setUpdateTime(dateUtils.getCurrentTimeBySecond());
                 reply.save();
@@ -502,8 +525,77 @@ public class PostController extends BaseController {
             ObjectNode node = Json.newObject();
             node.put(CODE, CODE200);
             node.put("hasNext", pagedList.hasNext());
+            node.put("pages", pagedList.getTotalPageCount());
             node.set("list", Json.toJson(pagedList.getList()));
             return ok(node);
+        });
+    }
+
+
+    /**
+     * @api {GET} /v1/user/my_reply/ 08我的回复
+     * @apiName myReplyList
+     * @apiGroup Post
+     * @apiSuccess (Success 200) {int} code 200 请求成功
+     * @apiSuccess (Success 200) {int} pages 页数
+     * @apiSuccess (Success 200) {JsonObject} list 列表
+     * @apiSuccess (Success 200){String} postTitle 贴子标题
+     * @apiSuccess (Success 200){String} userName 作者
+     * @apiSuccess (Success 200){String} avatar 头像
+     * @apiSuccess (Success 200){String} content 内容
+     * @apiSuccess (Success 200){long} replies 回复数
+     * @apiSuccess (Success 200){long} likes 点赞数
+     * @apiSuccess (Success 200){String} updateTime 更新时间
+     * @apiSuccess (Success 200){String} createTime 创建时间
+     */
+    public CompletionStage<Result> myReplyList(Http.Request request, int page) {
+        return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
+            if (uid < 1) return unauth403();
+            PagedList<Reply> pagedList = Reply.find.query().where()
+                    .lt("status", Post.STATUS_DELETE)
+                    .eq("uid", uid)
+                    .orderBy().desc("id")
+                    .setFirstRow((page - 1) * PAGE_SIZE_10)
+                    .setMaxRows(PAGE_SIZE_10)
+                    .findPagedList();
+            ObjectNode node = Json.newObject();
+            node.put(CODE, CODE200);
+            node.put("hasNext", pagedList.hasNext());
+            node.put("pages", pagedList.getTotalPageCount());
+            node.set("list", Json.toJson(pagedList.getList()));
+            return ok(node);
+        });
+    }
+
+
+    /**
+     * @api {POST} /v1/user/post_top/  09置顶/取消置顶贴子
+     * @apiName placePostTop
+     * @apiGroup Admin-Post
+     * @apiParam {long} id id
+     * @apiParam {int} placeTop true置顶 false取消置顶
+     */
+    @BodyParser.Of(BodyParser.Json.class)
+    public CompletionStage<Result> placePostTop(Http.Request request) {
+        return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
+            JsonNode jsonNode = request.body().asJson();
+            Messages messages = this.messagesApi.preferred(request);
+            String baseArgumentError = messages.at("base.argument.error");
+            if (null == jsonNode) return okCustomJson(CODE40001, baseArgumentError);
+            if (uid < 1) return unauth403();
+            Member member = Member.find.byId(uid);
+            if (null == member) return unauth403();
+            if (member.status == Member.MEMBER_STATUS_LOCK) return okCustomJson(CODE40001, "该帐号被锁定");
+
+            long id = jsonNode.findPath("id").asLong();
+            boolean placeTop = jsonNode.findPath("placeTop").asBoolean();
+            Post post = Post.find.byId(id);
+            if (null == post) return okCustomJson(CODE40001, "该贴子不存在");
+            if (!isPostAdmin(request, post)) return okCustomJson(CODE40001, "非管理员不可操作");
+            post.setPlaceTop(placeTop);
+            post.setUpdateTime(dateUtils.getCurrentTimeBySecond());
+            post.save();
+            return okJSON200();
         });
     }
 

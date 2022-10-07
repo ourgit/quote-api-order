@@ -518,6 +518,86 @@
   },
   {
     "type": "POST",
+    "url": "/v1/user/ask_bid/",
+    "title": "03请求报价",
+    "name": "askBid",
+    "group": "BID",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": false,
+            "field": "price",
+            "description": "<p>价格</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "note",
+            "description": "<p>备注</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/BidController.java",
+    "groupTitle": "BID"
+  },
+  {
+    "type": "GET",
+    "url": "/v1/user/bid_list/:id/",
+    "title": "02报价单详情",
+    "name": "getBid",
+    "group": "BID",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "JsonArray",
+            "optional": false,
+            "field": "list",
+            "description": "<p>列表</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "status",
+            "description": "<p>1未读 2已读</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/BidController.java",
+    "groupTitle": "BID"
+  },
+  {
+    "type": "POST",
     "url": "/v1/user/bid_list/",
     "title": "01报价列表",
     "name": "listBid",
@@ -545,6 +625,56 @@
             "optional": false,
             "field": "status",
             "description": "<p>1未读 2已读</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/BidController.java",
+    "groupTitle": "BID"
+  },
+  {
+    "type": "POST",
+    "url": "/v1/user/place_bid/",
+    "title": "04报价",
+    "name": "placeBid",
+    "group": "BID",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": false,
+            "field": "id",
+            "description": "<p>id</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": false,
+            "field": "price",
+            "description": "<p>价格</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "note",
+            "description": "<p>备注</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
           }
         ]
       }
@@ -1160,11 +1290,38 @@
     "groupTitle": "Post"
   },
   {
-    "type": "GET",
-    "url": "/v1/user/post_list/?categoryId=",
+    "type": "POST",
+    "url": "/v1/user/post_list/",
     "title": "02贴子列表",
     "name": "listPosts",
     "group": "Post",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "filter",
+            "description": "<p>filter</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": false,
+            "field": "categoryId",
+            "description": "<p>categoryId</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "orderType",
+            "description": "<p>orderType 1最新发表 2最新回复 3最多回复</p>"
+          }
+        ]
+      }
+    },
     "success": {
       "fields": {
         "Success 200": [
@@ -1365,6 +1522,99 @@
             "optional": false,
             "field": "updateTime",
             "description": "<p>更新时间</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/PostController.java",
+    "groupTitle": "Post"
+  },
+  {
+    "type": "GET",
+    "url": "/v1/user/my_reply/",
+    "title": "08我的回复",
+    "name": "myReplyList",
+    "group": "Post",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200 请求成功</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "pages",
+            "description": "<p>页数</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "JsonObject",
+            "optional": false,
+            "field": "list",
+            "description": "<p>列表</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "postTitle",
+            "description": "<p>贴子标题</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "userName",
+            "description": "<p>作者</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "avatar",
+            "description": "<p>头像</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "content",
+            "description": "<p>内容</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "replies",
+            "description": "<p>回复数</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "likes",
+            "description": "<p>点赞数</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "updateTime",
+            "description": "<p>更新时间</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "createTime",
+            "description": "<p>创建时间</p>"
           }
         ]
       }
@@ -3119,6 +3369,36 @@
             "optional": false,
             "field": "code",
             "description": "<p>200</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
+  },
+  {
+    "type": "POST",
+    "url": "/v1/user/signup_vcode/",
+    "title": "02请求注册激活码",
+    "name": "requestSignupVcode",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "accountName",
+            "description": "<p>帐号 可手机号也可邮箱</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "accountType",
+            "description": "<p>1手机 2邮箱</p>"
           }
         ]
       }

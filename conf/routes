@@ -1,6 +1,7 @@
 GET         /v1/user/send_mail/                               controllers.TestController.sendMail
 +nocsrf
 POST        /v1/user/new/                                     controllers.MemberController.signUp(request: Request)
+POST        /v1/user/signup_vcode/                            controllers.MemberController.requestSignupVcode(request: Request)
 +nocsrf
 POST        /v1/user/login/                                   controllers.MemberController.login(request: Request)
 POST        /v1/user/logout/                                  controllers.MemberController.logout(request: Request)
@@ -30,32 +31,34 @@ POST        /v1/o/wechat/pay_notify/                          controllers.Wechat
 
 
 GET         /v1/p/articles/                                   controllers.ArticleController.listArticles(page:Int?=1,cateName:String,size:Int?=10)
-GET         /v1/p/articles/:articleId/                        controllers.ArticleController.getArticle(request: Request,articleId:Long)
 POST        /v1/p/articles/fav/                               controllers.ArticleController.fav(request: Request)
 GET         /v1/p/param_config/                               controllers.ArticleController.getParamConfig(key:String)
 GET         /v1/p/discovery_list/                             controllers.ArticleController.listDiscovery(request: Request)
 GET         /v1/p/articles_by_category_id/                    controllers.ArticleController.listArticlesByCategoryId(categoryId:Long,page:Int?=1)
 GET         /v1/p/recommend_articles/                         controllers.ArticleController.listRecommendArticles
 GET         /v1/p/carousels/                                  controllers.CarouselController.listCarousel(request: Request,bizType:Int?=0,clientType:Int?=0)
+GET         /v1/p/articles/:articleId/                        controllers.ArticleController.getArticle(request: Request,articleId:Long)
 
 GET         /v1/user/post_categories/                         controllers.PostController.listPostCategories(filter:String?="")
 GET         /v1/user/categories_posts/                        controllers.PostController.listPostCategoriesWithPosts
 POST        /v1/user/post_list/                               controllers.PostController.listPosts(request: Request)
-GET         /v1/user/posts/:id/                               controllers.PostController.getPost(request: Request,id:Long)
 POST        /v1/user/post/new/                                controllers.PostController.newPost(request: Request)
-POST        /v1/user/post/:id/                                controllers.PostController.updatePost(request: Request,id:Long)
 POST        /v1/user/post/like/                               controllers.PostController.likePost(request: Request)
 POST        /v1/user/post/reply/                              controllers.PostController.replyPost(request: Request)
 POST        /v1/user/post/                                    controllers.PostController.deletePost(request: Request)
 GET         /v1/user/my_posts/                                controllers.PostController.myPosts(request: Request,page:Int?=1)
+GET         /v1/user/my_reply/                                controllers.PostController.myReplyList(request: Request,page:Int?=1)
+GET         /v1/user/posts/:id/                               controllers.PostController.getPost(request: Request,id:Long)
+POST        /v1/user/post/:id/                                controllers.PostController.updatePost(request: Request,id:Long)
+POST        /v1/user/post_top/                                controllers.PostController.placePostTop(request: Request)
 
-GET         /v1/user/categories/                              controllers.CategoryController.listCategories(filter:String?="")
+GET         /v1/user/categories/                              controllers.CategoryController.listCategories(filter:String?="",needRecurrence:Boolean?=false)
 
 GET         /v1/user/show_case_list/                          controllers.ShowCaseController.listShowCase(request: Request,shopId:Long?=0,page:Int?=1,title:String?="")
-GET         /v1/user/show_case_list/:id/                      controllers.ShowCaseController.getShowCase(request: Request,id:Long)
 POST        /v1/user/show_case/new/                           controllers.ShowCaseController.addShowCase(request: Request)
-POST        /v1/user/show_case/:id/                           controllers.ShowCaseController.updateShowCase(request: Request,id:Long)
 POST        /v1/user/show_case/                               controllers.ShowCaseController.deleteShowcase(request: Request)
+GET         /v1/user/show_case_list/:id/                      controllers.ShowCaseController.getShowCase(request: Request,id:Long)
+POST        /v1/user/show_case/:id/                           controllers.ShowCaseController.updateShowCase(request: Request,id:Long)
 
 POST        /v1/user/apply_auth/                              controllers.MemberController.applyAuth(request: Request)
 GET         /v1/user/my_apply_log/                            controllers.MemberController.myApplyLog(request: Request)

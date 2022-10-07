@@ -57,6 +57,9 @@ public class Post extends Model {
     @Column(name = "replies")
     public long replies;
 
+    @Column(name = "views")
+    public long views;
+
     @Column(name = "participants")
     public long participants;
 
@@ -70,6 +73,9 @@ public class Post extends Model {
 
     @Column(name = "update_time")
     public long updateTime;
+
+    @Column(name = "last_reply_time")
+    public long lastReplyTime;
 
     @Column(name = "create_time")
     public long createTime;
@@ -203,5 +209,21 @@ public class Post extends Model {
 
     public void setPlaceTop(boolean placeTop) {
         this.placeTop = placeTop;
+    }
+
+    public long getViews() {
+        return views;
+    }
+
+    public void setViews(long views) {
+        this.views = views;
+    }
+
+    public long getLastReplyTime() {
+        return lastReplyTime;
+    }
+
+    public void setLastReplyTime(long lastReplyTime) {
+        this.lastReplyTime = lastReplyTime;
     }
 }
