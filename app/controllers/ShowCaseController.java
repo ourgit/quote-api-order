@@ -154,6 +154,7 @@ public class ShowCaseController extends BaseSecurityController {
             String tags = jsonNode.findPath("tags").asText();
             String images = jsonNode.findPath("images").asText();
             String content = jsonNode.findPath("content").asText();
+            String cover = jsonNode.findPath("cover").asText();
             long imageCount = jsonNode.findPath("imageCount").asLong();
             long categoryId = jsonNode.findPath("categoryId").asLong();
             if (jsonNode.has("title")) showcase.setTitle(title);
@@ -161,6 +162,7 @@ public class ShowCaseController extends BaseSecurityController {
             if (jsonNode.has("images")) showcase.setImages(images);
             if (jsonNode.has("imageCount")) showcase.setImageCount(imageCount);
             if (jsonNode.has("content")) showcase.setContent(content);
+            if (jsonNode.has("cover")) showcase.setCover(cover);
             if (categoryId > 0) showcase.setCategoryId(categoryId);
             showcase.save();
             return okJSON200();

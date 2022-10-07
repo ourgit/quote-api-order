@@ -36,6 +36,7 @@ libraryDependencies ++= Seq(
   "dom4j" % "dom4j" % "1.6.1",
   "com.aventrix.jnanoid" % "jnanoid" % "2.0.0",
   "com.github.wechatpay-apiv3" % "wechatpay-apache-httpclient" % "0.2.2",
+  "com.aliyun.oss" % "aliyun-sdk-oss" % "3.4.2",
   javaWs
 )
 val akkaVersion = PlayVersion.akkaVersion

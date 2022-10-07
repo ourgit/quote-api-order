@@ -35,6 +35,10 @@ public class Showcase extends Model {
     @JsonDeserialize(using = EscapeHtmlSerializer.class)
     public String images;
 
+    @Column(name = "cover")
+    @JsonDeserialize(using = EscapeHtmlSerializer.class)
+    public String cover;
+
     @Column(name = "image_count")
     public long imageCount;//联系电话
 
@@ -180,5 +184,13 @@ public class Showcase extends Model {
 
     public void setCreateTime(long createTime) {
         this.createTime = createTime;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 }

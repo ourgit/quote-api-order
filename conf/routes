@@ -67,6 +67,7 @@ POST        /v1/user/shop/:id/                                controllers.ShopCo
 POST        /v1/user/apply_auth/                              controllers.MemberController.applyAuth(request: Request)
 GET         /v1/user/my_apply_log/                            controllers.MemberController.myApplyLog(request: Request)
 
+POST        /v1/p/upload/                                     controllers.AliyunUploadController.upload(request: Request)
 ################################################################################################################################
 #GET            /v1/actor/:name/                                                  controllers.message.ActorController.sayHello(name:String)
 #GET            /*file                                                            controllers.Assets.versioned(path="/public", file: Asset)
