@@ -113,6 +113,7 @@ public class PostController extends BaseController {
             list.parallelStream().forEach((postCategory) -> {
                 List<Post> postList = Post.find.query().where()
                         .eq("categoryId", postCategory.id)
+                        .eq("status", Post.STATUS_NORMAL)
                         .orderBy().desc("placeTop")
                         .orderBy().desc("id")
                         .setMaxRows(10)
