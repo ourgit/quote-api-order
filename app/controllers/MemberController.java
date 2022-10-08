@@ -938,6 +938,7 @@ public class MemberController extends BaseController {
             if (ValidationUtil.isEmpty(businessItems)) return okCustomJson(CODE40001, "请输入经营项目");
 
             String rectLogo = jsonNode.findPath("rectLogo").asText();
+            String categoryList = jsonNode.findPath("categoryList").asText();
 
             ShopApplyLog storeApplyLog = ShopApplyLog.find.query().where()
                     .eq("uid", uid)
@@ -969,6 +970,7 @@ public class MemberController extends BaseController {
             log.setStatus(ShopApplyLog.STATUS_TO_AUDIT);
             log.setDigest(digest);
             log.setBusinessItems(businessItems);
+            log.setCategoryList(categoryList);
             log.save();
 
             member.setAuthStatus(Member.AUTH_STATUS_PROCESSING);
