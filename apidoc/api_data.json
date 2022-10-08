@@ -1,5 +1,136 @@
 [
   {
+    "type": "POST",
+    "url": "/v1/user/shop/:id/",
+    "title": "03修改门店",
+    "name": "updateShop",
+    "group": "ADMIN-SHOP",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>名称</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "contactNumber",
+            "description": "<p>联系电话</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "contactName",
+            "description": "<p>联系人</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "contactAddress",
+            "description": "<p>联系地址</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "licenseNumber",
+            "description": "<p>营业执照号</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "licenseImg",
+            "description": "<p>营业执照图片</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>备注</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "double",
+            "optional": false,
+            "field": "lat",
+            "description": "<p>纬度</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "double",
+            "optional": false,
+            "field": "lon",
+            "description": "<p>经度</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200 请求成功</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001 参数错误</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/ShopController.java",
+    "groupTitle": "ADMIN-SHOP"
+  },
+  {
+    "type": "POST",
+    "url": "/v1/user/post_top/",
+    "title": "09置顶/取消置顶贴子",
+    "name": "placePostTop",
+    "group": "Admin-Post",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": false,
+            "field": "id",
+            "description": "<p>id</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "placeTop",
+            "description": "<p>true置顶 false取消置顶</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/PostController.java",
+    "groupTitle": "Admin-Post"
+  },
+  {
     "type": "post",
     "url": "/v1/p/articles/fav/",
     "title": "06收藏",
@@ -1736,6 +1867,402 @@
   },
   {
     "type": "POST",
+    "url": "/v1/user/service/new/",
+    "title": "03添加商家服务",
+    "name": "addShowCase",
+    "group": "SERVICE",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "serviceName",
+            "description": "<p>服务名字</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "serviceIcon",
+            "description": "<p>服务图标</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "serviceDigest",
+            "description": "<p>服务摘要</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "serviceContent",
+            "description": "<p>服务内容</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": false,
+            "field": "categoryId",
+            "description": "<p>分类ID</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001 参数错误</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/ServiceController.java",
+    "groupTitle": "SERVICE"
+  },
+  {
+    "type": "POST",
+    "url": "/v1/user/service/",
+    "title": "05删除服务",
+    "name": "deleteService",
+    "group": "SERVICE",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "id",
+            "description": "<p>id</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "operation",
+            "description": "<p>操作,&quot;del&quot;为删除</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200 请求成功</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001 参数错误</p>"
+          }
+        ],
+        "Error 40002": [
+          {
+            "group": "Error 40002",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40002 服务不存在</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/ServiceController.java",
+    "groupTitle": "SERVICE"
+  },
+  {
+    "type": "GET",
+    "url": "/v1/user/service_list/:id/",
+    "title": "02商家服务详情",
+    "name": "getService",
+    "group": "SERVICE",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "serviceName",
+            "description": "<p>服务名字</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "serviceIcon",
+            "description": "<p>服务图标</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "serviceDigest",
+            "description": "<p>服务摘要</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "serviceContent",
+            "description": "<p>服务内容</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "shopId",
+            "description": "<p>店铺ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "categoryId",
+            "description": "<p>分类ID</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001 参数错误</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/ServiceController.java",
+    "groupTitle": "SERVICE"
+  },
+  {
+    "type": "POST",
+    "url": "/v1/user/service_list/",
+    "title": "01商家服务列表",
+    "name": "listService",
+    "group": "SERVICE",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": false,
+            "field": "shopId",
+            "description": "<p>shopId</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": false,
+            "field": "categoryId",
+            "description": "<p>categoryId</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": false,
+            "field": "page",
+            "description": "<p>page</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "serviceName",
+            "description": "<p>serviceName</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Array",
+            "optional": false,
+            "field": "list",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "serviceName",
+            "description": "<p>服务名字</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "serviceIcon",
+            "description": "<p>服务图标</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "serviceDigest",
+            "description": "<p>服务摘要</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "serviceContent",
+            "description": "<p>服务内容</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "shopId",
+            "description": "<p>店铺ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "categoryId",
+            "description": "<p>分类ID</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001 参数错误</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/ServiceController.java",
+    "groupTitle": "SERVICE"
+  },
+  {
+    "type": "POST",
+    "url": "/v1/user/service/:id/",
+    "title": "04修改服务",
+    "name": "updateService",
+    "group": "SERVICE",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "serviceName",
+            "description": "<p>服务名字</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "serviceIcon",
+            "description": "<p>服务图标</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "serviceDigest",
+            "description": "<p>服务摘要</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "serviceContent",
+            "description": "<p>服务内容</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": false,
+            "field": "categoryId",
+            "description": "<p>分类ID</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001 参数错误</p>"
+          }
+        ],
+        "Error 40002": [
+          {
+            "group": "Error 40002",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40002 服务不存在</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/ServiceController.java",
+    "groupTitle": "SERVICE"
+  },
+  {
+    "type": "POST",
     "url": "/v1/user/show_case/new/",
     "title": "03添加案例图片",
     "name": "addShowCase",
@@ -1763,6 +2290,20 @@
             "optional": false,
             "field": "images",
             "description": "<p>图片</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "content",
+            "description": "<p>内容</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": true,
+            "field": "categoryId",
+            "description": "<p>分类ID</p>"
           },
           {
             "group": "Parameter",
@@ -2059,6 +2600,20 @@
             "optional": false,
             "field": "imageCount",
             "description": "<p>图片数</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "content",
+            "description": "<p>内容</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": true,
+            "field": "categoryId",
+            "description": "<p>分类ID</p>"
           }
         ]
       }
@@ -2097,6 +2652,240 @@
     "version": "0.0.0",
     "filename": "app/controllers/ShowCaseController.java",
     "groupTitle": "SHOW-CASE"
+  },
+  {
+    "type": "GET",
+    "url": "/v1/user/shop_list/:id/",
+    "title": "02店铺详情",
+    "name": "getShop",
+    "group": "Shop",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "id",
+            "description": "<p>id</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>名称</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "contactNumber",
+            "description": "<p>联系电话</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "contactName",
+            "description": "<p>联系人</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "contactAddress",
+            "description": "<p>联系地址</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "licenseNumber",
+            "description": "<p>营业执照号</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "licenseImg",
+            "description": "<p>营业执照图片</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "businessTime",
+            "description": "<p>营业时间描述</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "avatar",
+            "description": "<p>店铺头像</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "images",
+            "description": "<p>店铺图片相册</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>备注</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "double",
+            "optional": false,
+            "field": "lat",
+            "description": "<p>纬度</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "double",
+            "optional": false,
+            "field": "lon",
+            "description": "<p>经度</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "updateTime",
+            "description": "<p>更新时间</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/ShopController.java",
+    "groupTitle": "Shop"
+  },
+  {
+    "type": "GET",
+    "url": "/v1/user/shop_list/?page=&name=",
+    "title": "01店铺列表",
+    "name": "listShop",
+    "group": "Shop",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Array",
+            "optional": false,
+            "field": "list",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "id",
+            "description": "<p>id</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>名称</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "shopLevel",
+            "description": "<p>店铺级别</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "digest",
+            "description": "<p>简要</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Array",
+            "optional": false,
+            "field": "showcaseList",
+            "description": "<p>案例列表</p>"
+          }
+        ],
+        "Error 40001": [
+          {
+            "group": "Error 40001",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40001 参数错误</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/ShopController.java",
+    "groupTitle": "Shop"
+  },
+  {
+    "type": "POST",
+    "url": "/v1/user/upload/",
+    "title": "上传",
+    "name": "upload",
+    "group": "System",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "url",
+            "description": "<p>保存的地址</p>"
+          }
+        ],
+        "Error 40003": [
+          {
+            "group": "Error 40003",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>40003 上传失败</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/AliyunUploadController.java",
+    "groupTitle": "System"
   },
   {
     "type": "post",
@@ -2155,90 +2944,6 @@
             "optional": true,
             "field": "businessItems",
             "description": "<p>经营类目</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": true,
-            "field": "images",
-            "description": "<p>认证图片，可选 ，如门店照等 多张图片地址，以逗号隔开</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": true,
-            "field": "shopLink",
-            "description": "<p>网店链接</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": true,
-            "field": "description",
-            "description": "<p>备注</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "name",
-            "description": "<p>名字(法人)</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "nationality",
-            "description": "<p>国家</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "num",
-            "description": "<p>身份证号 法人</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "sex",
-            "description": "<p>姓别 法人</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "birth",
-            "description": "<p>出生 法人</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "startDate",
-            "description": "<p>发证起始日期 法人</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "endDate",
-            "description": "<p>发证结束日期 法人</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "issue",
-            "description": "<p>发证机构 法人</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "monthSalesAmount",
-            "description": "<p>月销量</p>"
           }
         ]
       }

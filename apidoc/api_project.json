@@ -1,5 +1,5 @@
 {
-  "name": "User",
+  "name": "manager",
   "version": "0.0.1",
   "description": "API文档",
   "title": "API文档",
@@ -9,7 +9,7 @@
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2022-10-07T08:25:46.583Z",
+    "time": "2022-10-08T07:48:49.693Z",
     "url": "https://apidocjs.com",
     "version": "0.27.1"
   }
