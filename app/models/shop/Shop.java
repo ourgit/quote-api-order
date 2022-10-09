@@ -154,6 +154,9 @@ public class Shop extends Model {
     @Column(name = "sort")
     public int sort;
 
+    @Column(name = "score")
+    public int score;
+
     @Column(name = "place_top")
     public boolean placeTop;
 
@@ -618,5 +621,13 @@ public class Shop extends Model {
 
     public void setOpenId(String openId) {
         this.openId = openId;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }

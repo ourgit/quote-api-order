@@ -27,11 +27,13 @@ public class MailerService {
         redis.set(key, generatedVerificationCode, 10 * 60);
         String html = VCODE_TEMPLATE.replace("USER_EMAIL", accountName)
                 .replace("VCODE", generatedVerificationCode);
+        System.out.println("sendVcode:" + accountName);
         Email email = new Email()
                 .setSubject("Renoseeker验证码")
-                .setFrom("Mister FROM <ray.Renoseeker@gmail.com>")
+                .setFrom("Mister FROM <157579114@qq.com>")
                 .addTo("Miss TO <" + accountName + ">")
                 .setBodyText("Renoseeker 注册验证码")
+//                .setBodyHtml("<html><body><p>An <b>html</b> 注册验证码: " + generatedVerificationCode + "</p></body></html>");
                 .setBodyHtml(html);
         mailerClient.send(email);
     }

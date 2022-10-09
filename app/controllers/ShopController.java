@@ -66,12 +66,15 @@ public class ShopController extends BaseSecurityController {
                 ObjectNode node = Json.newObject();
                 node.put("id", shop.id);
                 node.put("name", shop.name);
+                node.put("logo", shop.rectLogo);
+                node.put("contactAddress", shop.contactAddress);
+                node.put("contactNumber", shop.contactNumber);
+                node.put("score", shop.score);
                 node.put("shopLevel", shop.shopLevel);
                 node.put("digest", shop.digest);
                 List<Showcase> showcases = map.get(shop.id);
-                if (null != showcases) {
-                    node.set("showcaseList", Json.toJson(showcaseList));
-                }
+                if (null == showcases) showcases = new ArrayList<>();
+                node.set("showcaseList", Json.toJson(showcases));
                 nodes.add(node);
             });
             result.put("pages", pagedList.getTotalPageCount());
