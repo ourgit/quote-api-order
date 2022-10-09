@@ -8,7 +8,6 @@ import io.ebean.ExpressionList;
 import io.ebean.PagedList;
 import models.shop.Shop;
 import models.shop.Showcase;
-import models.user.Member;
 import play.db.ebean.Transactional;
 import play.libs.Json;
 import play.mvc.BodyParser;
@@ -20,7 +19,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
-public class ShopController extends BaseSecurityController {
+public class ShopController extends BaseController {
 
     /**
      * @api {GET} /v1/user/shop_list/?page=&name= 01店铺列表
