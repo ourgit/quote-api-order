@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import constants.BusinessConstant;
 import io.ebean.ExpressionList;
 import io.ebean.PagedList;
+import models.post.PostCategory;
 import models.shop.Shop;
 import models.shop.Showcase;
 import models.user.Member;
@@ -16,10 +17,11 @@ import play.mvc.Http;
 import play.mvc.Result;
 import utils.ValidationUtil;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
-public class ShowCaseController extends BaseSecurityController {
+public class ShowCaseController extends BaseController {
 
     /**
      * @api {GET} /v1/user/show_case_list/?shopId=&page=&title= 01案例图片
@@ -45,7 +47,9 @@ public class ShowCaseController extends BaseSecurityController {
                     .setMaxRows(BusinessConstant.PAGE_SIZE_10)
                     .findPagedList();
             ObjectNode result = Json.newObject();
-            result.set("list", Json.toJson(pagedList.getList()));
+            List<Showcase> list = pagedList.getList();
+            list.parallelStream().forEach((showcase) -> showcase.categoryName = getCategoryName(showcase.categoryId));
+            result.set("list", Json.toJson(list));
             result.put("pages", pagedList.getTotalPageCount());
             result.put(CODE, CODE200);
             return ok(result);
@@ -69,10 +73,22 @@ public class ShowCaseController extends BaseSecurityController {
         return CompletableFuture.supplyAsync(() -> {
             Showcase showcase = Showcase.find.byId(id);
             if (null == showcase) return okCustomJson(CODE40001, "该案例不存在");
+            showcase.categoryName = getCategoryName(showcase.categoryId);
             ObjectNode result = (ObjectNode) Json.toJson(showcase);
             result.put(CODE, CODE200);
             return ok(result);
         });
+    }
+
+    public String getCategoryName(long categoryId) {
+        PostCategory postCategory = PostCategory.find.byId(categoryId);
+        if (null != postCategory) {
+            if (postCategory.path.equals("/")) return postCategory.name;
+            String categoryName = postCategory.pathName;
+            categoryName = categoryName.replaceAll("/", ">");
+            return categoryName;
+        }
+        return "";
     }
 
     /**
@@ -192,7 +208,8 @@ public class ShowCaseController extends BaseSecurityController {
                 return okCustomJson(CODE40001, "非店铺管理人员，不可操作");
             }
             String operation = jsonNode.findPath("operation").asText();
-            if (ValidationUtil.isEmpty(operation) || !operation.equals("del")) return okCustomJson(CODE40001, "参数错误");
+            if (ValidationUtil.isEmpty(operation) || !operation.equals("del"))
+                return okCustomJson(CODE40001, "参数错误");
             long id = jsonNode.findPath("id").asInt();
             if (id < 1) return okCustomJson(CODE40001, "参数错误");
             Showcase showcase = Showcase.find.byId(id);

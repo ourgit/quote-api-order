@@ -72,6 +72,9 @@ public class Showcase extends Model {
     @Column(name = "create_time")
     public long createTime;
 
+    @Transient
+    public String categoryName;
+
     public static Finder<Long, Showcase> find = new Finder<>(Showcase.class);
 
     public long getId() {
