@@ -48,7 +48,7 @@ public class ShopController extends BaseController {
             list.parallelStream().forEach((shop) -> set.add(shop.id));
             List<Showcase> showcaseList = Showcase.find.query().where()
                     .eq("status", Showcase.STATUS_AUDIT)
-                    .idIn(set)
+                    .in("shopId", set)
                     .orderBy().desc("id")
                     .findList();
             Map<Long, List<Showcase>> map = new HashMap<>();
