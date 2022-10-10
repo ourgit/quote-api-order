@@ -86,6 +86,9 @@ public class Member extends Model {
     @Column(name = "user_type")
     public int userType;
 
+    @Column(name = "expire_time")
+    public long expireTime;
+
     public static Finder<Long, Member> find = new Finder<>(Member.class);
 
     public long getId() {
@@ -198,5 +201,13 @@ public class Member extends Model {
 
     public void setAuthStatus(int authStatus) {
         this.authStatus = authStatus;
+    }
+
+    public long getExpireTime() {
+        return expireTime;
+    }
+
+    public void setExpireTime(long expireTime) {
+        this.expireTime = expireTime;
     }
 }

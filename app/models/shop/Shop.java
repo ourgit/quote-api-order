@@ -196,6 +196,9 @@ public class Shop extends Model {
     @JsonDeserialize(using = EscapeHtmlSerializer.class)
     public String qualifications = "";
 
+    @Column(name = "expire_time")
+    public long expireTime;
+
     @Transient
     public boolean isFav;
 
@@ -629,5 +632,13 @@ public class Shop extends Model {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public long getExpireTime() {
+        return expireTime;
+    }
+
+    public void setExpireTime(long expireTime) {
+        this.expireTime = expireTime;
     }
 }

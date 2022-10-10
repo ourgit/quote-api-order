@@ -650,7 +650,7 @@ define({ "api": [
   {
     "type": "POST",
     "url": "/v1/user/ask_bid/",
-    "title": "03请求报价",
+    "title": "04请求报价",
     "name": "askBid",
     "group": "BID",
     "parameter": {
@@ -658,17 +658,52 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "long",
+            "type": "String",
             "optional": false,
-            "field": "price",
-            "description": "<p>价格</p>"
+            "field": "serviceRegion",
+            "description": "<p>服务区域</p>"
           },
           {
             "group": "Parameter",
-            "type": "string",
-            "optional": true,
-            "field": "note",
-            "description": "<p>备注</p>"
+            "type": "String",
+            "optional": false,
+            "field": "serviceAddress",
+            "description": "<p>服务地址</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "categoryName",
+            "description": "<p>分类名字</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "preferenceServiceTime",
+            "description": "<p>预约时间</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "serviceContent",
+            "description": "<p>服务内容</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "contactMail",
+            "description": "<p>联系人邮箱</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "contactName",
+            "description": "<p>联系人名字</p>"
           }
         ]
       }
@@ -693,7 +728,7 @@ define({ "api": [
   {
     "type": "GET",
     "url": "/v1/user/bid_list/:id/",
-    "title": "02报价单详情",
+    "title": "03报价单详情",
     "name": "getBid",
     "group": "BID",
     "success": {
@@ -715,10 +750,52 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "int",
+            "type": "String",
             "optional": false,
-            "field": "status",
-            "description": "<p>1未读 2已读</p>"
+            "field": "serviceRegion",
+            "description": "<p>服务区域</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "serviceAddress",
+            "description": "<p>服务地址</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "categoryName",
+            "description": "<p>分类名字</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "preferenceServiceTime",
+            "description": "<p>预约时间</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "serviceContent",
+            "description": "<p>服务内容</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "contactMail",
+            "description": "<p>联系人邮箱</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "contactName",
+            "description": "<p>联系人名字</p>"
           }
         ]
       }
@@ -729,10 +806,37 @@ define({ "api": [
   },
   {
     "type": "POST",
-    "url": "/v1/user/bid_list/",
-    "title": "01报价列表",
-    "name": "listBid",
+    "url": "/v1/user/my_bid_list/",
+    "title": "01我的报价列表",
+    "name": "listMyBid",
     "group": "BID",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": false,
+            "field": "page",
+            "description": "<p>page</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": false,
+            "field": "size",
+            "description": "<p>size</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "status",
+            "description": "<p>status10未报价 20报价中 30执行中 40已完成</p>"
+          }
+        ]
+      }
+    },
     "success": {
       "fields": {
         "Success 200": [
@@ -752,10 +856,172 @@ define({ "api": [
           },
           {
             "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "serviceRegion",
+            "description": "<p>服务区域</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "serviceAddress",
+            "description": "<p>服务地址</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "categoryName",
+            "description": "<p>分类名字</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "preferenceServiceTime",
+            "description": "<p>预约时间</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "serviceContent",
+            "description": "<p>服务内容</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "contactMail",
+            "description": "<p>联系人邮箱</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "contactName",
+            "description": "<p>联系人名字</p>"
+          },
+          {
+            "group": "Success 200",
             "type": "int",
             "optional": false,
             "field": "status",
-            "description": "<p>1未读 2已读</p>"
+            "description": "<p>10未报价 20报价中 30执行中 40已完成</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/BidController.java",
+    "groupTitle": "BID"
+  },
+  {
+    "type": "POST",
+    "url": "/v1/user/my_to_bid_list/",
+    "title": "02获得报价资格的报价列表",
+    "name": "myToBidList",
+    "group": "BID",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": false,
+            "field": "page",
+            "description": "<p>page</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "long",
+            "optional": false,
+            "field": "size",
+            "description": "<p>size</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "status",
+            "description": "<p>status10未报价 20报价中 30执行中 40已完成</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "JsonArray",
+            "optional": false,
+            "field": "list",
+            "description": "<p>列表</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "serviceRegion",
+            "description": "<p>服务区域</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "serviceAddress",
+            "description": "<p>服务地址</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "categoryName",
+            "description": "<p>分类名字</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "preferenceServiceTime",
+            "description": "<p>预约时间</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "serviceContent",
+            "description": "<p>服务内容</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "contactMail",
+            "description": "<p>联系人邮箱</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "contactName",
+            "description": "<p>联系人名字</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "status",
+            "description": "<p>10未报价 20报价中 30执行中 40已完成</p>"
           }
         ]
       }
@@ -767,7 +1033,7 @@ define({ "api": [
   {
     "type": "POST",
     "url": "/v1/user/place_bid/",
-    "title": "04报价",
+    "title": "05报价/修改报价",
     "name": "placeBid",
     "group": "BID",
     "parameter": {

@@ -11,6 +11,10 @@ import javax.persistence.*;
 @Table(name = "v1_bid")
 public class Bid extends Model {
 
+    public static final int STATUS_NOT_BID = 10;
+    public static final int STATUS_BIDDING = 20;
+    public static final int STATUS_EXECUTING = 30;
+    public static final int STATUS_FINISHED = 40;
     @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
