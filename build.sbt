@@ -37,6 +37,7 @@ libraryDependencies ++= Seq(
   "com.aventrix.jnanoid" % "jnanoid" % "2.0.0",
   "com.github.wechatpay-apiv3" % "wechatpay-apache-httpclient" % "0.2.2",
   "com.aliyun.oss" % "aliyun-sdk-oss" % "3.4.2",
+  "com.stripe" % "stripe-java" % "21.11.0",
   javaWs
 )
 val akkaVersion = PlayVersion.akkaVersion
