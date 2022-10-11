@@ -2,6 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import constants.BusinessConstant;
 import io.ebean.Expr;
 import io.ebean.ExpressionList;
 import io.ebean.PagedList;
@@ -600,5 +601,50 @@ public class PostController extends BaseController {
         });
     }
 
+
+    /**
+     * @api {GET} /v1/user/reply_list/?id=&page= 10评论列表
+     * @apiName replyList
+     * @apiGroup Post
+     * @apiSuccess (Success 200) {int} code 200 请求成功
+     * @apiSuccess (Success 200) {Array} replyList 跟贴内容
+     * @apiSuccess (Success 200){long} id id
+     * @apiSuccess (Success 200){String} title 标题
+     * @apiSuccess (Success 200){String} userName 作者
+     * @apiSuccess (Success 200){String} avatar 头像
+     * @apiSuccess (Success 200){String} content 内容
+     * @apiSuccess (Success 200){long} categoryId 分类ID
+     * @apiSuccess (Success 200){String} categoryName 分类名字
+     * @apiSuccess (Success 200){long} commentNumber 跟贴数
+     * @apiSuccess (Success 200){long} replies 回复数
+     * @apiSuccess (Success 200){int} status 1正常 -1隐藏
+     * @apiSuccess (Success 200){long} participants 参与人数
+     * @apiSuccess (Success 200){long} likes 点赞数
+     * @apiSuccess (Success 200){String} updateTime 更新时间
+     * @apiSuccess (Success 200){String} createTime 创建时间
+     */
+    public CompletionStage<Result> replyList(Http.Request request, long id, int page) {
+        return CompletableFuture.supplyAsync(() -> {
+            if (id < 1) return okCustomJson(CODE40001, "id错误");
+            ExpressionList<Reply> expressionList = Reply.find.query().where()
+                    .eq("postId", id);
+            PagedList<Reply> pagedList = expressionList.orderBy().asc("id")
+                    .setFirstRow((page - 1) * PAGE_SIZE_10)
+                    .setMaxRows(PAGE_SIZE_10)
+                    .findPagedList();
+            ObjectNode node = Json.newObject();
+            node.put(CODE, CODE200);
+            List<Reply> replyList = pagedList.getList();
+            replyList.parallelStream().forEach((reply) -> {
+                if (reply.status == Post.STATUS_DISABLE) {
+                    reply.content = "";
+                }
+            });
+            node.set("replyList", Json.toJson(replyList));
+            node.put("hasNext", pagedList.hasNext());
+            node.put("pages", pagedList.getTotalPageCount());
+            return ok(node);
+        });
+    }
 
 }

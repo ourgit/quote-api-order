@@ -51,6 +51,7 @@ GET         /v1/user/my_reply/                                controllers.PostCo
 GET         /v1/user/posts/:id/                               controllers.PostController.getPost(request: Request,id:Long)
 POST        /v1/user/post/:id/                                controllers.PostController.updatePost(request: Request,id:Long)
 POST        /v1/user/post_top/                                controllers.PostController.placePostTop(request: Request)
+GET         /v1/user/reply_list/                              controllers.PostController.replyList(request: Request,id:Long?=0,page:Int?=1)
 
 GET         /v1/user/categories/                              controllers.CategoryController.listCategories(filter:String?="",needRecurrence:Boolean?=false)
 
