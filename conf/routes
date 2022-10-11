@@ -77,6 +77,7 @@ POST        /v1/user/my_bid_list/                             controllers.BidCon
 POST        /v1/user/my_to_bid_list/                          controllers.BidController.myToBidList(request: Request)
 GET         /v1/user/bid_list/:id/                            controllers.BidController.getBid(request: Request,id:Long)
 POST        /v1/user/ask_bid/                                 controllers.BidController.askBid(request: Request)
+POST        /v1/user/bid/:id/                                 controllers.BidController.updateBid(request: Request,id:Long)
 POST        /v1/user/place_bid/                               controllers.BidController.placeBid(request: Request)
 
 

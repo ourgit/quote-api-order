@@ -9,6 +9,7 @@ import io.ebean.PagedList;
 import models.bid.Bid;
 import models.bid.BidDetail;
 import models.bid.BidUser;
+import models.post.PostCategory;
 import models.user.Member;
 import play.Logger;
 import play.i18n.Messages;
@@ -148,6 +149,8 @@ public class BidController extends BaseController {
      * @apiSuccess (Success 200) {String} categoryName 分类名字
      * @apiSuccess (Success 200) {String} preferenceServiceTime 预约时间
      * @apiSuccess (Success 200) {String} serviceContent 服务内容
+     * @apiSuccess (Success 200) {String} contactPhoneNumber 联系电话
+     * @apiSuccess (Success 200) {String} fileList 附件
      * @apiSuccess (Success 200) {String} contactMail 联系人邮箱
      * @apiSuccess (Success 200) {String} contactName 联系人名字
      */
@@ -178,11 +181,13 @@ public class BidController extends BaseController {
      * @apiGroup BID
      * @apiParam {String} serviceRegion 服务区域
      * @apiParam {String} serviceAddress 服务地址
-     * @apiParam {String} categoryName 分类名字
+     * @apiParam {long} categoryId 分类ID
      * @apiParam {String} preferenceServiceTime 预约时间
      * @apiParam {String} serviceContent 服务内容
      * @apiParam {String} contactMail 联系人邮箱
      * @apiParam {String} contactName 联系人名字
+     * @apiParam {String} contactPhoneNumber 联系电话
+     * @apiParam {String} fileList 附件
      * @apiSuccess (Success 200) {int} code 200
      */
     @Security.Authenticated(Secured.class)
@@ -200,7 +205,6 @@ public class BidController extends BaseController {
             if (ValidationUtil.isEmpty(serviceRegion)) return okCustomJson(CODE40001, "请输入服务区域");
             String serviceAddress = jsonNode.findPath("serviceAddress").asText();
             if (ValidationUtil.isEmpty(serviceAddress)) return okCustomJson(CODE40001, "请输入服务地址");
-            String categoryName = jsonNode.findPath("categoryName").asText();
             String preferenceServiceTime = jsonNode.findPath("preferenceServiceTime").asText();
             if (ValidationUtil.isEmpty(preferenceServiceTime)) return okCustomJson(CODE40001, "请输入预约服务时间");
             String serviceContent = jsonNode.findPath("serviceContent").asText();
@@ -209,16 +213,24 @@ public class BidController extends BaseController {
             if (ValidationUtil.isEmpty(contactMail)) return okCustomJson(CODE40001, "请输入联系邮箱");
             String contactName = jsonNode.findPath("contactName").asText();
             if (ValidationUtil.isEmpty(contactName)) return okCustomJson(CODE40001, "请输入联系人名字");
-
+            String contactPhoneNumber = jsonNode.findPath("contactPhoneNumber").asText();
+            if (ValidationUtil.isEmpty(contactPhoneNumber)) return okCustomJson(CODE40001, "请输入联系电话");
+            String fileList = jsonNode.findPath("fileList").asText();
+            long categoryId = jsonNode.findPath("categoryId").asLong();
+            if (categoryId < 1) return okCustomJson(CODE40001, "请选择分类");
+            PostCategory postCategory = PostCategory.find.byId(categoryId);
+            if (null == postCategory) return okCustomJson(CODE40001, "选择的分类不存在");
             Bid bid = new Bid();
             bid.setServiceRegion(serviceRegion);
             bid.setServiceAddress(serviceAddress);
-            bid.setCategoryName(categoryName);
+            bid.setCategoryName(postCategory.name);
             bid.setPreferenceServiceTime(preferenceServiceTime);
             bid.setServiceContent(serviceContent);
             bid.setContactMail(contactMail);
             bid.setContactName(contactName);
+            bid.setContactPhoneNumber(contactPhoneNumber);
             bid.setAskerUid(uid);
+            bid.setFileList(fileList);
             bid.setAskerName(businessUtils.getMemberName(member));
             long currentTime = dateUtils.getCurrentTimeBySecond();
             bid.setUpdateTime(currentTime);
@@ -246,6 +258,63 @@ public class BidController extends BaseController {
                     DB.saveAll(list);
                 }
             }
+            return okJSON200();
+        });
+    }
+
+    /**
+     * @api {POST} /v1/user/bid/:id/ 05修改报价
+     * @apiName updateBid
+     * @apiGroup BID
+     * @apiParam {String} serviceRegion 服务区域
+     * @apiParam {String} serviceAddress 服务地址
+     * @apiParam {String} preferenceServiceTime 预约时间
+     * @apiParam {String} serviceContent 服务内容
+     * @apiParam {String} contactMail 联系人邮箱
+     * @apiParam {String} contactName 联系人名字
+     * @apiParam {String} contactPhoneNumber 联系电话
+     * @apiParam {String} fileList 附件
+     * @apiSuccess (Success 200) {int} code 200
+     */
+    @Security.Authenticated(Secured.class)
+    @BodyParser.Of(BodyParser.Json.class)
+    public CompletionStage<Result> updateBid(Http.Request request, long id) {
+        return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
+            if (uid < 1) return unauth403();
+            Member member = Member.find.byId(uid);
+            if (null == member) return unauth403();
+            JsonNode jsonNode = request.body().asJson();
+            Messages messages = this.messagesApi.preferred(request);
+            String baseArgumentError = messages.at("base.argument.error");
+            if (null == jsonNode) return okCustomJson(CODE40001, baseArgumentError);
+            Bid bid = Bid.find.byId(id);
+            if (null == bid) return okCustomJson(CODE40001, "该报价不存在");
+            if (bid.askerUid != uid) return okCustomJson(CODE40001, "非发布者，不可修改");
+            String serviceRegion = jsonNode.findPath("serviceRegion").asText();
+            if (!ValidationUtil.isEmpty(serviceRegion)) bid.setServiceRegion(serviceRegion);
+            String serviceAddress = jsonNode.findPath("serviceAddress").asText();
+            if (!ValidationUtil.isEmpty(serviceAddress)) bid.setServiceAddress(serviceAddress);
+
+            String preferenceServiceTime = jsonNode.findPath("preferenceServiceTime").asText();
+            if (!ValidationUtil.isEmpty(preferenceServiceTime)) bid.setPreferenceServiceTime(preferenceServiceTime);
+
+            String serviceContent = jsonNode.findPath("serviceContent").asText();
+            if (!ValidationUtil.isEmpty(serviceContent)) bid.setServiceContent(serviceContent);
+
+            String contactMail = jsonNode.findPath("contactMail").asText();
+            if (!ValidationUtil.isEmpty(contactMail)) bid.setContactMail(contactMail);
+
+            String contactName = jsonNode.findPath("contactName").asText();
+            if (!ValidationUtil.isEmpty(contactName)) bid.setContactName(contactName);
+
+            String contactPhoneNumber = jsonNode.findPath("contactPhoneNumber").asText();
+            if (!ValidationUtil.isEmpty(contactPhoneNumber)) bid.setContactPhoneNumber(contactPhoneNumber);
+
+            String fileList = jsonNode.findPath("fileList").asText();
+            if (!ValidationUtil.isEmpty(fileList)) bid.setFileList(fileList);
+            long currentTime = dateUtils.getCurrentTimeBySecond();
+            bid.setUpdateTime(currentTime);
+            bid.save();
             return okJSON200();
         });
     }

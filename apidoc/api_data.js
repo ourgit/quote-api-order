@@ -672,10 +672,10 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "String",
+            "type": "long",
             "optional": false,
-            "field": "categoryName",
-            "description": "<p>分类名字</p>"
+            "field": "categoryId",
+            "description": "<p>分类ID</p>"
           },
           {
             "group": "Parameter",
@@ -704,6 +704,20 @@ define({ "api": [
             "optional": false,
             "field": "contactName",
             "description": "<p>联系人名字</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "contactPhoneNumber",
+            "description": "<p>联系电话</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "fileList",
+            "description": "<p>附件</p>"
           }
         ]
       }
@@ -782,6 +796,20 @@ define({ "api": [
             "optional": false,
             "field": "serviceContent",
             "description": "<p>服务内容</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "contactPhoneNumber",
+            "description": "<p>联系电话</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "fileList",
+            "description": "<p>附件</p>"
           },
           {
             "group": "Success 200",
@@ -1059,6 +1087,91 @@ define({ "api": [
             "optional": true,
             "field": "note",
             "description": "<p>备注</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/BidController.java",
+    "groupTitle": "BID"
+  },
+  {
+    "type": "POST",
+    "url": "/v1/user/bid/:id/",
+    "title": "05修改报价",
+    "name": "updateBid",
+    "group": "BID",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "serviceRegion",
+            "description": "<p>服务区域</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "serviceAddress",
+            "description": "<p>服务地址</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "preferenceServiceTime",
+            "description": "<p>预约时间</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "serviceContent",
+            "description": "<p>服务内容</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "contactMail",
+            "description": "<p>联系人邮箱</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "contactName",
+            "description": "<p>联系人名字</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "contactPhoneNumber",
+            "description": "<p>联系电话</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "fileList",
+            "description": "<p>附件</p>"
           }
         ]
       }

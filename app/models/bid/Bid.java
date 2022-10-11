@@ -68,6 +68,17 @@ public class Bid extends Model {
     @Column(name = "price")
     public long price;
 
+    @Column(name = "category_id")
+    public long categoryId;
+
+    @Column(name = "contact_phone_number")
+    @JsonDeserialize(using = EscapeHtmlSerializer.class)
+    public String contactPhoneNumber;
+
+    @Column(name = "file_list")
+    @JsonDeserialize(using = EscapeHtmlSerializer.class)
+    public String fileList;
+
     @Column(name = "update_time")
     public long updateTime;
 
@@ -202,5 +213,29 @@ public class Bid extends Model {
 
     public void setCreateTime(long createTime) {
         this.createTime = createTime;
+    }
+
+    public long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getContactPhoneNumber() {
+        return contactPhoneNumber;
+    }
+
+    public void setContactPhoneNumber(String contactPhoneNumber) {
+        this.contactPhoneNumber = contactPhoneNumber;
+    }
+
+    public String getFileList() {
+        return fileList;
+    }
+
+    public void setFileList(String fileList) {
+        this.fileList = fileList;
     }
 }
