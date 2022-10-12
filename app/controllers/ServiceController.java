@@ -19,7 +19,7 @@ import utils.ValidationUtil;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
-public class ServiceController extends BaseSecurityController {
+public class ServiceController extends BaseController {
 
     /**
      * @api {POST} /v1/user/service_list/ 01商家服务列表
