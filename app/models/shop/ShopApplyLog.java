@@ -63,6 +63,10 @@ public class ShopApplyLog extends Model {
     @JsonDeserialize(using = EscapeHtmlSerializer.class)
     public String categoryList;
 
+    @Column(name = "images")
+    @JsonDeserialize(using = EscapeHtmlSerializer.class)
+    public String images;
+
 
     @Column(name = "logo")
     @JsonDeserialize(using = EscapeHtmlSerializer.class)
@@ -213,5 +217,13 @@ public class ShopApplyLog extends Model {
 
     public void setCategoryList(String categoryList) {
         this.categoryList = categoryList;
+    }
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
     }
 }
