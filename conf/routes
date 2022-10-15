@@ -81,7 +81,7 @@ POST        /v1/user/ask_bid/                                 controllers.BidCon
 POST        /v1/user/bid/:id/                                 controllers.BidController.updateBid(request: Request,id:Long)
 POST        /v1/user/place_bid/                               controllers.BidController.placeBid(request: Request)
 
-GET         /v1/user/ad_list/                                 controllers.AdController.listAd(request: Request)
+GET         /v1/user/ad_list/                                 controllers.AdController.listAd(request: Request,sourceType:Int?=0,pageType:Int?=0)
 
 POST        /v1/user/upload/                                  controllers.AliyunUploadController.upload(request: Request)
 ################################################################################################################################

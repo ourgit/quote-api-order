@@ -21,7 +21,7 @@ import java.util.concurrent.CompletionStage;
 public class AdController extends BaseController {
 
     /**
-     * @api {GET} /v1/user/ad_list/  01广告列表
+     * @api {GET} /v1/user/ad_list/?pageType=&sourceType=  01广告列表
      * @apiName listAd
      * @apiGroup AD
      * @apiSuccess (Success 200) {int} code 200 请求成功
@@ -36,11 +36,14 @@ public class AdController extends BaseController {
      * @apiSuccess (Success 200)　{long} createTime 创建时间
      * @apiSuccess (Success 200)　{Array} adOwnerList 广告主列表
      */
-    public CompletionStage<Result> listAd(Http.Request request) {
+    public CompletionStage<Result> listAd(Http.Request request, int sourceType, int pageType) {
         return CompletableFuture.supplyAsync(() -> {
             ObjectNode result = Json.newObject();
             result.put(CODE, CODE200);
-            List<Ad> list = Ad.find.query().where().eq("status", Ad.STATUS_NORMAL)
+            ExpressionList<Ad> expressionList = Ad.find.query().where().eq("status", Ad.STATUS_NORMAL);
+            if (sourceType > 0) expressionList.eq("sourceType", sourceType);
+            if (pageType > 0) expressionList.eq("pageType", pageType);
+            List<Ad> list = expressionList
                     .orderBy().desc("sort")
                     .findList();
             list.parallelStream().forEach((ad) -> {
