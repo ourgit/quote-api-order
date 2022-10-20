@@ -11,7 +11,7 @@ import javax.persistence.*;
  * 商品分类
  */
 @Entity
-@Table(name = "v1_post")
+@Table(name = "v1_post_like")
 public class PostLike extends Model {
 
     @Column(name = "id")

@@ -102,7 +102,7 @@
   },
   {
     "type": "GET",
-    "url": "/v1/user/ad_list/",
+    "url": "/v1/user/ad_list/?pageType=&sourceType=",
     "title": "01广告列表",
     "name": "listAd",
     "group": "AD",
