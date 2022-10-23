@@ -79,6 +79,12 @@ public class Bid extends Model {
     @JsonDeserialize(using = EscapeHtmlSerializer.class)
     public String fileList;
 
+    @Column(name = "lat")
+    public double lat;
+
+    @Column(name = "lng")
+    public double lng;
+
     @Column(name = "update_time")
     public long updateTime;
 
@@ -237,5 +243,21 @@ public class Bid extends Model {
 
     public void setFileList(String fileList) {
         this.fileList = fileList;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
     }
 }
