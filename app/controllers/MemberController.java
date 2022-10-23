@@ -15,6 +15,7 @@ import models.msg.Msg;
 import models.shop.ShopApplyLog;
 import models.user.Member;
 import models.user.MemberBalance;
+import models.user.Membership;
 import play.Logger;
 import play.i18n.Messages;
 import play.i18n.MessagesApi;
@@ -1010,4 +1011,82 @@ public class MemberController extends BaseController {
         });
     }
 
+    /**
+     * @api {GET} /v1/user/membership_list/ 21会员价格列表
+     * @apiName listMembership
+     * @apiGroup User
+     * @apiSuccess (Success 200) {int} code 200 请求成功
+     * @apiSuccess (Success 200) {int} pages 页数
+     * @apiSuccess (Success 200) {JsonArray} list 列表
+     * @apiSuccess (Success 200){long} id 分类id
+     * @apiSuccess (Success 200){long} duration 时长，以天为单位
+     * @apiSuccess (Success 200){long} oldPrice 原价
+     * @apiSuccess (Success 200){long} price 现价
+     * @apiSuccess (Success 200){int} sort 排序顺序
+     * @apiSuccess (Success 200){string} updateTime 更新时间
+     */
+    public CompletionStage<Result> listMembership() {
+        return CompletableFuture.supplyAsync(() -> {
+            ExpressionList<Membership> expressionList = Membership.find.query().where();
+            List<Membership> list = expressionList.orderBy().desc("sort").findList();
+            ObjectNode result = Json.newObject();
+            result.put(CODE, CODE200);
+            result.set("list", Json.toJson(list));
+            return ok(result);
+        });
+    }
+
+
+    /**
+     * @api {POST} /v1/user/change_email/ 22换绑邮箱
+     * @apiName changeEmail
+     * @apiGroup User
+     * @apiParam {string} [password] 密码
+     * @apiParam {string} newMail  新手机号
+     * @apiParam {string} oldMailVcode 原邮箱验证码
+     * @apiParam {string} newMailVcode 新邮箱验证码
+     * @apiSuccess (Success 200){int}code 200
+     */
+    @BodyParser.Of(BodyParser.Json.class)
+    @Security.Authenticated(Secured.class)
+    public CompletionStage<Result> changeEmail(Http.Request request) {
+        return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
+            JsonNode node = request.body().asJson();
+            if (uid < 1) return unauth403();
+            Member member = Member.find.byId(uid);
+            if (uid < 1) return unauth403();
+            if (member.status != Member.MEMBER_STATUS_NORMAL)
+                return okCustomJson(CODE40001, "该用户被锁定，如有需要，请联系客服");
+            String password = node.findPath("password").asText();
+            String newMail = node.findPath("newMail").asText();
+            String oldMailVcode = node.findPath("oldMailVcode").asText();
+            String newMailVcode = node.findPath("newMailVcode").asText();
+            Member exist = Member.find.query().where()
+                    .eq("accountName", newMail)
+                    .setMaxRows(1)
+                    .findOne();
+            if (null != exist) return okCustomJson(CODE40001, "邮箱已被使用");
+            if (ValidationUtil.isEmpty(oldMailVcode)) return okCustomJson(CODE40001, "请输入原邮箱验证码");
+            if (ValidationUtil.isEmpty(newMailVcode)) return okCustomJson(CODE40001, "请输入新邮箱验证码");
+            if (!ValidationUtil.isVcodeCorrect(oldMailVcode))
+                return okCustomJson(CODE40001, "原邮箱验证码有误");
+            if (!ValidationUtil.isVcodeCorrect(newMailVcode))
+                return okCustomJson(CODE40001, "新邮箱验证码有误");
+            if (!ValidationUtil.isValidEmailAddress(newMail)) return okCustomJson(CODE40001, "新邮箱有误");
+            if (!ValidationUtil.isEmpty(member.loginPassword)) {
+                if (ValidationUtil.isEmpty(password)) return okCustomJson(CODE40001, "请输入密码");
+                String targetPassword = encodeUtils.getMd5WithSalt(password);
+                if (!targetPassword.equals(member.loginPassword)) return okCustomJson(CODE40001, "密码错误");
+            }
+            if (!businessUtils.checkVcode(member.accountName, oldMailVcode))
+                return okCustomJson(CODE40002, "原邮箱验证码有误");
+            if (!businessUtils.checkVcode(newMail, newMailVcode))
+                return okCustomJson(CODE40002, "新邮箱验证码有误");
+            member.setAccountName(newMail);
+            //TODO 需要短信提醒
+            member.save();
+
+            return okJSON200();
+        });
+    }
 }

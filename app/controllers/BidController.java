@@ -168,6 +168,11 @@ public class BidController extends BaseController {
             set.add(bid.askerUid);
             bidUserList.parallelStream().forEach((each) -> set.add(each.uid));
             if (!set.contains(uid)) return okCustomJson(CODE40001, "该报价不存在");
+            bid.bidUserList.addAll(bidUserList);
+            List<BidDetail> detailList = BidDetail.find.query().where()
+                    .eq("bidId", id)
+                    .findList();
+            bid.detailList.addAll(detailList);
             ObjectNode result = (ObjectNode) Json.toJson(bid);
             result.put(CODE, CODE200);
             return ok(result);

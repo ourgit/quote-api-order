@@ -6,6 +6,8 @@ import io.ebean.Model;
 import myannotation.EscapeHtmlSerializer;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "v1_bid")
@@ -90,6 +92,12 @@ public class Bid extends Model {
 
     @Column(name = "create_time")
     public long createTime;
+
+    @Transient
+    public List<BidUser> bidUserList = new ArrayList<>();
+
+    @Transient
+    public List<BidDetail> detailList = new ArrayList<>();
 
     public static Finder<Long, Bid> find = new Finder<>(Bid.class);
 

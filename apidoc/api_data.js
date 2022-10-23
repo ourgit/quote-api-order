@@ -3603,6 +3603,63 @@ define({ "api": [
   },
   {
     "type": "POST",
+    "url": "/v1/user/change_email/",
+    "title": "22换绑邮箱",
+    "name": "changeEmail",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "password",
+            "description": "<p>密码</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "newMail",
+            "description": "<p>新手机号</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "oldMailVcode",
+            "description": "<p>原邮箱验证码</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "newMailVcode",
+            "description": "<p>新邮箱验证码</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
+  },
+  {
+    "type": "POST",
     "url": "/v1/user/change_phone_number/",
     "title": "15修改手机号码",
     "name": "changePhoneNumber",
@@ -4262,6 +4319,85 @@ define({ "api": [
             "optional": false,
             "field": "createTime",
             "description": "<p>时间</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
+  },
+  {
+    "type": "GET",
+    "url": "/v1/user/membership_list/",
+    "title": "21会员价格列表",
+    "name": "listMembership",
+    "group": "User",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200 请求成功</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "pages",
+            "description": "<p>页数</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "JsonArray",
+            "optional": false,
+            "field": "list",
+            "description": "<p>列表</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "id",
+            "description": "<p>分类id</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "duration",
+            "description": "<p>时长，以天为单位</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "oldPrice",
+            "description": "<p>原价</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "long",
+            "optional": false,
+            "field": "price",
+            "description": "<p>现价</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "sort",
+            "description": "<p>排序顺序</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "updateTime",
+            "description": "<p>更新时间</p>"
           }
         ]
       }
