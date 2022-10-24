@@ -434,7 +434,9 @@ public class ArticleController extends BaseController {
             Optional<String> jsonCache = redis.sync().get(key);
             if (jsonCache.isPresent()) {
                 String result = jsonCache.get();
-                if (!ValidationUtil.isEmpty(result)) return ok(Json.parse(result));
+                if (!ValidationUtil.isEmpty(result)) {
+                    return ok();
+                }
             }
             ParamConfig config = ParamConfig.find.query().where()
                     .eq("key", key)
