@@ -431,11 +431,12 @@ public class ArticleController extends BaseController {
     public CompletionStage<Result> getParamConfig(String key) {
         return CompletableFuture.supplyAsync(() -> {
             if (ValidationUtil.isEmpty(key)) return okCustomJson(CODE40001, "请输入KEY值");
-            String jsonKey = cacheUtils.getParamConfigCacheKey() + key;
-            Optional<String> jsonCache = redis.sync().get(jsonKey);
+            Optional<String> jsonCache = redis.sync().get(key);
             if (jsonCache.isPresent()) {
                 String result = jsonCache.get();
-                if (!ValidationUtil.isEmpty(result)) return ok(Json.parse(result));
+                if (!ValidationUtil.isEmpty(result)) {
+                    return ok();
+                }
             }
             ParamConfig config = ParamConfig.find.query().where()
                     .eq("key", key)
@@ -455,7 +456,7 @@ public class ArticleController extends BaseController {
             ObjectNode resultNode = Json.newObject();
             resultNode.put(CODE, CODE200);
             resultNode.put("value", value);
-            redis.set(jsonKey, Json.stringify(resultNode), 30 * 24 * 60 * 60);
+            redis.set(key, Json.stringify(resultNode), 30 * 24 * 60 * 60);
             return ok(resultNode);
         });
     }
