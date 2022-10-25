@@ -56,6 +56,7 @@ public class MemberController extends BaseController {
     MailerService mailerService;
     private static final int CHANGE_LOGIN_PASSWORD = 1;
     private static final int CHANGE_PAY_PASSWORD = 2;
+    public static final String SMS_TEMPLATE = "【Renoseeker】verification code: **code**, valid within 10 min.";
 
     /**
      * @api {post} /v1/user/new/ 01用户注册
@@ -166,7 +167,9 @@ public class MemberController extends BaseController {
             if (accountType == ACCOUNT_TYPE_PHONE_EMAIL) {
                 mailerService.sendVcode(accountName);
             } else if (accountType == Member.ACCOUNT_TYPE_PHONE_NUMBER) {
-
+                final String vcode = businessUtils.generateVerificationCode();
+                String content = SMS_TEMPLATE.replace("**code**", vcode);
+                businessUtils.sendSMS(accountName, vcode, content);
             }
             return okJSON200();
         });
