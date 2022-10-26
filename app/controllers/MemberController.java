@@ -166,7 +166,7 @@ public class MemberController extends BaseController {
             if (ValidationUtil.isEmpty(accountName)) return okCustomJson(CODE40001, "请输入帐号");
             int accountType = jsonNode.findPath("accountType").asInt();
             if (accountType == ACCOUNT_TYPE_EMAIL) {
-                mailerService.sendVcode(accountName);
+                mailerService.sendVcode(accountName.replaceAll("-", "").trim());
             } else if (accountType == Member.ACCOUNT_TYPE_PHONE_NUMBER) {
                 final String vcode = businessUtils.generateVerificationCode();
                 String content = SMS_TEMPLATE.replace("**code**", vcode);
