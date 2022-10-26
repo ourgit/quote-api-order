@@ -33,7 +33,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 import static constants.BusinessConstant.*;
-import static models.user.Member.ACCOUNT_TYPE_PHONE_EMAIL;
+import static models.user.Member.ACCOUNT_TYPE_EMAIL;
 
 /**
  * 用户控制类
@@ -83,7 +83,7 @@ public class MemberController extends BaseController {
             String nickName = json.findPath("nickName").asText();
             String vcode = json.findPath("vcode").asText();
             int accountType = json.findPath("accountType").asInt();
-            if (accountType == ACCOUNT_TYPE_PHONE_EMAIL) {
+            if (accountType == ACCOUNT_TYPE_EMAIL) {
                 if (!ValidationUtil.isValidEmailAddress(accountName))
                     return okCustomJson(40006, "无效的邮箱");
             }
@@ -163,8 +163,9 @@ public class MemberController extends BaseController {
         return CompletableFuture.supplyAsync(() -> {
             JsonNode jsonNode = request.body().asJson();
             String accountName = jsonNode.findPath("accountName").asText();
+            if (ValidationUtil.isEmpty(accountName)) return okCustomJson(CODE40001, "请输入帐号");
             int accountType = jsonNode.findPath("accountType").asInt();
-            if (accountType == ACCOUNT_TYPE_PHONE_EMAIL) {
+            if (accountType == ACCOUNT_TYPE_EMAIL) {
                 mailerService.sendVcode(accountName);
             } else if (accountType == Member.ACCOUNT_TYPE_PHONE_NUMBER) {
                 final String vcode = businessUtils.generateVerificationCode();

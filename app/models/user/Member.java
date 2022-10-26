@@ -29,7 +29,7 @@ public class Member extends Model {
     public static final int AUTH_STATUS_AUTHED = 3;
 
     public static final int ACCOUNT_TYPE_PHONE_NUMBER = 1;
-    public static final int ACCOUNT_TYPE_PHONE_EMAIL = 2;
+    public static final int ACCOUNT_TYPE_EMAIL = 2;
 
     @Column(name = "id")
     @Id
