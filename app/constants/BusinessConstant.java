@@ -243,6 +243,9 @@ public class BusinessConstant {
     public static final String PARAM_KEY_WE_PAY_KEY_SERIAL_NO = "PARAM_KEY_WE_PAY_KEY_SERIAL_NO";//序列号
     public static final String PARAM_KEY_WE_PAY_API_V3_KEY = "PARAM_KEY_WE_PAY_API_V3_KEY";
     public static final String PARAM_KEY_WE_PAY_PRIVATE_KEY = "PARAM_KEY_WE_PAY_PRIVATE_KEY";
+    public static final String PARAM_KEY_SMS_USER_NAME = "PARAM_KEY_SMS_USER_NAME";
+    public static final String PARAM_KEY_SMS_PASSWORD = "PARAM_KEY_SMS_PASSWORD";
+    public static final String PARAM_KEY_SMS_URL = "PARAM_KEY_SMS_URL";
 
     public static final String PARAM_KEY_DEFAULT_AVATAR = "PARAM_CONFIG_KEY_PREFIX:DEFAULT_AVATAR";
 }

@@ -34,7 +34,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 import static constants.BusinessConstant.*;
-import static models.user.Member.ACCOUNT_TYPE_PHONE_EMAIL;
+import static models.user.Member.ACCOUNT_TYPE_EMAIL;
 
 /**
  * 用户控制类
@@ -57,6 +57,7 @@ public class MemberController extends BaseController {
     MailerService mailerService;
     private static final int CHANGE_LOGIN_PASSWORD = 1;
     private static final int CHANGE_PAY_PASSWORD = 2;
+    public static final String SMS_TEMPLATE = "【Renoseeker】verification code: **code**, valid within 10 min.";
 
     /**
      * @api {post} /v1/user/new/ 01用户注册
@@ -83,7 +84,7 @@ public class MemberController extends BaseController {
             String nickName = json.findPath("nickName").asText();
             String vcode = json.findPath("vcode").asText();
             int accountType = json.findPath("accountType").asInt();
-            if (accountType == ACCOUNT_TYPE_PHONE_EMAIL) {
+            if (accountType == ACCOUNT_TYPE_EMAIL) {
                 if (!ValidationUtil.isValidEmailAddress(accountName))
                     return okCustomJson(40006, "无效的邮箱");
             }
@@ -163,11 +164,14 @@ public class MemberController extends BaseController {
         return CompletableFuture.supplyAsync(() -> {
             JsonNode jsonNode = request.body().asJson();
             String accountName = jsonNode.findPath("accountName").asText();
+            if (ValidationUtil.isEmpty(accountName)) return okCustomJson(CODE40001, "请输入帐号");
             int accountType = jsonNode.findPath("accountType").asInt();
-            if (accountType == ACCOUNT_TYPE_PHONE_EMAIL) {
-                mailerService.sendVcode(accountName);
+            if (accountType == ACCOUNT_TYPE_EMAIL) {
+                mailerService.sendVcode(accountName.replaceAll("-", "").trim());
             } else if (accountType == Member.ACCOUNT_TYPE_PHONE_NUMBER) {
-
+                final String vcode = businessUtils.generateVerificationCode();
+                String content = SMS_TEMPLATE.replace("**code**", vcode);
+                businessUtils.sendSMS(accountName, vcode, content);
             }
             return okJSON200();
         });

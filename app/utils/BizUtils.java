@@ -2,17 +2,21 @@ package utils;
 
 import actor.ActorProtocol;
 import akka.actor.ActorRef;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.typesafe.config.Config;
 import constants.BusinessConstant;
 import io.ebean.DB;
 import io.ebean.Ebean;
+import models.log.SmsLog;
 import models.system.ParamConfig;
 import models.user.Member;
 import models.user.MemberBalance;
 import play.Logger;
 import play.cache.NamedCache;
 import play.libs.Json;
+import play.libs.ws.WSClient;
 import play.mvc.Http;
 
 import javax.inject.Inject;
@@ -20,7 +24,10 @@ import javax.inject.Singleton;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
@@ -29,6 +36,8 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.TimeUnit;
 
 import static constants.BusinessConstant.*;
+import static constants.RedisKeyConstant.*;
+import static constants.RedisKeyConstant.EXIST_REQUEST_SMS;
 
 @Singleton
 public class BizUtils {
@@ -49,6 +58,9 @@ public class BizUtils {
     @Inject
     @NamedCache("redis")
     protected play.cache.redis.AsyncCacheApi redis;
+
+    @Inject
+    WSClient wsClient;
 
     public static DecimalFormat DF = new DecimalFormat("0.0");
 
@@ -410,6 +422,18 @@ public class BizUtils {
         return getConfigValue(PARAM_KEY_WE_PAY_PRIVATE_KEY);
     }
 
+    public String getSmsUserName() {
+        return getConfigValue(PARAM_KEY_SMS_USER_NAME);
+    }
+
+    public String getSmsUserPassword() {
+        return getConfigValue(PARAM_KEY_SMS_PASSWORD);
+    }
+
+    public String getSmsURL() {
+        return getConfigValue(PARAM_KEY_SMS_URL);
+    }
+
     public String generateAuthToken() {
         String authToken = UUID.randomUUID().toString();
         return authToken;
@@ -497,5 +521,86 @@ public class BizUtils {
         Random ran = new Random();
         String code = String.valueOf(100000 + ran.nextInt(900000));
         return code;
+    }
+
+    public void sendSMS(String phoneNumber, String vcode, String content) {
+        ObjectNode node = Json.newObject();
+        node.put("code", 200);
+        String userName = getSmsUserName();
+        String password = getSmsUserPassword();
+        String requestUrl = getSmsURL();
+        if (ValidationUtil.isEmpty(requestUrl)) {
+            node.put("code", 500);
+            node.put("reason", "短信请求地址为空");
+            logger.info(node.findPath("reason").asText());
+            return;
+        }
+        if (ValidationUtil.isEmpty(userName)) {
+            node.put("code", 500);
+            node.put("reason", "appKey为空");
+            logger.info(node.findPath("reason").asText());
+            return;
+        }
+        if (ValidationUtil.isEmpty(password)) {
+            node.put("code", 500);
+            node.put("reason", "apiSecret为空");
+            logger.info(node.findPath("reason").asText());
+            return;
+        }
+        ObjectNode param = Json.newObject();
+        String timestamp = getCurrentTimeWithHMS();
+        param.put("userid", userName);
+        String pwd = encodeUtils.getMd5(userName.toUpperCase() + "00000000" + password + timestamp);
+        param.put("pwd", pwd);
+        param.put("mobile", phoneNumber);
+        param.put("content", content);
+        param.put("timestamp", timestamp);
+        param.put("svrtype", "1");
+//        param.put("exno", );
+        long unixStamp = System.currentTimeMillis();
+        param.put("custid", unixStamp + "");
+//        param.put("exdata", );
+        SmsLog smsLog = new SmsLog();
+        smsLog.setPhoneNumber(phoneNumber);
+        smsLog.setContent(requestUrl + "" + param);
+        smsLog.setExtno(unixStamp + "");
+        smsLog.setReqStatus("");
+        smsLog.setRespStatus("");
+        smsLog.setReqTime(unixStamp / 1000);
+        smsLog.save();
+        System.out.println(requestUrl);
+        System.out.println(Json.stringify(param));
+        wsClient.url(requestUrl).setContentType("application/json")
+                .post(param).thenAccept((response) -> {
+                    ObjectNode returnNode = Json.newObject();
+                    JsonNode jsonNode = response.asJson();
+                    if (!ValidationUtil.isEmpty(vcode)) {
+                        String key = cacheUtils.getSMSLastVerifyCodeKey(phoneNumber);
+                        redis.set(key, vcode, 10 * 60);
+                        if (null != jsonNode) {
+                            int resultCode = jsonNode.findPath("result").asInt();
+                            if (resultCode == 0) {
+                                returnNode.put("code", 200);
+                                //设置缓存，用于判断一分钟内请求短信多少
+                                String existRequestKey = EXIST_REQUEST_SMS + phoneNumber;
+                                redis.set(existRequestKey, existRequestKey, 60);
+                            } else {
+                                logger.info(response.getBody());
+                            }
+                            String msg = jsonNode.findPath("desc").asText();
+                            smsLog.setMsgId(jsonNode.findPath("msgid").asText());
+                            smsLog.setReqStatus(resultCode + "   " + msg);
+                        }
+                    }
+                    smsLog.setRespTime(System.currentTimeMillis() / 1000);
+                    smsLog.save();
+                });
+    }
+
+    public String getCurrentTimeWithHMS() {
+        Date date = new Date(System.currentTimeMillis());
+        DateFormat formatter = new SimpleDateFormat("MMddHHmmss");
+        String dateFormatted = formatter.format(date);
+        return dateFormatted;
     }
 }
