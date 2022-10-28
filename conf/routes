@@ -75,6 +75,7 @@ POST        /v1/user/apply_auth/                              controllers.Member
 GET         /v1/user/my_apply_log/                            controllers.MemberController.myApplyLog(request: Request)
 GET         /v1/user/membership_list/                         controllers.MemberController.listMembership
 POST        /v1/user/change_email/                            controllers.MemberController.changeEmail(request: Request)
+GET         /v1/user/mh_images/                               controllers.MemberController.listMHImages(request: Request)
 
 POST        /v1/user/my_bid_list/                             controllers.BidController.listMyBid(request: Request)
 POST        /v1/user/my_to_bid_list/                          controllers.BidController.myToBidList(request: Request)

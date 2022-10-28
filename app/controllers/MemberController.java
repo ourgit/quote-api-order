@@ -13,6 +13,7 @@ import models.log.BalanceLog;
 import models.log.LoginLog;
 import models.msg.Msg;
 import models.shop.ShopApplyLog;
+import models.user.MHImage;
 import models.user.Member;
 import models.user.MemberBalance;
 import models.user.Membership;
@@ -1089,4 +1090,24 @@ public class MemberController extends BaseController {
             return okJSON200();
         });
     }
+
+
+    /**
+     * @api {GET}  /v1/user/mh_images/  75MH图片列表
+     * @apiName listMHImages
+     * @apiGroup Product
+     * @apiSuccess (Success 200) {String} images 图像地址
+     * @apiSuccess (Success 200) {int} code 200 请求成功
+     */
+    public CompletionStage<Result> listMHImages(Http.Request request) {
+        return CompletableFuture.supplyAsync(() -> {
+            List<MHImage> list = MHImage.find.query().where().orderBy().desc("id")
+                    .findList();
+            ObjectNode result = Json.newObject();
+            result.put(CODE, CODE200);
+            result.set("list", Json.toJson(list));
+            return ok(result);
+        });
+    }
+
 }
