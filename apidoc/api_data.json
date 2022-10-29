@@ -2466,6 +2466,36 @@
     "groupTitle": "Post"
   },
   {
+    "type": "GET",
+    "url": "/v1/user/images/",
+    "title": "75图片列表",
+    "name": "listImages",
+    "group": "Product",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "images",
+            "description": "<p>图像地址</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>200 请求成功</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "Product"
+  },
+  {
     "type": "POST",
     "url": "/v1/user/service/new/",
     "title": "03添加商家服务",
