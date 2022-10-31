@@ -435,7 +435,7 @@ public class ArticleController extends BaseController {
             if (jsonCache.isPresent()) {
                 String result = jsonCache.get();
                 if (!ValidationUtil.isEmpty(result)) {
-                    return ok();
+                    return ok(result);
                 }
             }
             ParamConfig config = ParamConfig.find.query().where()

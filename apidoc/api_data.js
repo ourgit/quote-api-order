@@ -4850,6 +4850,16 @@ define({ "api": [
   },
   {
     "type": "POST",
+    "url": "/v1/user/mail_vcode/",
+    "title": "03请求当前邮箱验证码",
+    "name": "requestMailVcode",
+    "group": "User",
+    "version": "0.0.0",
+    "filename": "app/controllers/MemberController.java",
+    "groupTitle": "User"
+  },
+  {
+    "type": "POST",
     "url": "/v1/user/signup_vcode/",
     "title": "02请求注册激活码",
     "name": "requestSignupVcode",

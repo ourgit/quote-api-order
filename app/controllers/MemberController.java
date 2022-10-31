@@ -167,16 +167,62 @@ public class MemberController extends BaseController {
             if (ValidationUtil.isEmpty(accountName)) return okCustomJson(CODE40001, "请输入帐号");
             int accountType = jsonNode.findPath("accountType").asInt();
             if (accountType == ACCOUNT_TYPE_EMAIL) {
-                mailerService.sendVcode(accountName.replaceAll("-", "").trim());
+                mailerService.sendVcode(accountName);
             } else if (accountType == Member.ACCOUNT_TYPE_PHONE_NUMBER) {
                 final String vcode = businessUtils.generateVerificationCode();
                 String content = SMS_TEMPLATE.replace("**code**", vcode);
-                businessUtils.sendSMS(accountName, vcode, content);
+                businessUtils.sendSMS(accountName.replaceAll("-", "").trim(), vcode, content);
             }
             return okJSON200();
         });
     }
 
+
+    /**
+     * @api {POST} /v1/user/mail_vcode/ 03请求当前邮箱验证码
+     * @apiName requestMailVcode
+     * @apiGroup User
+     */
+    @BodyParser.Of(BodyParser.Json.class)
+    @Security.Authenticated(Secured.class)
+    public CompletionStage<Result> requestMailVcode(Http.Request request) {
+        return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
+            JsonNode node = request.body().asJson();
+            if (uid < 1) return unauth403();
+            Member member = Member.find.byId(uid);
+            if (uid < 1) return unauth403();
+            if (member.status != Member.MEMBER_STATUS_NORMAL)
+                return okCustomJson(CODE40001, "该用户被锁定，如有需要，请联系客服");
+            if (ValidationUtil.isValidEmailAddress(member.accountName))
+                mailerService.sendVcode(member.accountName.replaceAll("-", "").trim());
+            return okJSON200();
+        });
+    }
+
+    /**
+     * @api {POST} /v1/user/bind_phone_number/ 04绑定手机
+     * @apiName bindPhoneNumber
+     * @apiGroup User
+     */
+    @BodyParser.Of(BodyParser.Json.class)
+    @Security.Authenticated(Secured.class)
+    public CompletionStage<Result> bindPhoneNumber(Http.Request request) {
+        return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
+            JsonNode node = request.body().asJson();
+            if (uid < 1) return unauth403();
+            Member member = Member.find.byId(uid);
+            if (uid < 1) return unauth403();
+            String phoneNumber = node.findPath("phoneNumber").asText();
+            if (ValidationUtil.isEmpty(phoneNumber)) return okCustomJson(CODE40001, "请输入手机号码");
+            if (phoneNumber.length() > 30) return okCustomJson(CODE40001, "无效的手机号码");
+            if (member.status != Member.MEMBER_STATUS_NORMAL)
+                return okCustomJson(CODE40001, "该用户被锁定，如有需要，请联系客服");
+            if (!ValidationUtil.isEmpty(member.contactNumber)) {
+                return okCustomJson(CODE40003, "已绑定手机号码，不可再绑定");
+            }
+            return okJSON200();
+        });
+    }
 
     /**
      * @api {POST} /v1/user/login/ 02登录
