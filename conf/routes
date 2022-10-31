@@ -3,6 +3,8 @@ GET         /v1/user/send_mail/                               controllers.TestCo
 POST        /v1/user/new/                                     controllers.MemberController.signUp(request: Request)
 POST        /v1/user/signup_vcode/                            controllers.MemberController.requestSignupVcode(request: Request)
 POST        /v1/user/mail_vcode/                              controllers.MemberController.requestMailVcode(request: Request)
+POST        /v1/user/bind_phone_number/                       controllers.MemberController.bindPhoneNumber(request: Request)
+POST        /v1/user/bind_mail/                               controllers.MemberController.bindMail(request: Request)
 +nocsrf
 POST        /v1/user/login/                                   controllers.MemberController.login(request: Request)
 POST        /v1/user/logout/                                  controllers.MemberController.logout(request: Request)

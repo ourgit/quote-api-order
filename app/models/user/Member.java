@@ -89,6 +89,9 @@ public class Member extends Model {
     @Column(name = "expire_time")
     public long expireTime;
 
+    @Column(name = "update_time")
+    public long updateTime;
+
     public static Finder<Long, Member> find = new Finder<>(Member.class);
 
     public long getId() {
@@ -209,5 +212,13 @@ public class Member extends Model {
 
     public void setExpireTime(long expireTime) {
         this.expireTime = expireTime;
+    }
+
+    public long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(long updateTime) {
+        this.updateTime = updateTime;
     }
 }
