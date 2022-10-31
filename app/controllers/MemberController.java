@@ -1177,7 +1177,7 @@ public class MemberController extends BaseController {
 
     /**
      * @api {POST} /v1/user/bind_mail/ 78绑定邮箱
-     * @apiName bindPhoneNumber
+     * @apiName bindMail
      * @apiGroup User
      * @apiParam {string} email  邮箱
      * @apiParam {string} vcode 验证码
