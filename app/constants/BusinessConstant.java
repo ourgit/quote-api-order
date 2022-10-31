@@ -248,4 +248,7 @@ public class BusinessConstant {
     public static final String PARAM_KEY_SMS_URL = "PARAM_KEY_SMS_URL";
 
     public static final String PARAM_KEY_DEFAULT_AVATAR = "PARAM_CONFIG_KEY_PREFIX:DEFAULT_AVATAR";
+
+    public static final int BIZ_TYPE_SIGNUP = 1;
+    public static final int BIZ_TYPE_BIND_VERIFY = 2;
 }

@@ -91,7 +91,7 @@ public class MemberController extends BaseController {
             String loginPassword = json.findPath("loginPassword").asText();
             if (!ValidationUtil.isValidPassword(loginPassword)) return okCustomJson(40004, "无效的密码");
             if (ValidationUtil.isEmpty(vcode)) return okCustomJson(40004, "请输入验证码");
-            String key = cacheUtils.getSMSLastVerifyCodeKey(accountName);
+            String key = cacheUtils.getLastVerifyCodeKey(accountName, BIZ_TYPE_SIGNUP);
             Optional<String> optional = redis.sync().get(key);
             if (optional.isEmpty()) return okCustomJson(40004, "请先请求验证码");
             String vcodeSend = optional.get();
@@ -167,11 +167,11 @@ public class MemberController extends BaseController {
             if (ValidationUtil.isEmpty(accountName)) return okCustomJson(CODE40001, "请输入帐号");
             int accountType = jsonNode.findPath("accountType").asInt();
             if (accountType == ACCOUNT_TYPE_EMAIL) {
-                mailerService.sendVcode(accountName);
+                mailerService.sendVcode(accountName, BIZ_TYPE_SIGNUP);
             } else if (accountType == Member.ACCOUNT_TYPE_PHONE_NUMBER) {
                 final String vcode = businessUtils.generateVerificationCode();
                 String content = SMS_TEMPLATE.replace("**code**", vcode);
-                businessUtils.sendSMS(accountName.replaceAll("-", "").trim(), vcode, content);
+                businessUtils.sendSMS(accountName.replaceAll("-", "").trim(), vcode, content, BIZ_TYPE_SIGNUP);
             }
             return okJSON200();
         });
@@ -557,7 +557,7 @@ public class MemberController extends BaseController {
             String accountName = node.findPath("accountName").asText();
             accountName = businessUtils.escapeHtml(accountName);
             String vcode = node.findPath("vcode").asText();
-            if (!businessUtils.checkVcode(accountName, vcode))
+            if (!businessUtils.checkVcode(accountName, vcode, BIZ_TYPE_BIND_VERIFY))
                 return okCustomJson(CODE40002, "无效手机号码/短信验证码");
 
             String newPassword = node.findPath("newPassword").asText();
@@ -785,9 +785,9 @@ public class MemberController extends BaseController {
                 String targetPassword = encodeUtils.getMd5WithSalt(password);
                 if (!targetPassword.equals(member.loginPassword)) return okCustomJson(CODE40001, "密码错误");
             }
-            if (!businessUtils.checkVcode(member.contactNumber, oldPhoneNumberVcode))
+            if (!businessUtils.checkVcode(member.contactNumber, oldPhoneNumberVcode, BIZ_TYPE_BIND_VERIFY))
                 return okCustomJson(CODE40002, "原手机号短信验证码有误");
-            if (!businessUtils.checkVcode(newPhoneNumber, newPhoneNumberVcode))
+            if (!businessUtils.checkVcode(newPhoneNumber, newPhoneNumberVcode, BIZ_TYPE_BIND_VERIFY))
                 return okCustomJson(CODE40002, "新手机号短信验证码有误");
             //TODO 需要短信提醒
             member.save();
@@ -1083,9 +1083,9 @@ public class MemberController extends BaseController {
                 String targetPassword = encodeUtils.getMd5WithSalt(password);
                 if (!targetPassword.equals(member.loginPassword)) return okCustomJson(CODE40001, "密码错误");
             }
-            if (!businessUtils.checkVcode(member.accountName, oldMailVcode))
+            if (!businessUtils.checkVcode(member.accountName, oldMailVcode, BIZ_TYPE_BIND_VERIFY))
                 return okCustomJson(CODE40002, "原邮箱验证码有误");
-            if (!businessUtils.checkVcode(newMail, newMailVcode))
+            if (!businessUtils.checkVcode(newMail, newMailVcode, BIZ_TYPE_BIND_VERIFY))
                 return okCustomJson(CODE40002, "新邮箱验证码有误");
             member.setAccountName(newMail);
             //TODO 需要短信提醒
@@ -1131,16 +1131,18 @@ public class MemberController extends BaseController {
             if (member.status != Member.MEMBER_STATUS_NORMAL)
                 return okCustomJson(CODE40001, "该用户被锁定，如有需要，请联系客服");
             if (ValidationUtil.isValidEmailAddress(member.accountName))
-                mailerService.sendVcode(member.accountName.replaceAll("-", "").trim());
+                mailerService.sendVcode(member.accountName.replaceAll("-", "").trim(), BIZ_TYPE_BIND_VERIFY);
             return okJSON200();
         });
     }
+
 
     /**
      * @api {POST} /v1/user/bind_phone_number/ 77绑定手机
      * @apiName bindPhoneNumber
      * @apiGroup User
      * @apiParam {string} phoneNumber  手机号
+     * @apiParam {string} vcode 验证码
      */
     @BodyParser.Of(BodyParser.Json.class)
     @Security.Authenticated(Secured.class)
@@ -1151,6 +1153,8 @@ public class MemberController extends BaseController {
             Member member = Member.find.byId(uid);
             if (uid < 1) return unauth403();
             String phoneNumber = node.findPath("phoneNumber").asText();
+            String vcode = node.findPath("vcode").asText();
+            if (ValidationUtil.isEmpty(vcode)) return okCustomJson(40004, "验证码有误");
             if (ValidationUtil.isEmpty(phoneNumber)) return okCustomJson(CODE40001, "请输入手机号码");
             if (phoneNumber.length() > 30) return okCustomJson(CODE40001, "无效的手机号码");
             if (member.status != Member.MEMBER_STATUS_NORMAL)
@@ -1158,6 +1162,12 @@ public class MemberController extends BaseController {
             if (!ValidationUtil.isEmpty(member.contactNumber)) {
                 return okCustomJson(CODE40003, "已绑定手机号码，不可再绑定");
             }
+            String key = cacheUtils.getLastVerifyCodeKey(phoneNumber, BIZ_TYPE_BIND_VERIFY);
+            Optional<String> optional = redis.sync().get(key);
+            if (optional.isEmpty()) return okCustomJson(40004, "请先请求验证码");
+            String vcodeSend = optional.get();
+            if (!vcodeSend.equalsIgnoreCase(vcode)) return okCustomJson(40004, "验证码有误");
+
             member.setContactNumber(phoneNumber);
             member.setUpdateTime(dateUtils.getCurrentTimeBySecond());
             member.save();
@@ -1170,6 +1180,7 @@ public class MemberController extends BaseController {
      * @apiName bindPhoneNumber
      * @apiGroup User
      * @apiParam {string} email  邮箱
+     * @apiParam {string} vcode 验证码
      */
     @BodyParser.Of(BodyParser.Json.class)
     @Security.Authenticated(Secured.class)
@@ -1181,11 +1192,21 @@ public class MemberController extends BaseController {
             if (uid < 1) return unauth403();
             String email = node.findPath("email").asText();
             if (!ValidationUtil.isValidEmailAddress(email)) return okCustomJson(CODE40001, "无效的邮箱");
+            String vcode = node.findPath("vcode").asText();
+            if (ValidationUtil.isEmpty(vcode)) return okCustomJson(40004, "验证码有误");
+
             if (member.status != Member.MEMBER_STATUS_NORMAL)
                 return okCustomJson(CODE40001, "该用户被锁定，如有需要，请联系客服");
             if (!ValidationUtil.isEmpty(member.accountName)) {
                 return okCustomJson(CODE40003, "已绑定邮箱号，不可再绑定");
             }
+
+            String key = cacheUtils.getLastVerifyCodeKey(email, BIZ_TYPE_BIND_VERIFY);
+            Optional<String> optional = redis.sync().get(key);
+            if (optional.isEmpty()) return okCustomJson(40004, "请先请求验证码");
+            String vcodeSend = optional.get();
+            if (!vcodeSend.equalsIgnoreCase(vcode)) return okCustomJson(40004, "验证码有误");
+
             member.setAccountName(email);
             member.setUpdateTime(dateUtils.getCurrentTimeBySecond());
             member.save();

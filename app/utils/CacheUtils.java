@@ -2,9 +2,7 @@ package utils;
 
 import constants.BusinessConstant;
 import constants.RedisKeyConstant;
-import play.cache.SyncCacheApi;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
@@ -13,8 +11,8 @@ import javax.inject.Singleton;
 @Singleton
 public class CacheUtils {
 
-    public String getSMSLastVerifyCodeKey(String phoneNumber) {
-        return BusinessConstant.KEY_LAST_VERIFICATION_CODE_PREFIX_KEY + phoneNumber;
+    public String getLastVerifyCodeKey(String phoneNumber, int bizType) {
+        return BusinessConstant.KEY_LAST_VERIFICATION_CODE_PREFIX_KEY + ":" + bizType + ":" + phoneNumber;
     }
 
 
@@ -52,9 +50,11 @@ public class CacheUtils {
     public String getCategoryJsonCache() {
         return RedisKeyConstant.CATEGORIES_LIST_CACHE_KEY_PREFIX;
     }
+
     public String getPostCategoryJsonCache() {
         return RedisKeyConstant.POST_CATEGORIES_LIST_CACHE_KEY_PREFIX;
     }
+
     public String getCategoryWithPostsJsonCache() {
         return RedisKeyConstant.CATEGORIES_POSTS_LIST_CACHE_KEY_PREFIX;
     }

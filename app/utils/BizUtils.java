@@ -1,14 +1,10 @@
 package utils;
 
-import actor.ActorProtocol;
-import akka.actor.ActorRef;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.typesafe.config.Config;
 import constants.BusinessConstant;
 import io.ebean.DB;
-import io.ebean.Ebean;
 import models.log.SmsLog;
 import models.system.ParamConfig;
 import models.user.Member;
@@ -36,7 +32,6 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.TimeUnit;
 
 import static constants.BusinessConstant.*;
-import static constants.RedisKeyConstant.*;
 import static constants.RedisKeyConstant.EXIST_REQUEST_SMS;
 
 @Singleton
@@ -127,9 +122,9 @@ public class BizUtils {
         return ip == null ? "" : escapeHtml(ip);
     }
 
-    public boolean checkVcode(String accountName, String vcode) {
+    public boolean checkVcode(String accountName, String vcode, int bizType) {
         if (ValidationUtil.isPhoneNumber(accountName)) {
-            String key = cacheUtils.getSMSLastVerifyCodeKey(accountName);
+            String key = cacheUtils.getLastVerifyCodeKey(accountName, bizType);
             Optional<String> optional = redis.sync().get(key);
             if (optional.isPresent()) {
                 String correctVcode = optional.get();
@@ -523,7 +518,7 @@ public class BizUtils {
         return code;
     }
 
-    public void sendSMS(String phoneNumber, String vcode, String content) {
+    public void sendSMS(String phoneNumber, String vcode, String content, int bizType) {
         ObjectNode node = Json.newObject();
         node.put("code", 200);
         String userName = getSmsUserName();
@@ -575,7 +570,7 @@ public class BizUtils {
                     ObjectNode returnNode = Json.newObject();
                     JsonNode jsonNode = response.asJson();
                     if (!ValidationUtil.isEmpty(vcode)) {
-                        String key = cacheUtils.getSMSLastVerifyCodeKey(phoneNumber);
+                        String key = cacheUtils.getLastVerifyCodeKey(phoneNumber, bizType);
                         redis.set(key, vcode, 10 * 60);
                         if (null != jsonNode) {
                             int resultCode = jsonNode.findPath("result").asInt();

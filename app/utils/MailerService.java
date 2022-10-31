@@ -21,9 +21,9 @@ public class MailerService {
     protected play.cache.redis.AsyncCacheApi redis;
 
 
-    public void sendVcode(String accountName) {
+    public void sendVcode(String accountName, int bizType) {
         final String generatedVerificationCode = bizUtils.generateVerificationCode();
-        String key = cacheUtils.getSMSLastVerifyCodeKey(accountName);
+        String key = cacheUtils.getLastVerifyCodeKey(accountName, bizType);
         redis.set(key, generatedVerificationCode, 10 * 60);
         String html = VCODE_TEMPLATE.replace("USER_EMAIL", accountName)
                 .replace("VCODE", generatedVerificationCode);
