@@ -221,16 +221,15 @@ public class BidController extends BaseController {
             String contactPhoneNumber = jsonNode.findPath("contactPhoneNumber").asText();
             if (ValidationUtil.isEmpty(contactPhoneNumber)) return okCustomJson(CODE40001, "请输入联系电话");
             String fileList = jsonNode.findPath("fileList").asText();
-            long categoryId = jsonNode.findPath("categoryId").asLong();
+            String categoryId = jsonNode.findPath("categoryId").asText();
+            String categoryName = jsonNode.findPath("categoryName").asText();
             double lat = jsonNode.findPath("lat").asDouble();
             double lng = jsonNode.findPath("lng").asDouble();
-            if (categoryId < 1) return okCustomJson(CODE40001, "请选择分类");
-            Category category = Category.find.byId(categoryId);
-            if (null == category) return okCustomJson(CODE40001, "选择的分类不存在");
             Bid bid = new Bid();
             bid.setServiceRegion(serviceRegion);
             bid.setServiceAddress(serviceAddress);
-            bid.setCategoryName(category.name);
+            bid.setCategoryName(categoryName);
+            bid.setCategoryId(categoryId);
             bid.setPreferenceServiceTime(preferenceServiceTime);
             bid.setServiceContent(serviceContent);
             bid.setContactMail(contactMail);
@@ -251,6 +250,7 @@ public class BidController extends BaseController {
                     .orderBy().asc("id")
                     .setMaxRows(20)
                     .findList();
+            //TODO 这里需要 改成 针对 分类 做分发
             if (memberList.size() > 0) {
                 List<BidUser> list = new ArrayList<>();
                 memberList.forEach((each) -> {
