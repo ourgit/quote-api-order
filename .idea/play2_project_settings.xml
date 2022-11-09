@@ -13,15 +13,15 @@
         <entry key="quote-order">
           <value>
             <ProjectSettingsEntry>
-              <option name="playDistrPath" value="$USER_HOME$/.cache/coursier/v1/https/repo1.maven.org/maven2/com/typesafe/play/play_2.13/2.8.16/play_2.13-2.8.16.jar" />
+              <option name="playDistrPath" value="$USER_HOME$/AppData/Local/Coursier/cache/v1/https/repo1.maven.org/maven2/com/typesafe/play/play_2.13/2.8.16/play_2.13-2.8.16.jar" />
             </ProjectSettingsEntry>
           </value>
         </entry>
         <entry key="root">
           <value>
             <ProjectSettingsEntry>
-              <option name="sourceDir" value="$PROJECT_DIR$/app" />
-              <option name="confDir" value="$PROJECT_DIR$/app" />
+              <option name="sourceDir" value="D:\projects\quote-api-order\app" />
+              <option name="confDir" value="D:\projects\quote-api-order\app" />
               <option name="templateImports">
                 <list>
                   <option value="_root_.play.twirl.api.TwirlFeatureImports._" />
@@ -51,7 +51,7 @@
                   <option value="play.libs.F" />
                 </list>
               </option>
-              <option name="uri" value="$PROJECT_DIR$" />
+              <option name="uri" value="/D:/projects/quote-api-order" />
             </ProjectSettingsEntry>
           </value>
         </entry>

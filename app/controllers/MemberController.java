@@ -78,31 +78,63 @@ public class MemberController extends BaseController {
     @Transactional
     public CompletionStage<Result> signUp(Http.Request request) {
         JsonNode json = request.body().asJson();
+
+
         return CompletableFuture.supplyAsync(() -> {
-            if (null == json) return okCustomJson(40003, "参数错误");
+            //参数错误
+            Messages paramMessage = this.messagesApi.preferred(request);
+            String paramErr = paramMessage.at("base.argument.error");
+            if (null == json) return okCustomJson(40003, paramErr);
+
             String accountName = json.findPath("accountName").asText();
             String nickName = json.findPath("nickName").asText();
             String vcode = json.findPath("vcode").asText();
             int accountType = json.findPath("accountType").asInt();
+            //无效的邮箱
+            Messages emailMessage = this.messagesApi.preferred(request);
+            String emailErr = emailMessage.at("base.mail.error");
             if (accountType == ACCOUNT_TYPE_EMAIL) {
                 if (!ValidationUtil.isValidEmailAddress(accountName))
-                    return okCustomJson(40006, "无效的邮箱");
+                    return okCustomJson(40006, emailErr);
             }
+
             String loginPassword = json.findPath("loginPassword").asText();
-            if (!ValidationUtil.isValidPassword(loginPassword)) return okCustomJson(40004, "无效的密码");
-            if (ValidationUtil.isEmpty(vcode)) return okCustomJson(40004, "请输入验证码");
+            //密码无效
+            Messages passwordMassage = this.messagesApi.preferred(request);
+            String passwordErr = passwordMassage.at("base.password.error");
+            if (!ValidationUtil.isValidPassword(loginPassword)) return okCustomJson(40004, passwordErr);
+            //请输入验证码
+            Messages identifyingCodeMassage = this.messagesApi.preferred(request);
+            String identifyingCodeErr = identifyingCodeMassage.at("user.info.please.input.identifyingCode");
+            if (ValidationUtil.isEmpty(vcode)) return okCustomJson(40004, identifyingCodeErr);
+
             String key = cacheUtils.getLastVerifyCodeKey(accountName, BIZ_TYPE_SIGNUP);
             Optional<String> optional = redis.sync().get(key);
-            if (optional.isEmpty()) return okCustomJson(40004, "请先请求验证码");
+            //请先请求验证码
+            Messages VCodeMassage = this.messagesApi.preferred(request);
+            String VCodeErr = VCodeMassage.at("base.please.vcode");
+            if (optional.isEmpty()) return okCustomJson(40004,VCodeErr);
+
             String vcodeSend = optional.get();
-            if (!vcodeSend.equalsIgnoreCase(vcode)) return okCustomJson(40004, "验证码有误");
+            //短信验证码有误
+            Messages codeMassage = this.messagesApi.preferred(request);
+            String codeErr = codeMassage.at("base.vcode.error");
+            if (!vcodeSend.equalsIgnoreCase(vcode)) return okCustomJson(40004, codeErr);
 
             Member foundMember = Member.find.query().where()
                     .eq("accountName", accountName.trim())
                     .setMaxRows(1).findOne();
-            if (null != foundMember) return okCustomJson(40001, "帐号已被注册");
+            //账号已经被注册
+            Messages accountMassage = this.messagesApi.preferred(request);
+            String accountErr = accountMassage.at("reg.error.account.used");
+            if (null != foundMember) return okCustomJson(40001, accountErr);
+
+            //注册发生异常，请联系客服
             Member resultMember = saveMemberForNormalSignup(accountName, loginPassword, nickName, "");
-            if (null == resultMember) return okCustomJson(CODE500, "注册发生异常，请联系客服");
+            Messages occurMassage = this.messagesApi.preferred(request);
+            String occurErr = occurMassage.at("reg.error.occur.exceptions");
+            if (null == resultMember) return okCustomJson(CODE500, occurErr);
+
             ObjectNode authTokenJson = Json.newObject();
             int deviceType = httpRequestDeviceUtils.getMobileDeviceType(request);
             String authToken = businessUtils.generateAuthToken();
@@ -164,7 +196,11 @@ public class MemberController extends BaseController {
         return CompletableFuture.supplyAsync(() -> {
             JsonNode jsonNode = request.body().asJson();
             String accountName = jsonNode.findPath("accountName").asText();
-            if (ValidationUtil.isEmpty(accountName)) return okCustomJson(CODE40001, "请输入帐号");
+            //请输入帐号
+            Messages accountNumberMassage = this.messagesApi.preferred(request);
+            String accountNumber = accountNumberMassage.at("user.info.please.input.accountNumber");
+            if (ValidationUtil.isEmpty(accountName)) return okCustomJson(CODE40001, accountNumber);
+
             int accountType = jsonNode.findPath("accountType").asInt();
             if (accountType == ACCOUNT_TYPE_EMAIL) {
                 mailerService.sendVcode(accountName, BIZ_TYPE_SIGNUP);
@@ -202,18 +238,28 @@ public class MemberController extends BaseController {
         String ip = businessUtils.getRequestIP(request);
         Http.Session session = request.session();
         return CompletableFuture.supplyAsync(() -> {
+            Messages paramMessage = this.messagesApi.preferred(request);
+            String paramErr = paramMessage.at("base.argument.error");
             if (ValidationUtil.isEmpty(accountName) || accountName.length() > 50)
-                return okCustomJson(CODE40001, "参数错误");
+                return okCustomJson(CODE40001, paramErr);
+
             String password = jsonNode.findPath("password").asText();
             if (ValidationUtil.isEmpty(password)) password = "";
-            if (ValidationUtil.isEmpty(password)) return okCustomJson(CODE40001, "参数错误");
+            if (ValidationUtil.isEmpty(password)) return okCustomJson(CODE40001, paramErr);
             Member member = businessUtils.findByAccountNameAndPassword(accountName, password);
-            if (null == member) return okCustomJson(CODE40003, "用户名或密码错误");
+            //用户名或密码错误
+            Messages passwordMessage = this.messagesApi.preferred(request);
+            String passwordErr = passwordMessage.at("signin.error.username.or.password");
+            if (null == member) return okCustomJson(CODE40003, passwordErr);
+
             if (null == member) {
                 member = saveMemberForNormalSignup(accountName, password, "", "");
             }
+           //用户被锁定
+            Messages userMessage = this.messagesApi.preferred(request);
+            String userErr = userMessage.at("signin.error.user.locked");
             if (member.status == Member.MEMBER_STATUS_LOCK) {
-                return okCustomJson(CODE40005, "用户被锁定");
+                return okCustomJson(CODE40005, userErr);
             }
 
             ObjectNode memberJson = (ObjectNode) Json.toJson(member);
@@ -306,8 +352,12 @@ public class MemberController extends BaseController {
             JsonNode jsonNode = request.body().asJson();
             String oldPassword = jsonNode.findPath("oldPassword").textValue();
             String newPassword = jsonNode.findPath("newPassword").textValue();
+
+            //密码不合法
+            Messages codeMessage = this.messagesApi.preferred(request);
+            String codeErr = codeMessage.at("user.error.password.not.correct");
             if (!checkPassword(oldPassword) || !checkPassword(newPassword))
-                return okCustomJson(CODE40001, "密码不合法");
+                return okCustomJson(CODE40001, codeErr);
             return savePassword(uid, oldPassword, newPassword, CHANGE_LOGIN_PASSWORD, request);
         });
     }
@@ -321,6 +371,15 @@ public class MemberController extends BaseController {
      */
     private Result savePassword(long uid, String oldPassword, String newPassword, int type, Http.Request request) {
         Member member = Member.find.byId(uid);
+        //密码错误
+        Messages passwordMessage = this.messagesApi.preferred(request);
+        String passwordErr = passwordMessage.at("user.error.password.error");
+
+        //用户不存在
+        Messages userMessage = this.messagesApi.preferred(request);
+        String userNot = userMessage.at("user.error.user.not.exist");
+
+
         if (null != member) {
             String newTargetPassword = encodeUtils.getMd5WithSalt(newPassword);
             String storedPassword = "";
@@ -353,8 +412,8 @@ public class MemberController extends BaseController {
                 memberJson.put("uidToken", idToken);
                 Http.Session session = refreshAuthCookie(member, authToken, type, idToken);
                 return ok(memberJson).withSession(session);
-            } else return okCustomJson(CODE40002, "密码错误");
-        } else return okCustomJson(CODE40004, "用户不存在");
+            } else return okCustomJson(CODE40002, passwordErr);
+        } else return okCustomJson(CODE40004, userNot);
     }
 
     public Http.Session refreshAuthCookie(Member member, String idToken, int type, String authToken) {
@@ -409,7 +468,11 @@ public class MemberController extends BaseController {
         return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
             if (uid < 1) return unauth403();
             Member member = Member.find.byId(uid);
-            if (null == member) return okCustomJson(CODE403, "该用户不存在");
+            //用户不存在
+            Messages userMessage = this.messagesApi.preferred(request);
+            String userNot = userMessage.at("user.error.user.not.exist");
+            if (null == member) return okCustomJson(CODE403, userNot);
+
             boolean isLoginPasswordSet = false;
             boolean isPayPasswordSet = false;
             if (!ValidationUtil.isEmpty(member.loginPassword)) isLoginPasswordSet = true;
@@ -441,10 +504,14 @@ public class MemberController extends BaseController {
      * @apiSuccess (Success 200){boolean} used true已注册，false未注册
      * @apiSuccess (Error 40001) {int}code 40001 无效的手机号码
      */
-    public CompletionStage<Result> isPhoneNumberUsed(String phoneNumber) {
+    public CompletionStage<Result> isPhoneNumberUsed(Http.Request request,String phoneNumber) {
         return CompletableFuture.supplyAsync(() -> {
+            //无效的手机号码 base.phoneNumber.error
+            Messages phoneNumberMessage = this.messagesApi.preferred(request);
+            String phoneNumberNot = phoneNumberMessage.at("base.phoneNumber.error");
+
             if (!ValidationUtil.isPhoneNumber(phoneNumber)) {
-                return okCustomJson(40001, "无效的手机号码");
+                return okCustomJson(40001, phoneNumberNot);
             } else {
                 Member member = Member.find.query().where().eq("phoneNumber", phoneNumber)
                         .setMaxRows(1)
@@ -489,19 +556,35 @@ public class MemberController extends BaseController {
         return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
             if (uid < 1) return unauth403();
             JsonNode jsonNode = request.body().asJson();
-            if (jsonNode == null) return okCustomJson(40001, "参数错误");
+
+            //base.argument.error=参数错误
+            Messages argumentMessage = messagesApi.preferred(request);
+            String argumentErr = argumentMessage.at("base.argument.error");
+            if (jsonNode == null) return okCustomJson(40001, argumentErr);
+
             String realName = jsonNode.findPath("realName").asText();
             String nickName = jsonNode.findPath("nickName").asText();
             String avatar = jsonNode.findPath("avatar").asText();
             Member member = Member.find.byId(uid);
-            if (null == member) return okCustomJson(CODE40001, "该用户不存在");
 
+            //user.error.user.not.exist=该用户不存在
+            Messages userMessage = messagesApi.preferred(request);
+            String userNotErr = userMessage.at("user.error.user.not.exist");
+            if (null == member) return okCustomJson(CODE40001, userNotErr);
+
+            //user.error.name.not.exceed.six="姓名不能超过六位"
+            Messages nameMessage = messagesApi.preferred(request);
+            String nameNotExceed = nameMessage.at("user.error.name.not.exceed.six");
             if (!ValidationUtil.isEmpty(realName)) {
-                if (realName.length() > 6) return okCustomJson(40001, "姓名 不超过6位");
+                if (realName.length() > 6) return okCustomJson(40001, nameNotExceed);
                 member.setRealName(realName);
             }
+            //user.error.please.fillIn.nickname.to.long"昵称太长，请重新填写"
+            Messages nickNameLMessage = messagesApi.preferred(request);
+            String nickNameL = nickNameLMessage.at("user.error.please.fillIn.nickname.to.long");
+
             if (!ValidationUtil.isEmpty(nickName)) {
-                if (nickName.length() > 30) return okCustomJson(40001, "昵称太长，请重新填写");
+                if (nickName.length() > 30) return okCustomJson(40001, nickNameL);
                 member.setNickName(nickName);
             }
             if (!ValidationUtil.isEmpty(avatar)) {
@@ -527,10 +610,19 @@ public class MemberController extends BaseController {
     public CompletionStage<Result> isValidAccount(Http.Request request, String accountName) {
         boolean isUptoLimit = businessUtils.upToIPLimit(request, RedisKeyConstant.KEY_INVOKE_IS_VALID_ACCOUNT_LIMIT, BusinessConstant.MAX_COUNT_INVOKE_IS_VALID_ACCOUNT_PER_DAY);
         return CompletableFuture.supplyAsync(() -> {
-            if (isUptoLimit) return okCustomJson(CODE40002, "超过当日最大调用次数");
-            if (!ValidationUtil.isPhoneNumber(accountName)) return okCustomJson(CODE40001, "该手机号未注册");
+
+            //user.error.upto.max.api.used=超过当日最大调用次数
+            Messages uptApiMessage = messagesApi.preferred(request);
+            String uptoAPI = uptApiMessage.at("user.error.upto.max.api.used");
+            if (isUptoLimit) return okCustomJson(CODE40002, uptoAPI);
+
+            //user.error.phonenumber.not.reg=该手机号未注册
+            Messages phoneNumberMessage = messagesApi.preferred(request);
+            String phoneNumberReg= phoneNumberMessage.at("user.error.phonenumber.not.reg");
+
+            if (!ValidationUtil.isPhoneNumber(accountName)) return okCustomJson(CODE40001, phoneNumberReg);
             List<Member> members = Member.find.query().where().eq("phoneNumber", accountName).findList();
-            if (members.size() < 1) return okCustomJson(CODE40001, "该手机号未注册");
+            if (members.size() < 1) return okCustomJson(CODE40001, phoneNumberReg);
             return okJSON200();
         });
 
@@ -557,13 +649,25 @@ public class MemberController extends BaseController {
             String accountName = node.findPath("accountName").asText();
             accountName = businessUtils.escapeHtml(accountName);
             String vcode = node.findPath("vcode").asText();
+
+            //signin.error.phonenumber.or.vcode=无效手机号码/短信验证码
+            Messages NoPhoneNumberMessage = messagesApi.preferred(request);
+            String NoPhoneNumber = NoPhoneNumberMessage.at("signin.error.phonenumber.or.vcode");
             if (!businessUtils.checkVcode(accountName, vcode, BIZ_TYPE_BIND_VERIFY))
-                return okCustomJson(CODE40002, "无效手机号码/短信验证码");
+                return okCustomJson(CODE40002, NoPhoneNumber);
 
             String newPassword = node.findPath("newPassword").asText();
-            if (!checkPassword(newPassword)) return okCustomJson(CODE40003, "无效的密码");
+            //base.password.error=无效的密码
+            Messages NoPasswordMessage = messagesApi.preferred(request);
+            String NoPassword = NoPasswordMessage.at("base.password.error");
+            if (!checkPassword(newPassword)) return okCustomJson(CODE40003, NoPassword);
+
             Member member = Member.find.query().where().eq("phoneNumber", accountName).setMaxRows(1).findOne();
-            if (null == member) return okCustomJson(CODE40005, "该帐号不存在");
+
+            //user.error.account.not.exist=该帐号不存在
+            Messages accouentMessages = messagesApi.preferred(request);
+            String accouentNotExist = accouentMessages.at("user.error.account.not.exist");
+            if (null == member) return okCustomJson(CODE40005, accouentNotExist);
             member.setLoginPassword(encodeUtils.getMd5WithSalt(newPassword));
             member.save();
             return okJSON200();
@@ -592,14 +696,28 @@ public class MemberController extends BaseController {
             String oldPassword = node.findPath("oldPassword").asText();
             String vcode = node.findPath("vcode").asText();
             long memberId = node.findPath("uid").asLong();
-            if (uid != memberId) return okCustomJson(CODE403, "没有权限使用该功能");
-            if (!checkPassword(newPassword)) return okCustomJson(CODE40003, "无效的密码");
+            //没有权限使用功能base.not.auth.to.use=没有权限使用该功能
+            Messages NotuseMessage = messagesApi.preferred(request);
+            String NotUse = NotuseMessage.at("base.not.auth.to.use");
+            if (uid != memberId) return okCustomJson(CODE403, NotUse);
+
+            //base.password.error=无效的密码
+            Messages passWordErrMessage = messagesApi.preferred(request);
+            String NotPassWord = passWordErrMessage.at("base.password.error");
+            if (!checkPassword(newPassword)) return okCustomJson(CODE40003, NotPassWord);
             Member member = Member.find.byId(uid);
-            if (null == member) return okCustomJson(CODE40004, "该帐号不存在");
+            //user.error.account.not.exist=该帐号不存在
+            Messages accountMessage = messagesApi.preferred(request);
+            String accountNotExist = accountMessage.at("user.error.account.not.exist");
+            if (null == member) return okCustomJson(CODE40004, accountNotExist);
             //todo need to change mail code
+            //user.error.old.password="原密码有误"
+            Messages oldPasswordMessage = messagesApi.preferred(request);
+            String oldPasswordErr = oldPasswordMessage.at("user.error.old.password");
+
             if (!ValidationUtil.isEmpty(member.loginPassword)) {
                 if (!member.loginPassword.equals(encodeUtils.getMd5WithSalt(oldPassword))) {
-                    return okCustomJson(CODE40001, "原密码有误");
+                    return okCustomJson(CODE40001, oldPasswordErr);
                 }
             }
             member.setLoginPassword(encodeUtils.getMd5WithSalt(newPassword));
@@ -624,11 +742,18 @@ public class MemberController extends BaseController {
     @Security.Authenticated(Secured.class)
     public CompletionStage<Result> getBalance(Http.Request request, int balanceType) {
         return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
-            if (uid < 1) return okCustomJson(403, "没有权限");
+            //base.not.auth.to.use=没有权限使用该功能
+            Messages notAuthUseMessage = messagesApi.preferred(request);
+            String notAuthUser = notAuthUseMessage.at("base.not.auth.to.use");
+            if (uid < 1) return okCustomJson(403, notAuthUser);
+
+            //user.error.not.this.leftbalance.available=没有该类型的余额
+            Messages balanceMessage = messagesApi.preferred(request);
+            String Notbalance = balanceMessage.at("user.error.not.this.leftbalance.available");
             if (balanceType > 0) {
                 MemberBalance balance = MemberBalance.find.query().where().eq("uid", uid)
                         .eq("itemId", balanceType).setMaxRows(1).findOne();
-                if (null == balance) return okCustomJson(CODE40002, "没有该类型的余额");
+                if (null == balance) return okCustomJson(CODE40002, Notbalance);
                 else {
                     ObjectNode resultNode = (ObjectNode) Json.toJson(balance);
                     resultNode.put(CODE, CODE200);
@@ -772,23 +897,61 @@ public class MemberController extends BaseController {
             String oldPhoneNumberVcode = node.findPath("oldPhoneNumberVcode").asText();
             String newPhoneNumberVcode = node.findPath("newPhoneNumberVcode").asText();
             Member exist = Member.find.query().where().eq("phoneNumber", newPhoneNumber).setMaxRows(1).findOne();
-            if (null != exist) return okCustomJson(CODE40001, "新手机号码已被使用");
-            if (ValidationUtil.isEmpty(oldPhoneNumberVcode)) return okCustomJson(CODE40001, "请输入原手机号短信验证码");
-            if (ValidationUtil.isEmpty(newPhoneNumberVcode)) return okCustomJson(CODE40001, "请输入新手机号短信验证码");
+
+            //user.error.new.phonenumber.used="新手机号码已被使用"
+            Messages PhoneNumberMessage = messagesApi.preferred(request);
+            String NewPhoneNumberUse = PhoneNumberMessage.at("user.error.new.phonenumber.used");
+            if (null != exist) return okCustomJson(CODE40001, NewPhoneNumberUse);
+
+            //phonenumber.info.please.input.old.vcode=请输入原手机号短信验证码
+            Messages PhoneNumberCodeMessage = messagesApi.preferred(request);
+            String PhoneNumberCode = PhoneNumberCodeMessage.at("phonenumber.info.please.input.old.vcode");
+            if (ValidationUtil.isEmpty(oldPhoneNumberVcode)) return okCustomJson(CODE40001, PhoneNumberCode);
+
+            //phonenumber.info.please.input.new.vcode=请输入新手机号短信验证码
+            Messages NewNumberCodeMessage = messagesApi.preferred(request);
+            String NewNumberCode = NewNumberCodeMessage.at("phonenumber.info.please.input.new.vcode");
+            if (ValidationUtil.isEmpty(newPhoneNumberVcode)) return okCustomJson(CODE40001, NewNumberCode);
+
+            //phonenumber.error.old.vcode=原手机号短信验证码有误
+            Messages phonenumberCodeMessage = messagesApi.preferred(request);
+            String oldNumberCodeErr = phonenumberCodeMessage.at("phonenumber.error.old.vcode");
             if (!ValidationUtil.isVcodeCorrect(oldPhoneNumberVcode))
-                return okCustomJson(CODE40001, "原手机号短信验证码有误");
+                return okCustomJson(CODE40001, oldNumberCodeErr);
+
+            //phonenumber.error.new.vcode=新手机号短信验证码有误
+            Messages NewphonenumberCodeMessage = messagesApi.preferred(request);
+            String NewNumberCodeErr = NewphonenumberCodeMessage.at("phonenumber.error.new.vcode");
             if (!ValidationUtil.isVcodeCorrect(newPhoneNumberVcode))
-                return okCustomJson(CODE40001, "新手机号短信验证码有误");
-            if (!ValidationUtil.isPhoneNumber(newPhoneNumber)) return okCustomJson(CODE40001, "新手机号码有误");
+                return okCustomJson(CODE40001, NewNumberCodeErr);
+
+           // phonenumber.error.new.phonenumber=新手机号码有误
+            Messages NewphonenumberMessage = messagesApi.preferred(request);
+            String NewNumberErr = NewphonenumberMessage.at(" phonenumber.error.new.phonenumber");
+            if (!ValidationUtil.isPhoneNumber(newPhoneNumber)) return okCustomJson(CODE40001, NewNumberErr);
+
+           //phonenumber.error.please.input.password=请输入密码
+            Messages  InputPasswordMessage = messagesApi.preferred(request);
+            String InputPasswordErr = InputPasswordMessage.at(" phonenumber.error.please.input.password");
             if (!ValidationUtil.isEmpty(member.loginPassword)) {
-                if (ValidationUtil.isEmpty(password)) return okCustomJson(CODE40001, "请输入密码");
+                if (ValidationUtil.isEmpty(password)) return okCustomJson(CODE40001, InputPasswordErr);
                 String targetPassword = encodeUtils.getMd5WithSalt(password);
-                if (!targetPassword.equals(member.loginPassword)) return okCustomJson(CODE40001, "密码错误");
+
+                //user.error.password.error=密码错误
+                Messages  PasswordMessage = messagesApi.preferred(request);
+                String PasswordErr = PasswordMessage.at(" user.error.password.error");
+                if (!targetPassword.equals(member.loginPassword)) return okCustomJson(CODE40001, PasswordErr);
             }
+            //phonenumber.error.old.vcode=原手机号短信验证码有误
+            Messages oldphonenumberMessage = messagesApi.preferred(request);
+            String oldNumberErr = oldphonenumberMessage.at("phonenumber.error.old.vcode");
             if (!businessUtils.checkVcode(member.contactNumber, oldPhoneNumberVcode, BIZ_TYPE_BIND_VERIFY))
-                return okCustomJson(CODE40002, "原手机号短信验证码有误");
+                return okCustomJson(CODE40002, oldNumberErr);
+            //phonenumber.error.new.vcode=新手机号短信验证码有误
+            Messages NewphoneMessage = messagesApi.preferred(request);
+            String NewPhoneCodeErr = NewphoneMessage.at("phonenumber.error.new.vcode");
             if (!businessUtils.checkVcode(newPhoneNumber, newPhoneNumberVcode, BIZ_TYPE_BIND_VERIFY))
-                return okCustomJson(CODE40002, "新手机号短信验证码有误");
+                return okCustomJson(CODE40002, NewPhoneCodeErr);
             //TODO 需要短信提醒
             member.save();
             return okJSON200();
@@ -871,13 +1034,17 @@ public class MemberController extends BaseController {
     public CompletionStage<Result> clearSelectedMsg(Http.Request request) {
         return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
             JsonNode jsonNode = request.body().asJson();
+            //base.argument.error=参数错误
             Messages messages = this.messagesApi.preferred(request);
             String baseArgumentError = messages.at("base.argument.error");
             if (null == jsonNode) return okCustomJson(CODE40001, baseArgumentError);
             if (uid < 1) return unauth403();
-            if (!jsonNode.has("list")) return okCustomJson(CODE40001, "list参数错误");
+            //base.list.argument.error="list参数错误"
+            Messages listMessages = this.messagesApi.preferred(request);
+            String listArgumentError = listMessages.at("base.list.argument.error");
+            if (!jsonNode.has("list")) return okCustomJson(CODE40001, listArgumentError);
             ArrayNode nodes = (ArrayNode) jsonNode.findPath("list");
-            if (null == nodes || nodes.size() < 1) return okCustomJson(CODE40001, "list参数错误");
+            if (null == nodes || nodes.size() < 1) return okCustomJson(CODE40001, listArgumentError);
             List<Msg> updateList = new ArrayList<>();
             nodes.forEach((each) -> {
                 long id = each.asLong();
@@ -919,29 +1086,55 @@ public class MemberController extends BaseController {
         return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
             if (uid < 1) return unauth403();
             JsonNode jsonNode = request.body().asJson();
-            if (jsonNode == null) return okCustomJson(40001, "参数错误");
+            //base.argument.error=参数错误
+            Messages messages = this.messagesApi.preferred(request);
+            String baseArgumentError = messages.at("base.argument.error");
+            if (jsonNode == null) return okCustomJson(40001, baseArgumentError);
             Member member = Member.find.byId(uid);
-            if (null == member) return okCustomJson(CODE40001, "该用户不存在");
-            if (member.authStatus == Member.AUTH_STATUS_AUTHED) return okCustomJson(CODE40001, "您已认证");
-
+            //user.error.user.not.exist=该用户不存在
+            Messages userMessage = messagesApi.preferred(request);
+            String userNotErr = userMessage.at("user.error.user.not.exist");
+            if (null == member) return okCustomJson(CODE40001, userNotErr);
+            //user.info.you.authentication="您已认证"
+            Messages authenticationMessage = messagesApi.preferred(request);
+            String authentication = authenticationMessage.at("user.info.you.authentication");
+            if (member.authStatus == Member.AUTH_STATUS_AUTHED) return okCustomJson(CODE40001, authentication);
             long currentTime = dateUtils.getCurrentTimeBySecond();
             String shopName = jsonNode.findPath("shopName").asText();
-            if (ValidationUtil.isEmpty(shopName)) return okCustomJson(CODE40001, "请输入店铺名字");
+            //user.info.please.input.shopName="请输入店铺名字"
+            Messages shopMessage = messagesApi.preferred(request);
+            String shoppingName = shopMessage.at("user.info.please.input.shopName");
+            if (ValidationUtil.isEmpty(shopName)) return okCustomJson(CODE40001, shoppingName);
 
             String contactPhoneNumber = jsonNode.findPath("contactNumber").asText();
-            if (ValidationUtil.isEmpty(contactPhoneNumber)) return okCustomJson(CODE40001, "请输入联系电话");
+            //user.info.please.input.phonenumber=请输入电话号码
+            Messages PhoneNumMessage = messagesApi.preferred(request);
+            String PhoneNumber = PhoneNumMessage.at("user.info.please.input.phonenumber");
+            if (ValidationUtil.isEmpty(contactPhoneNumber)) return okCustomJson(CODE40001, PhoneNumber);
 
             String contactAddress = jsonNode.findPath("contactAddress").asText();
-            if (ValidationUtil.isEmpty(contactAddress)) return okCustomJson(CODE40001, "请输入联系地址");
+            //user.info.please.input.contactAddress="请输入联系地址"
+            Messages address = messagesApi.preferred(request);
+            String ContactAddress = address.at("user.info.please.input.contactAddress");
+            if (ValidationUtil.isEmpty(contactAddress)) return okCustomJson(CODE40001, ContactAddress);
 
             String contactName = jsonNode.findPath("contactName").asText();
-            if (ValidationUtil.isEmpty(contactName)) return okCustomJson(CODE40001, "请输入联系人名字");
+            //user.info.please.input.contact.name=请输入联系人称呼
+            Messages message= messagesApi.preferred(request);
+            String ContactName = message.at("user.info.please.input.contact.name");
+            if (ValidationUtil.isEmpty(contactName)) return okCustomJson(CODE40001, ContactName);
 
             String digest = jsonNode.findPath("digest").asText();
-            if (ValidationUtil.isEmpty(digest)) return okCustomJson(CODE40001, "请输入摘要");
+            //user.info.please.input.abstracts="请输入摘要"
+            Messages abstractMessage= messagesApi.preferred(request);
+            String abstracts = abstractMessage.at("user.info.please.input.abstracts");
+            if (ValidationUtil.isEmpty(digest)) return okCustomJson(CODE40001, abstracts);
 
             String businessItems = jsonNode.findPath("businessItems").asText();
-            if (ValidationUtil.isEmpty(businessItems)) return okCustomJson(CODE40001, "请输入经营项目");
+            //user.info.please.input.operatingItems="请输入经营项目"
+            Messages ItemsMessage= messagesApi.preferred(request);
+            String operatingItems = ItemsMessage.at("user.info.please.input.operatingItems");
+            if (ValidationUtil.isEmpty(businessItems)) return okCustomJson(CODE40001, operatingItems);
 
             String rectLogo = jsonNode.findPath("rectLogo").asText();
             String images = jsonNode.findPath("images").asText();
@@ -951,14 +1144,19 @@ public class MemberController extends BaseController {
                     .orderBy().desc("id")
                     .setMaxRows(1)
                     .findOne();
+            //请等待审核user.error.please.waitAudit="请先等待"
+            Messages Message= messagesApi.preferred(request);
+            String waitAudit = Message.at("user.error.please.waitAudit");
             if (null != storeApplyLog && storeApplyLog.status > ShopApplyLog.STATUS_TO_AUDIT) {
-                return okCustomJson(CODE40001, "请等待审核");
+                return okCustomJson(CODE40001, waitAudit);
             }
-
-            if (ValidationUtil.isEmpty(contactAddress)) return okCustomJson(CODE40001, "请输入联系地址");
-            if (ValidationUtil.isEmpty(contactPhoneNumber)) return okCustomJson(CODE40001, "请输入联系");
-            if (ValidationUtil.isEmpty(contactName)) return okCustomJson(CODE40001, "名字有误");
-            if (ValidationUtil.isEmpty(shopName)) return okCustomJson(CODE40001, "请输入店铺名字");
+            if (ValidationUtil.isEmpty(contactAddress)) return okCustomJson(CODE40001, ContactAddress);
+            if (ValidationUtil.isEmpty(contactPhoneNumber)) return okCustomJson(CODE40001, PhoneNumber);
+           // base.name.error=名字有误
+            Messages NameMessage= messagesApi.preferred(request);
+            String nameErr = NameMessage.at("base.name.error");
+            if (ValidationUtil.isEmpty(contactName)) return okCustomJson(CODE40001, nameErr);
+            if (ValidationUtil.isEmpty(shopName)) return okCustomJson(CODE40001, shoppingName);
 
 
             ShopApplyLog log = new ShopApplyLog();
@@ -1060,8 +1258,11 @@ public class MemberController extends BaseController {
             if (uid < 1) return unauth403();
             Member member = Member.find.byId(uid);
             if (uid < 1) return unauth403();
+            //signin.error.user.locked=用户被锁定
+            Messages userMessage= messagesApi.preferred(request);
+            String userLock = userMessage.at("signin.error.user.locked");
             if (member.status != Member.MEMBER_STATUS_NORMAL)
-                return okCustomJson(CODE40001, "该用户被锁定，如有需要，请联系客服");
+                return okCustomJson(CODE40001, userLock);
             String password = node.findPath("password").asText();
             String newMail = node.findPath("newMail").asText();
             String oldMailVcode = node.findPath("oldMailVcode").asText();
@@ -1070,23 +1271,49 @@ public class MemberController extends BaseController {
                     .eq("accountName", newMail)
                     .setMaxRows(1)
                     .findOne();
-            if (null != exist) return okCustomJson(CODE40001, "邮箱已被使用");
-            if (ValidationUtil.isEmpty(oldMailVcode)) return okCustomJson(CODE40001, "请输入原邮箱验证码");
-            if (ValidationUtil.isEmpty(newMailVcode)) return okCustomJson(CODE40001, "请输入新邮箱验证码");
+            //user.error.mailbox.used="邮箱已被使用"
+            Messages mailMessage= messagesApi.preferred(request);
+            String mailUsed = mailMessage.at("user.error.mailbox.used");
+            if (null != exist) return okCustomJson(CODE40001, mailUsed);
+
+            //mailbox.info.please.input.old.vcode="请输入原邮箱验证码"
+            Messages OldmailboxMessage= messagesApi.preferred(request);
+            String oldmailbox = OldmailboxMessage.at("mailbox.info.please.input.old.vcode");
+            if (ValidationUtil.isEmpty(oldMailVcode)) return okCustomJson(CODE40001, oldmailbox);
+            //mailbox.info.please.input.new.vcode="请输入新邮箱验证码"
+            Messages NewmailboxMessage= messagesApi.preferred(request);
+            String newmailbox = NewmailboxMessage.at("mailbox.info.please.input.new.vcode");
+            if (ValidationUtil.isEmpty(newMailVcode)) return okCustomJson(CODE40001, newmailbox);
+
+            //mailbox.error.old.vcode="原邮箱验证码有误"
+            Messages oldmailCodeMessage= messagesApi.preferred(request);
+            String oldMailCode = oldmailCodeMessage.at("mailbox.error.old.vcode");
             if (!ValidationUtil.isVcodeCorrect(oldMailVcode))
-                return okCustomJson(CODE40001, "原邮箱验证码有误");
+                return okCustomJson(CODE40001, oldMailCode);
+            // mailbox.error.new.vcode="新邮箱验证码有误"
+            Messages newMailCodeMessage= messagesApi.preferred(request);
+            String newMailCode = newMailCodeMessage.at("mailbox.error.new.vcode");
             if (!ValidationUtil.isVcodeCorrect(newMailVcode))
-                return okCustomJson(CODE40001, "新邮箱验证码有误");
-            if (!ValidationUtil.isValidEmailAddress(newMail)) return okCustomJson(CODE40001, "新邮箱有误");
+                return okCustomJson(CODE40001, newMailCode);
+            //mailbox.error.new.mailBox="新邮箱有误"
+            Messages newMailMessage = messagesApi.preferred(request);
+            String newMailBox = newMailMessage.at("mailbox.error.new.mailBox");
+            if (!ValidationUtil.isValidEmailAddress(newMail)) return okCustomJson(CODE40001, newMailBox);
             if (!ValidationUtil.isEmpty(member.loginPassword)) {
-                if (ValidationUtil.isEmpty(password)) return okCustomJson(CODE40001, "请输入密码");
+                //phonenumber.error.please.input.password=请输入密码
+                Messages  InputPasswordMessage = messagesApi.preferred(request);
+                String InputPasswordErr = InputPasswordMessage.at(" phonenumber.error.please.input.password");
+                if (ValidationUtil.isEmpty(password)) return okCustomJson(CODE40001, InputPasswordErr);
                 String targetPassword = encodeUtils.getMd5WithSalt(password);
-                if (!targetPassword.equals(member.loginPassword)) return okCustomJson(CODE40001, "密码错误");
+                //密码错误
+                Messages  PasswordMessage = messagesApi.preferred(request);
+                String PasswordErr = PasswordMessage.at(" user.error.password.error");
+                if (!targetPassword.equals(member.loginPassword)) return okCustomJson(CODE40001, PasswordErr);
             }
             if (!businessUtils.checkVcode(member.accountName, oldMailVcode, BIZ_TYPE_BIND_VERIFY))
-                return okCustomJson(CODE40002, "原邮箱验证码有误");
+                return okCustomJson(CODE40002, oldMailCode);
             if (!businessUtils.checkVcode(newMail, newMailVcode, BIZ_TYPE_BIND_VERIFY))
-                return okCustomJson(CODE40002, "新邮箱验证码有误");
+                return okCustomJson(CODE40002, newMailCode);
             member.setAccountName(newMail);
             //TODO 需要短信提醒
             member.save();
@@ -1128,8 +1355,11 @@ public class MemberController extends BaseController {
             if (uid < 1) return unauth403();
             Member member = Member.find.byId(uid);
             if (uid < 1) return unauth403();
+            //signin.error.user.locked=用户被锁定
+            Messages userMessage= messagesApi.preferred(request);
+            String userLock = userMessage.at("signin.error.user.locked");
             if (member.status != Member.MEMBER_STATUS_NORMAL)
-                return okCustomJson(CODE40001, "该用户被锁定，如有需要，请联系客服");
+                return okCustomJson(CODE40001, userLock);
             if (ValidationUtil.isValidEmailAddress(member.accountName))
                 mailerService.sendVcode(member.accountName.replaceAll("-", "").trim(), BIZ_TYPE_BIND_VERIFY);
             return okJSON200();
@@ -1154,19 +1384,38 @@ public class MemberController extends BaseController {
             if (uid < 1) return unauth403();
             String phoneNumber = node.findPath("phoneNumber").asText();
             String vcode = node.findPath("vcode").asText();
-            if (ValidationUtil.isEmpty(vcode)) return okCustomJson(40004, "验证码有误");
-            if (ValidationUtil.isEmpty(phoneNumber)) return okCustomJson(CODE40001, "请输入手机号码");
-            if (phoneNumber.length() > 30) return okCustomJson(CODE40001, "无效的手机号码");
+            //短信验证码有误
+            Messages codeMassage = this.messagesApi.preferred(request);
+            String codeErr = codeMassage.at("base.vcode.error");
+            if (ValidationUtil.isEmpty(vcode)) return okCustomJson(40004, codeErr);
+            //user.info.please.input.phonenumber=请输入电话号码
+            Messages PhoneNumMessage = messagesApi.preferred(request);
+            String PhoneNumber = PhoneNumMessage.at("user.info.please.input.phonenumber");
+            if (ValidationUtil.isEmpty(phoneNumber)) return okCustomJson(CODE40001, PhoneNumber);
+            Messages phoneNumberMessage = this.messagesApi.preferred(request);
+            String phoneNumberNot = phoneNumberMessage.at("base.phoneNumber.error");
+            if (phoneNumber.length() > 30) return okCustomJson(CODE40001, phoneNumberNot);
+
+            //signin.error.user.locked=用户被锁定
+            Messages userMessage= messagesApi.preferred(request);
+            String userLock = userMessage.at("signin.error.user.locked");
             if (member.status != Member.MEMBER_STATUS_NORMAL)
-                return okCustomJson(CODE40001, "该用户被锁定，如有需要，请联系客服");
+                return okCustomJson(CODE40001, userLock);
+            //reg.error.phoneNumber.bound="已绑定手机号码，不可再绑定"
+            Messages PhoneNumberMessage= messagesApi.preferred(request);
+            String PhoneNumErr = PhoneNumberMessage.at("reg.error.phoneNumber.bound");
             if (!ValidationUtil.isEmpty(member.contactNumber)) {
-                return okCustomJson(CODE40003, "已绑定手机号码，不可再绑定");
+                return okCustomJson(CODE40003, PhoneNumErr);
             }
             String key = cacheUtils.getLastVerifyCodeKey(phoneNumber, BIZ_TYPE_BIND_VERIFY);
             Optional<String> optional = redis.sync().get(key);
-            if (optional.isEmpty()) return okCustomJson(40004, "请先请求验证码");
+            //请先请求验证码
+            Messages VCodeMassage = this.messagesApi.preferred(request);
+            String VCodeErr = VCodeMassage.at("base.please.vcode");
+            if (optional.isEmpty()) return okCustomJson(40004, VCodeErr);
             String vcodeSend = optional.get();
-            if (!vcodeSend.equalsIgnoreCase(vcode)) return okCustomJson(40004, "验证码有误");
+
+            if (!vcodeSend.equalsIgnoreCase(vcode)) return okCustomJson(40004, codeErr);
 
             member.setContactNumber(phoneNumber);
             member.setUpdateTime(dateUtils.getCurrentTimeBySecond());
@@ -1191,22 +1440,38 @@ public class MemberController extends BaseController {
             Member member = Member.find.byId(uid);
             if (uid < 1) return unauth403();
             String email = node.findPath("email").asText();
-            if (!ValidationUtil.isValidEmailAddress(email)) return okCustomJson(CODE40001, "无效的邮箱");
+            //无效的邮箱
+            Messages emailMessage = this.messagesApi.preferred(request);
+            String emailErr = emailMessage.at("base.mail.error");
+            if (!ValidationUtil.isValidEmailAddress(email)) return okCustomJson(CODE40001, emailErr);
             String vcode = node.findPath("vcode").asText();
-            if (ValidationUtil.isEmpty(vcode)) return okCustomJson(40004, "验证码有误");
-
+            //base.Mailvcode.error="邮箱验证码有误"
+            Messages emaiCodelMessage = this.messagesApi.preferred(request);
+            String emailCodeErr = emaiCodelMessage.at("base.Mailvcode.error");
+            if (ValidationUtil.isEmpty(vcode)) return okCustomJson(40004, emailCodeErr);
+            //signin.error.user.locked=用户被锁定
+            Messages userMessage= messagesApi.preferred(request);
+            String userLock = userMessage.at("signin.error.user.locked");
             if (member.status != Member.MEMBER_STATUS_NORMAL)
-                return okCustomJson(CODE40001, "该用户被锁定，如有需要，请联系客服");
+                return okCustomJson(CODE40001, userLock);
+            //reg.error.mailAccounts.bound="已绑定邮箱账号号，不可再绑定"
+            Messages mailAccountsMessage= messagesApi.preferred(request);
+            String mailAccounts = mailAccountsMessage.at("reg.error.mailAccounts.bound");
             if (!ValidationUtil.isEmpty(member.accountName)) {
-                return okCustomJson(CODE40003, "已绑定邮箱号，不可再绑定");
+                return okCustomJson(CODE40003, mailAccounts);
             }
 
             String key = cacheUtils.getLastVerifyCodeKey(email, BIZ_TYPE_BIND_VERIFY);
             Optional<String> optional = redis.sync().get(key);
-            if (optional.isEmpty()) return okCustomJson(40004, "请先请求验证码");
+            //请先请求验证码
+            Messages VCodeMassage = this.messagesApi.preferred(request);
+            String VCodeErr = VCodeMassage.at("base.please.vcode");
+            if (optional.isEmpty()) return okCustomJson(40004, VCodeErr);
             String vcodeSend = optional.get();
-            if (!vcodeSend.equalsIgnoreCase(vcode)) return okCustomJson(40004, "验证码有误");
-
+            //短信验证码有误
+            Messages codeMassage = this.messagesApi.preferred(request);
+            String codeErr = codeMassage.at("base.vcode.error");
+            if (!vcodeSend.equalsIgnoreCase(vcode)) return okCustomJson(40004, codeErr);
             member.setAccountName(email);
             member.setUpdateTime(dateUtils.getCurrentTimeBySecond());
             member.save();

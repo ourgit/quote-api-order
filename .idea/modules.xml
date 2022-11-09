@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/project.quote-order-build.iml" filepath="$PROJECT_DIR$/.idea/modules/project.quote-order-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/projects.quote-api-order.quote-order.iml" filepath="$PROJECT_DIR$/.idea/modules/projects.quote-api-order.quote-order.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/quote-api-order.project.quote-order-build.iml" filepath="$PROJECT_DIR$/.idea/modules/quote-api-order.project.quote-order-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/quote-api-order.quote-order.iml" filepath="$PROJECT_DIR$/.idea/modules/quote-api-order.quote-order.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/quote-order.iml" filepath="$PROJECT_DIR$/.idea/modules/quote-order.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/quote-order-build.iml" filepath="$PROJECT_DIR$/.idea/modules/quote-order-build.iml" />

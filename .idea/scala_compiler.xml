@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ScalaCompilerConfiguration">
     <profile name="sbt 1" modules="quote-api-order_8741" />
-    <profile name="sbt 2" modules="order,quote-api-order.quote-order,quote-order">
+    <profile name="sbt 2" modules="order,projects.quote-api-order.quote-order,quote-api-order.quote-order,quote-order">
       <option name="deprecationWarnings" value="true" />
       <option name="uncheckedWarnings" value="true" />
       <parameters>
