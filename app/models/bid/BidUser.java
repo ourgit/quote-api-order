@@ -29,6 +29,9 @@ public class BidUser extends Model {
     @Column(name = "create_time")
     public long createTime;
 
+    @Transient
+    public Bid bid;
+
     public static Finder<Long, BidUser> find = new Finder<>(BidUser.class);
 
     public long getId() {

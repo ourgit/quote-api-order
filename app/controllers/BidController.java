@@ -73,7 +73,7 @@ public class BidController extends BaseController {
             if (page < 1) page = 1;
             if (size < 1) size = BusinessConstant.PAGE_SIZE_20;
             ExpressionList<Bid> expressionList = Bid.find.query().where()
-                    .eq("uid", uid);
+                    .eq("askerUid", uid);
             if (status > 0) expressionList.eq("status", status);
             PagedList<Bid> pagedList = expressionList
                     .orderBy().desc("id")
@@ -120,15 +120,19 @@ public class BidController extends BaseController {
             int page = jsonNode.findPath("page").asInt();
             int size = jsonNode.findPath("size").asInt();
             if (page < 1) page = 1;
-            if (size < 1) size = BusinessConstant.PAGE_SIZE_20;
-            ExpressionList<Bid> expressionList = Bid.find.query().where()
+            if (size < 1) size = BusinessConstant.PAGE_SIZE_10;
+            ExpressionList<BidUser> expressionList = BidUser.find.query().where()
                     .eq("uid", uid);
-            PagedList<Bid> pagedList = expressionList
+            PagedList<BidUser> pagedList = expressionList
                     .orderBy().desc("id")
                     .setFirstRow((page - 1) * size)
                     .setMaxRows(size)
                     .findPagedList();
-            List<Bid> list = pagedList.getList();
+            List<BidUser> list = pagedList.getList();
+            list.parallelStream().forEach((bidUser) -> {
+                Bid bid = Bid.find.byId(bidUser.bidId);
+                bidUser.bid = bid;
+            });
             ObjectNode result = Json.newObject();
             result.put(CODE, CODE200);
             result.put("pages", pagedList.getTotalPageCount());
@@ -162,7 +166,7 @@ public class BidController extends BaseController {
             if (null == bid) return okCustomJson(CODE40001, "该报价不存在");
             List<BidUser> bidUserList = BidUser.find.query().where()
                     .eq("bidId", id)
-                    .eq("uid", uid)
+                    .eq("askerUid", uid)
                     .findList();
             Set<Long> set = new HashSet<>();
             set.add(bid.askerUid);
