@@ -12,7 +12,7 @@ POST        /v1/user/logout/                                  controllers.Member
 POST        /v1/user/loginPassword/                           controllers.MemberController.changeLoginPassword(request: Request)
 GET         /v1/user/                                         controllers.MemberController.getUser(request: Request)
 #is phonenumber used
-GET         /v1/user/is_phonenumber_used/:phoneNumber/        controllers.MemberController.isPhoneNumberUsed(phoneNumber:String)
+GET         /v1/user/is_phonenumber_used/:phoneNumber/        controllers.MemberController.isPhoneNumberUsed(request: Request,phoneNumber:String)
 #modify user infomation
 POST        /v1/user/                                         controllers.MemberController.update(request: Request)
 POST        /v1/user/reset_login_password/                    controllers.MemberController.resetLoginPassword(request: Request)
