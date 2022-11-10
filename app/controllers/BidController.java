@@ -161,9 +161,12 @@ public class BidController extends BaseController {
     @Security.Authenticated(Secured.class)
     public CompletionStage<Result> getBid(Http.Request request, long id) {
         return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
+            Messages messages = messagesApi.preferred(request);
             if (uid < 1) return unauth403();
             Bid bid = Bid.find.byId(id);
-            if (null == bid) return okCustomJson(CODE40001, "该报价不存在");
+            //bid.error.offer.not.exist="该报价不存在"
+            String offerNot = messages.at("bid.error.offer.not.exist");
+            if (null == bid) return okCustomJson(CODE40001, offerNot);
             List<BidUser> bidUserList = BidUser.find.query().where()
                     .eq("bidId", id)
                     .eq("askerUid", uid)
@@ -171,7 +174,7 @@ public class BidController extends BaseController {
             Set<Long> set = new HashSet<>();
             set.add(bid.askerUid);
             bidUserList.parallelStream().forEach((each) -> set.add(each.uid));
-            if (!set.contains(uid)) return okCustomJson(CODE40001, "该报价不存在");
+            if (!set.contains(uid)) return okCustomJson(CODE40001, offerNot);
             bid.bidUserList.addAll(bidUserList);
             List<BidDetail> detailList = BidDetail.find.query().where()
                     .eq("bidId", id)
@@ -211,19 +214,33 @@ public class BidController extends BaseController {
             String baseArgumentError = messages.at("base.argument.error");
             if (null == jsonNode) return okCustomJson(CODE40001, baseArgumentError);
             String serviceRegion = jsonNode.findPath("serviceRegion").asText();
-            if (ValidationUtil.isEmpty(serviceRegion)) return okCustomJson(CODE40001, "请输入服务区域");
+            //bid.info.please.input.serviceRegion="请输入服务区域"
+            String serRegion = messages.at("bid.info.please.input.serviceRegion");
+            if (ValidationUtil.isEmpty(serviceRegion)) return okCustomJson(CODE40001, serRegion);
             String serviceAddress = jsonNode.findPath("serviceAddress").asText();
-            if (ValidationUtil.isEmpty(serviceAddress)) return okCustomJson(CODE40001, "请输入服务地址");
+            //请输入服务地址
+            String serAddress = messages.at("bid.info.please.input.serviceAddress");
+            if (ValidationUtil.isEmpty(serviceAddress)) return okCustomJson(CODE40001, serAddress);
             String preferenceServiceTime = jsonNode.findPath("preferenceServiceTime").asText();
-            if (ValidationUtil.isEmpty(preferenceServiceTime)) return okCustomJson(CODE40001, "请输入预约服务时间");
+            //bid.info.please.input.serviceTime="请输入服务预约时间"
+            String serTime = messages.at("bid.info.please.input.serviceTime");
+            if (ValidationUtil.isEmpty(preferenceServiceTime)) return okCustomJson(CODE40001, serTime);
             String serviceContent = jsonNode.findPath("serviceContent").asText();
-            if (ValidationUtil.isEmpty(serviceContent)) return okCustomJson(CODE40001, "请输入服务内容");
+            //bid.info.please.input.serviceContent="请输入服务内容"
+            String serContent = messages.at("bid.info.please.input.serviceContent");
+            if (ValidationUtil.isEmpty(serviceContent)) return okCustomJson(CODE40001, serContent);
             String contactMail = jsonNode.findPath("contactMail").asText();
-            if (ValidationUtil.isEmpty(contactMail)) return okCustomJson(CODE40001, "请输入联系邮箱");
+            //mailbox.info.please.input.contactMail="请输入联系邮箱"
+            String mailContact = messages.at("mailbox.info.please.input.contactMail");
+            if (ValidationUtil.isEmpty(contactMail)) return okCustomJson(CODE40001, mailContact);
             String contactName = jsonNode.findPath("contactName").asText();
-            if (ValidationUtil.isEmpty(contactName)) return okCustomJson(CODE40001, "请输入联系人名字");
+            //user.info.please.input.contact.name=请输入联系人称呼
+            String contName = messages.at("user.info.please.input.contact.name");
+            if (ValidationUtil.isEmpty(contactName)) return okCustomJson(CODE40001, contName);
             String contactPhoneNumber = jsonNode.findPath("contactPhoneNumber").asText();
-            if (ValidationUtil.isEmpty(contactPhoneNumber)) return okCustomJson(CODE40001, "请输入联系电话");
+            //user.info.please.input.contactPhoneNumber="请输入联系电话"
+            String contPhoneNumber = messages.at("user.info.please.input.contactPhoneNumber");
+            if (ValidationUtil.isEmpty(contactPhoneNumber)) return okCustomJson(CODE40001, contPhoneNumber);
             String fileList = jsonNode.findPath("fileList").asText();
             String categoryId = jsonNode.findPath("categoryId").asText();
             String categoryName = jsonNode.findPath("categoryName").asText();
@@ -301,8 +318,12 @@ public class BidController extends BaseController {
             String baseArgumentError = messages.at("base.argument.error");
             if (null == jsonNode) return okCustomJson(CODE40001, baseArgumentError);
             Bid bid = Bid.find.byId(id);
-            if (null == bid) return okCustomJson(CODE40001, "该报价不存在");
-            if (bid.askerUid != uid) return okCustomJson(CODE40001, "非发布者，不可修改");
+            //bid.error.offer.not.exist="该报价不存在"
+            String bidNot = messages.at("bid.error.offer.not.exist");
+            if (null == bid) return okCustomJson(CODE40001, bidNot);
+            //bid.error.NonPublisher.not.amend="非发布者不可修改"
+            String notAmend = messages.at("bid.error.NonPublisher.not.amend");
+            if (bid.askerUid != uid) return okCustomJson(CODE40001, notAmend);
             String serviceRegion = jsonNode.findPath("serviceRegion").asText();
             if (!ValidationUtil.isEmpty(serviceRegion)) bid.setServiceRegion(serviceRegion);
             String serviceAddress = jsonNode.findPath("serviceAddress").asText();
@@ -354,16 +375,23 @@ public class BidController extends BaseController {
             long price = jsonNode.findPath("price").asLong();
             String note = jsonNode.findPath("note").asText();
             Bid bid = Bid.find.byId(id);
-            if (null == bid) return okCustomJson(CODE40001, "该报价不存在");
+            //bid.error.offer.not.exist="该报价不存在"
+            String bidNot = messages.at("bid.error.offer.not.exist");
+            if (null == bid) return okCustomJson(CODE40001, bidNot);
+            //bid.error.quote.not.state="当前非报价状态,不可报价"
+            String notQuote = messages.at("bid.error.quote.not.state");
+
             if (bid.status > Bid.STATUS_BIDDING) {
-                return okCustomJson(CODE40004, "当前非报价状态，不可报价");
+                return okCustomJson(CODE40004, notQuote);
             }
             BidUser bidUser = BidUser.find.query().where()
                     .eq("bidId", id)
                     .eq("uid", uid)
                     .setMaxRows(1)
                     .findOne();
-            if (null == bidUser) return okCustomJson(CODE40004, "非报价侯选人，不可报价");
+            //bid.error.quote.not.bidUser="非报价侯选人，不可报价"
+            String bidUserNot = messages.at("bid.error.quote.not.bidUser");
+            if (null == bidUser) return okCustomJson(CODE40004, bidUserNot);
             if (!businessUtils.setLock(String.valueOf(uid), OPERATION_PLACE_BID))
                 return okCustomJson(CODE40004, "正在操作中，请稍等");
             BidDetail bidDetail = BidDetail.find.query().where()
@@ -372,7 +400,9 @@ public class BidController extends BaseController {
                     .setMaxRows(1)
                     .findOne();
             long currentTime = dateUtils.getCurrentTimeBySecond();
-            if (price < 1) return okCustomJson(CODE40001, "请设置报价的价格");
+            //bid.please.set.PriceQuoted="清先设置报价价格"
+            String quotedPrice = messages.at("bid.please.set.PriceQuoted");
+            if (price < 1) return okCustomJson(CODE40001, quotedPrice);
             if (null == bidDetail) {
                 bidDetail = new BidDetail();
                 bidDetail.setCreateTime(currentTime);

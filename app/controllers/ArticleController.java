@@ -13,6 +13,8 @@ import models.article.ArticleFav;
 import models.system.ParamConfig;
 import models.user.Member;
 import play.Logger;
+import play.i18n.Messages;
+import play.i18n.MessagesApi;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Http;
@@ -39,6 +41,9 @@ public class ArticleController extends BaseController {
     Logger.ALogger logger = Logger.of(ArticleController.class);
     @Inject
     EncodeUtils encodeUtils;
+
+    @Inject
+    MessagesApi messagesApi;
 
 
     /**
@@ -167,11 +172,16 @@ public class ArticleController extends BaseController {
      * @apiSuccess (Success 200){String} categoryName 所属分类
      * @apiSuccess (Success 200){String} publishStatusName 发布状态
      */
-    public CompletionStage<Result> listArticles(int page, String cateName, int size) {
+    public CompletionStage<Result> listArticles(Http.Request request,int page, String cateName, int size) {
         return CompletableFuture.supplyAsync(() -> {
-            if (ValidationUtil.isEmpty(cateName)) return okCustomJson(CODE40001, "请输入分类名");
+            // article.info.please.input.categoryName="请输入分类名"
+            Messages messages = messagesApi.preferred(request);
+            String categoryName = messages.at("article.info.please.input.categoryName");
+            if (ValidationUtil.isEmpty(cateName)) return okCustomJson(CODE40001, categoryName);
             ArticleCategory articleCategory = getArticleCategory(cateName);
-            if (null == articleCategory) return okCustomJson(CODE40001, "该分类不存在");
+            //article.error.category.not.exist 该分类不存在
+            String categoryNot = messages.at("article.error.category.not.exist");
+            if (null == articleCategory) return okCustomJson(CODE40001, categoryNot);
             //缓存2分钟
             String key = ARTICLE_LIST_JSON_CACHE + cateName;
             Optional<String> jsonCache = redis.sync().get(key);
@@ -267,7 +277,10 @@ public class ArticleController extends BaseController {
     public CompletionStage<Result> getArticle(Http.Request request, long articleId) {
         long uid = businessUtils.getUserIdByAuthToken2(request);
         return CompletableFuture.supplyAsync(() -> {
-            if (articleId < 1) return okCustomJson(CODE40001, "该篇文章不存在");
+            //article.error.article.not.exist="该篇文章不存在"
+            Messages messages = messagesApi.preferred(request);
+            String articleNot = messages.at("article.error.article.not.exist");
+            if (articleId < 1) return okCustomJson(CODE40001, articleNot);
             String key = ARTICLE_JSON_CACHE + articleId;
             updateArticleViews(articleId);
             if (uid < 1) {
@@ -287,7 +300,8 @@ public class ArticleController extends BaseController {
                     .eq("id", articleId)
                     .eq("status", Article.ARTICLE_STATUS_NORMAL)
                     .setMaxRows(1).findOne();
-            if (null == article) return okCustomJson(CODE40001, "该篇文章不存在");
+             //该篇文章不存在
+            if (null == article) return okCustomJson(CODE40001, articleNot);
             boolean isFav = false;
             if (uid > 0) {
                 ArticleFav articleFav = ArticleFav.find.query().where().eq("uid", uid)
@@ -375,16 +389,21 @@ public class ArticleController extends BaseController {
     @BodyParser.Of(BodyParser.Json.class)
     public CompletionStage<Result> fav(Http.Request request) {
         return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
+            Messages messages = messagesApi.preferred(request);
+            //article.error.article.not.exist="该篇文章不存在"
+            String articleNot = messages.at("article.error.article.not.exist");
+            //article.error.article.remove="文章已下架"
+            String articleRemove = messages.at("article.error.article.remove");
             if (uid < 1) return unauth403();
             Member member = Member.find.byId(uid);
             if (null == member) return unauth403();
             JsonNode jsonNode = request.body().asJson();
             long articleId = jsonNode.findPath("articleId").asLong();
             boolean enable = jsonNode.findPath("enable").asBoolean();
-            if (articleId < 1) return okCustomJson(CODE40001, "文章不存在");
+            if (articleId < 1) return okCustomJson(CODE40001, articleNot);
             Article article = Article.find.byId(articleId);
-            if (null == article) return okCustomJson(CODE40001, "文章不存在");
-            if (article.getStatus() == Article.ARTICLE_STATUS_DISABLE) return okCustomJson(CODE40001, "文章已下架");
+            if (null == article) return okCustomJson(CODE40001, articleNot);
+            if (article.getStatus() == Article.ARTICLE_STATUS_DISABLE) return okCustomJson(CODE40001, articleRemove);
             ArticleFav articleFav = ArticleFav.find.query().where().eq("uid", uid)
                     .eq("articleId", articleId).setMaxRows(1).findOne();
             long currentTime = dateUtils.getCurrentTimeBySecond();
@@ -428,9 +447,14 @@ public class ArticleController extends BaseController {
      * @apiSuccess (Success 200){String} value 值
      * @apiSuccess (Success 200){String} note 中文备注
      */
-    public CompletionStage<Result> getParamConfig(String key) {
+    public CompletionStage<Result> getParamConfig(Http.Request request,String key) {
         return CompletableFuture.supplyAsync(() -> {
-            if (ValidationUtil.isEmpty(key)) return okCustomJson(CODE40001, "请输入KEY值");
+            Messages messages = messagesApi.preferred(request);
+            //article.info.please.input.key="请输入KEY值"
+            String inKey = messages.at("article.info.please.input.key");
+            //article.error.parameter.not.exist="该参数不存在"
+            String paramNot = messages.at("article.error.parameter.not.exist");
+            if (ValidationUtil.isEmpty(key)) return okCustomJson(CODE40001, inKey);
             Optional<String> jsonCache = redis.sync().get(key);
             if (jsonCache.isPresent()) {
                 String result = jsonCache.get();
@@ -443,7 +467,7 @@ public class ArticleController extends BaseController {
                     .eq("source", SOURCE_FRONTEND)
                     .orderBy().asc("id")
                     .setMaxRows(1).findOne();
-            if (null == config) return okCustomJson(CODE40001, "该参数不存在");
+            if (null == config) return okCustomJson(CODE40001, paramNot);
             String value = "";
             if (!ValidationUtil.isEmpty(config.value)) {
                 if (config.isEncrypt) {

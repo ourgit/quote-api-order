@@ -11,18 +11,22 @@ import models.shop.Showcase;
 import models.user.Member;
 import play.db.ebean.Transactional;
 import play.i18n.Messages;
+import play.i18n.MessagesApi;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
 import utils.ValidationUtil;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 public class ShowCaseController extends BaseController {
 
+  @Inject
+    MessagesApi messagesApi;
     /**
      * @api {GET} /v1/user/show_case_list/?shopId=&page=&title= 01案例图片
      * @apiName listShowCase
@@ -71,8 +75,11 @@ public class ShowCaseController extends BaseController {
      */
     public CompletionStage<Result> getShowCase(Http.Request request, long id) {
         return CompletableFuture.supplyAsync(() -> {
+            Messages messages = messagesApi.preferred(request);
+            //shop.error.showcase.not.exist="该案例不存在"
+            String NotShowcase = messages.at("shop.error.showcase.not.exist");
             Showcase showcase = Showcase.find.byId(id);
-            if (null == showcase) return okCustomJson(CODE40001, "该案例不存在");
+            if (null == showcase) return okCustomJson(CODE40001, NotShowcase);
             showcase.categoryName = getCategoryName(showcase.categoryId);
             ObjectNode result = (ObjectNode) Json.toJson(showcase);
             result.put(CODE, CODE200);
@@ -109,20 +116,31 @@ public class ShowCaseController extends BaseController {
     @Transactional
     public CompletionStage<Result> addShowCase(Http.Request request) {
         return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
+            Messages messages = messagesApi.preferred(request);
             JsonNode jsonNode = request.body().asJson();
             if (uid < 1) return unauth403();
             Member member = Member.find.byId(uid);
             if (null == member) return unauth403();
-            if (null == jsonNode) return okCustomJson(CODE40001, "参数错误");
-            if (member.shopId < 1) return okCustomJson(CODE40001, "请先申请入驻");
+            // base.argument.error=参数错误
+            String paramErr = messages.at("base.argument.error");
+            if (null == jsonNode) return okCustomJson(CODE40001, paramErr);
+            //service.please.apply.enter ="请先申请入驻"
+            String applyEnter = messages.at("service.please.apply.enter");
+            if (member.shopId < 1) return okCustomJson(CODE40001, applyEnter);
+            //service.error.store.not.member="非店铺管理人员不可操作"
+            String NotMember = messages.at("service.error.store.not.member");
             if (member.userType != Member.USER_TYPE_MANAGER) {
-                return okCustomJson(CODE40001, "非店铺管理人员，不可操作");
+                return okCustomJson(CODE40001, NotMember);
             }
             Showcase showcase = Json.fromJson(jsonNode, Showcase.class);
-            if (ValidationUtil.isEmpty(showcase.title)) return okCustomJson(CODE40001, "请输入标题");
-            if (ValidationUtil.isEmpty(showcase.images)) return okCustomJson(CODE40001, "请上传图片");
+            //shop.info.please.input.title="请输入标题"
+            String inTitle = messages.at("shop.info.please.input.title");
+            if (ValidationUtil.isEmpty(showcase.title)) return okCustomJson(CODE40001, inTitle);
+            // shop.upload.please.picture="请上传图片"
+            String upPicture = messages.at("shop.upload.please.picture");
+            if (ValidationUtil.isEmpty(showcase.images)) return okCustomJson(CODE40001, upPicture);
             Shop shop = Shop.find.byId(member.shopId);
-            if (null == shop) return okCustomJson(CODE40001, "请先申请入驻");
+            if (null == shop) return okCustomJson(CODE40001, applyEnter);
             showcase.setId(0);
             showcase.setShopName(shop.name);
             showcase.setStatus(Showcase.STATUS_AUDIT);
@@ -154,17 +172,26 @@ public class ShowCaseController extends BaseController {
     @Transactional
     public CompletionStage<Result> updateShowCase(Http.Request request, long id) {
         return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
+            Messages messages = messagesApi.preferred(request);
             JsonNode jsonNode = request.body().asJson();
             if (uid < 1) return unauth403();
             Member member = Member.find.byId(uid);
             if (null == member) return unauth403();
-            if (member.shopId < 1) return okCustomJson(CODE40001, "请先申请入驻");
+            //service.please.apply.enter ="请先申请入驻"
+            String applyEnter = messages.at("service.please.apply.enter");
+            if (member.shopId < 1) return okCustomJson(CODE40001, applyEnter);
+            //service.error.store.not.member="非店铺管理人员不可操作"
+            String NotMember = messages.at("service.error.store.not.member");
             if (member.userType != Member.USER_TYPE_MANAGER) {
-                return okCustomJson(CODE40001, "非店铺管理人员，不可操作");
+                return okCustomJson(CODE40001, NotMember);
             }
-            if (null == jsonNode || id < 1) return okCustomJson(CODE40001, "参数错误");
+            // base.argument.error=参数错误
+            String paramErr = messages.at("base.argument.error");
+            if (null == jsonNode || id < 1) return okCustomJson(CODE40001, paramErr);
             Showcase showcase = Showcase.find.byId(id);
-            if (null == showcase || showcase.shopId != member.shopId) return okCustomJson(CODE40002, "案例不存在");
+            //shop.error.showcase.not.exist="该案例不存在"
+            String NotShowcase = messages.at("shop.error.showcase.not.exist");
+            if (null == showcase || showcase.shopId != member.shopId) return okCustomJson(CODE40002, NotShowcase);
 
             String title = jsonNode.findPath("title").asText();
             String tags = jsonNode.findPath("tags").asText();
@@ -199,21 +226,28 @@ public class ShowCaseController extends BaseController {
     @Transactional
     public CompletionStage<Result> deleteShowcase(Http.Request request) {
         return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
+            Messages messages = messagesApi.preferred(request);
             JsonNode jsonNode = request.body().asJson();
             if (uid < 1) return unauth403();
             Member member = Member.find.byId(uid);
             if (null == member) return unauth403();
-            if (member.shopId < 1) return okCustomJson(CODE40001, "请先申请入驻");
+            String applyEnter = messages.at("service.please.apply.enter");
+            if (member.shopId < 1) return okCustomJson(CODE40001, applyEnter);
+            //service.error.store.not.member="非店铺管理人员不可操作"
+            String NotMember = messages.at("service.error.store.not.member");
             if (member.userType != Member.USER_TYPE_MANAGER) {
-                return okCustomJson(CODE40001, "非店铺管理人员，不可操作");
+                return okCustomJson(CODE40001, NotMember);
             }
             String operation = jsonNode.findPath("operation").asText();
+            String paramErr = messages.at("base.argument.error");
             if (ValidationUtil.isEmpty(operation) || !operation.equals("del"))
-                return okCustomJson(CODE40001, "参数错误");
+                return okCustomJson(CODE40001, paramErr);
             long id = jsonNode.findPath("id").asInt();
-            if (id < 1) return okCustomJson(CODE40001, "参数错误");
+            if (id < 1) return okCustomJson(CODE40001, paramErr);
             Showcase showcase = Showcase.find.byId(id);
-            if (null == showcase || showcase.shopId != member.shopId) return okCustomJson(CODE40002, "案例不存在");
+            //shop.error.showcase.not.exist="该案例不存在"
+            String NotShowcase = messages.at("shop.error.showcase.not.exist");
+            if (null == showcase || showcase.shopId != member.shopId) return okCustomJson(CODE40002, NotShowcase);
 
             showcase.delete();
             return okJSON200();

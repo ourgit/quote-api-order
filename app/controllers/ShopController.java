@@ -9,17 +9,23 @@ import io.ebean.PagedList;
 import models.shop.Shop;
 import models.shop.Showcase;
 import play.db.ebean.Transactional;
+import play.i18n.Messages;
+import play.i18n.MessagesApi;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
 import utils.ValidationUtil;
 
+import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 public class ShopController extends BaseController {
+
+    @Inject
+    MessagesApi messagesApi;
 
     /**
      * @api {GET} /v1/user/shop_list/?page=&name= 01店铺列表
@@ -105,8 +111,11 @@ public class ShopController extends BaseController {
      */
     public CompletionStage<Result> getShop(Http.Request request, long id) {
         return CompletableFuture.supplyAsync(() -> {
+            Messages messages = messagesApi.preferred(request);
             Shop shop = Shop.find.byId(id);
-            if (null == shop) return okCustomJson(CODE40001, "该商家不存在");
+            //service.error.businessService.exist=""该商家不存在
+            String businessNot = messages.at("service.error.businessService.exist");
+            if (null == shop) return okCustomJson(CODE40001, businessNot);
             ObjectNode result = (ObjectNode) Json.toJson(shop);
             result.put(CODE, CODE200);
             return ok(result);
@@ -134,19 +143,26 @@ public class ShopController extends BaseController {
     public CompletionStage<Result> updateShop(Http.Request request, long id) {
         JsonNode requestNode = request.body().asJson();
         return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
-            if (id < 1) return okCustomJson(CODE40001, "参数错误");
+            Messages messages = messagesApi.preferred(request);
+            //base.argument.error=参数错误
+            String paramErr = messages.at("base.argument.error");
+            if (id < 1) return okCustomJson(CODE40001, paramErr);
             Shop shop = Shop.find.byId(id);
-            if (null == shop) return okCustomJson(CODE40002, "该店铺不存在");
+            //shop.error.not.shop="该店铺不存在"
+            String NotShop = messages.at("shop.error.not.shop");
+            if (null == shop) return okCustomJson(CODE40002, NotShop);
             if (uid < 1) return unauth403();
-            if (shop.creatorId != uid) return okCustomJson(CODE40002, "该店铺不存在");
+            if (shop.creatorId != uid) return okCustomJson(CODE40002, NotShop);
             Shop param = Json.fromJson(requestNode, Shop.class);
-            if (null == param) return okCustomJson(CODE40001, "参数错误");
+            if (null == param) return okCustomJson(CODE40001, paramErr);
             if (!ValidationUtil.isEmpty(param.name)) {
                 Shop nameShop = Shop.find.query().where()
                         .eq("name", param.name)
                         .ne("id", shop.id)
                         .setMaxRows(1).findOne();
-                if (null != nameShop) return okCustomJson(CODE40001, "该店铺已存在");
+                // shop.error.have.exist="该店铺已经存在"
+                String haveShop = messages.at("shop.error.have.exist");
+                if (null != nameShop) return okCustomJson(CODE40001, haveShop);
                 shop.setName(param.name);
             }
             if (param.status > 0) shop.setStatus(param.status);

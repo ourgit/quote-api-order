@@ -281,13 +281,21 @@ public class PostController extends BaseController {
             if (uid < 1) return unauth403();
             Member member = Member.find.byId(uid);
             if (null == member) return unauth403();
-            if (member.status == Member.MEMBER_STATUS_LOCK) return okCustomJson(CODE40001, "该帐号被锁定");
+            //user.error.user.locked="该帐号已被锁定"
+            String userLocked = messages.at("post.error.user.locked");
+            if (member.status == Member.MEMBER_STATUS_LOCK) return okCustomJson(CODE40001, userLocked);
             Post post = Json.fromJson(jsonNode, Post.class);
-            if (ValidationUtil.isEmpty(post.title)) return okCustomJson(CODE40001, "请输入标题");
-            if (ValidationUtil.isEmpty(post.content)) return okCustomJson(CODE40001, "请输入内容");
-            if (post.categoryId < 1) return okCustomJson(CODE40001, "请选择分类");
+            //post.info.please.headline="请输入标题"
+            String inHeadline = messages.at("post.info.please.headline");
+            if (ValidationUtil.isEmpty(post.title)) return okCustomJson(CODE40001, inHeadline);
+            //post.info.please.content="请输入内容"
+            String inContent = messages.at("post.info.please.content");
+            if (ValidationUtil.isEmpty(post.content)) return okCustomJson(CODE40001, inContent);
+            // post.selected.please.category="请选择分类"
+            String selCategory = messages.at("post.selected.please.category");
+            if (post.categoryId < 1) return okCustomJson(CODE40001, selCategory);
             PostCategory category = PostCategory.find.byId(post.categoryId);
-            if (null == category) return okCustomJson(CODE40001, "请选择分类");
+            if (null == category) return okCustomJson(CODE40001, selCategory);
             post.setUid(uid);
             post.setUserName(member.nickName);
             post.setAvatar(member.avatar);
@@ -319,9 +327,13 @@ public class PostController extends BaseController {
             if (uid < 1) return unauth403();
             Member member = Member.find.byId(uid);
             if (null == member) return unauth403();
-            if (member.status == Member.MEMBER_STATUS_LOCK) return okCustomJson(CODE40001, "该帐号被锁定");
+            //post.error.user.locked="该帐号已被锁定"
+            String userLocked = messages.at("post.error.user.locked");
+            if (member.status == Member.MEMBER_STATUS_LOCK) return okCustomJson(CODE40001, userLocked);
             Post post = Post.find.byId(id);
-            if (null == post || uid != post.uid) return okCustomJson(CODE40001, "该贴子不存在");
+            //post.error.post.exist="该帖子不存在"
+            String postNot = messages.at("post.error.post.exist");
+            if (null == post || uid != post.uid) return okCustomJson(CODE40001, postNot);
 
             Post param = Json.fromJson(jsonNode, Post.class);
             if (!ValidationUtil.isEmpty(param.title)) {
@@ -332,7 +344,9 @@ public class PostController extends BaseController {
             }
             if (param.categoryId > 0) {
                 PostCategory category = PostCategory.find.byId(post.categoryId);
-                if (null == category) return okCustomJson(CODE40001, "请选择分类");
+                //请选择分类
+                String categoryed = messages.at("post.selected.please.category");
+                if (null == category) return okCustomJson(CODE40001, categoryed);
                 post.setCategoryId(param.categoryId);
                 post.setCategoryName(category.name);
             }
@@ -368,11 +382,15 @@ public class PostController extends BaseController {
             if (uid < 1) return unauth403();
             Member member = Member.find.byId(uid);
             if (null == member) return unauth403();
-            if (member.status == Member.MEMBER_STATUS_LOCK) return okCustomJson(CODE40001, "该帐号被锁定");
+            //post.error.user.locked="该帐号已被锁定"
+            String userLocked = messages.at("post.error.user.locked");
+            if (member.status == Member.MEMBER_STATUS_LOCK) return okCustomJson(CODE40001, userLocked);
             long id = jsonNode.findPath("id").asLong();
             boolean like = jsonNode.findPath("like").asBoolean();
             Post post = Post.find.byId(id);
-            if (null == post) return okCustomJson(CODE40001, "该贴子不存在");
+            //post.error.post.exist="该帖子不存在"
+            String postNot = messages.at("post.error.post.exist");
+            if (null == post) return okCustomJson(CODE40001, postNot);
             PostLike postLike = PostLike.find.query().where()
                     .eq("uid", uid)
                     .eq("postId", id)
@@ -417,15 +435,21 @@ public class PostController extends BaseController {
             if (uid < 1) return unauth403();
             Member member = Member.find.byId(uid);
             if (null == member) return unauth403();
-            if (member.status == Member.MEMBER_STATUS_LOCK) return okCustomJson(CODE40001, "该帐号被锁定");
+            //post.error.user.locked="该帐号已被锁定"
+            String userLocked = messages.at("post.error.user.locked");
+            if (member.status == Member.MEMBER_STATUS_LOCK) return okCustomJson(CODE40001, userLocked);
             long id = jsonNode.findPath("id").asLong();
             long quoteId = jsonNode.findPath("quoteId").asLong();
             String content = jsonNode.findPath("content").asText();
             Post post = Post.find.byId(id);
-            if (null == post) return okCustomJson(CODE40001, "该贴子不存在");
+            //post.error.post.exist="该帖子不存在"
+            String postNot = messages.at("post.error.post.exist");
+            if (null == post) return okCustomJson(CODE40001, postNot);
+           // post.error.quote.exist="该引用不存在"
+            String quoteNo = messages.at("post.error.quote.exist");
             if (quoteId > 0) {
                 Reply reply = Reply.find.byId(quoteId);
-                if (null == reply) return okCustomJson(CODE40001, "该引用不存在");
+                if (null == reply) return okCustomJson(CODE40001, quoteNo);
                 reply.setReplies(reply.replies + 1);
                 post.setReplies(post.replies + 1);
             } else {
@@ -472,22 +496,28 @@ public class PostController extends BaseController {
             if (uid < 1) return unauth403();
             Member member = Member.find.byId(uid);
             if (null == member) return unauth403();
-            if (member.status == Member.MEMBER_STATUS_LOCK) return okCustomJson(CODE40001, "该帐号被锁定");
+            //post.error.user.locked="该帐号已被锁定"
+            String userLocked = messages.at("post.error.user.locked");
+            if (member.status == Member.MEMBER_STATUS_LOCK) return okCustomJson(CODE40001, userLocked);
             long id = jsonNode.findPath("id").asLong();
             int postType = jsonNode.findPath("postType").asInt();
+            //post.error.post.exist="该帖子不存在"
+            String postNot = messages.at("post.error.post.exist");
+            //post.error.reply.exist="该回复不存在"
+            String replyNot = messages.at("post.error.reply.exist");
             if (postType == 1) {
                 Post post = Post.find.byId(id);
-                if (null == post) return okCustomJson(CODE40001, "该贴子不存在");
-                if (uid != post.uid && !isPostAdmin(request, post)) return okCustomJson(CODE40001, "该贴子不存在");
+                if (null == post) return okCustomJson(CODE40001, postNot);
+                if (uid != post.uid && !isPostAdmin(request, post)) return okCustomJson(CODE40001, postNot);
                 post.setStatus(Post.STATUS_DELETE);
                 post.setUpdateTime(dateUtils.getCurrentTimeBySecond());
                 post.save();
             } else {
                 Reply reply = Reply.find.byId(id);
-                if (null == reply) return okCustomJson(CODE40001, "该回复不存在");
+                if (null == reply) return okCustomJson(CODE40001, replyNot);
                 Post post = Post.find.byId(reply.postId);
-                if (null == post) return okCustomJson(CODE40001, "该贴子不存在");
-                if (uid != reply.uid && !isPostAdmin(request, post)) return okCustomJson(CODE40001, "该贴子不存在");
+                if (null == post) return okCustomJson(CODE40001, postNot);
+                if (uid != reply.uid && !isPostAdmin(request, post)) return okCustomJson(CODE40001, postNot);
                 reply.setStatus(Reply.STATUS_DELETE);
                 reply.setUpdateTime(dateUtils.getCurrentTimeBySecond());
                 reply.save();
@@ -587,13 +617,19 @@ public class PostController extends BaseController {
             if (uid < 1) return unauth403();
             Member member = Member.find.byId(uid);
             if (null == member) return unauth403();
-            if (member.status == Member.MEMBER_STATUS_LOCK) return okCustomJson(CODE40001, "该帐号被锁定");
+            //post.error.user.locked="该帐号已被锁定"
+            String userLocked = messages.at("post.error.user.locked");
+            if (member.status == Member.MEMBER_STATUS_LOCK) return okCustomJson(CODE40001, userLocked);
 
             long id = jsonNode.findPath("id").asLong();
             boolean placeTop = jsonNode.findPath("placeTop").asBoolean();
             Post post = Post.find.byId(id);
-            if (null == post) return okCustomJson(CODE40001, "该贴子不存在");
-            if (!isPostAdmin(request, post)) return okCustomJson(CODE40001, "非管理员不可操作");
+            //post.error.post.exist="该帖子不存在"
+            String postNot = messages.at("post.error.post.exist");
+            if (null == post) return okCustomJson(CODE40001, postNot);
+            //post.error.operate.Admin="非管理员不能操作"
+            String notAdmin = messages.at("post.error.operate.Admin");
+            if (!isPostAdmin(request, post)) return okCustomJson(CODE40001, notAdmin);
             post.setPlaceTop(placeTop);
             post.setUpdateTime(dateUtils.getCurrentTimeBySecond());
             post.save();
@@ -625,7 +661,10 @@ public class PostController extends BaseController {
      */
     public CompletionStage<Result> replyList(Http.Request request, long id, int page) {
         return CompletableFuture.supplyAsync(() -> {
-            if (id < 1) return okCustomJson(CODE40001, "id错误");
+            Messages messages = messagesApi.preferred(request);
+            //post.error.postId="id错误"
+            String idFalse = messages.at("post.error.postId");
+            if (id < 1) return okCustomJson(CODE40001, idFalse);
             ExpressionList<Reply> expressionList = Reply.find.query().where()
                     .eq("postId", id);
             PagedList<Reply> pagedList = expressionList.orderBy().asc("id")

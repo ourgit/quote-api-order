@@ -10,16 +10,22 @@ import models.shop.Shop;
 import models.shop.Showcase;
 import models.user.Member;
 import play.db.ebean.Transactional;
+import play.i18n.Messages;
+import play.i18n.MessagesApi;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
 import utils.ValidationUtil;
 
+import javax.inject.Inject;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 public class ServiceController extends BaseController {
+
+    @Inject
+    MessagesApi messagesApi;
 
     /**
      * @api {POST} /v1/user/service_list/ 01商家服务列表
@@ -42,8 +48,11 @@ public class ServiceController extends BaseController {
     @BodyParser.Of(BodyParser.Json.class)
     public CompletionStage<Result> listService(Http.Request request) {
         return CompletableFuture.supplyAsync(() -> {
+            //参数错误
+            Messages messages = messagesApi.preferred(request);
+            String paramErr = messages.at("base.argument.error");
             JsonNode jsonNode = request.body().asJson();
-            if (null == jsonNode) return okCustomJson(CODE40001, "参数错误");
+            if (null == jsonNode) return okCustomJson(CODE40001, paramErr);
             long shopId = jsonNode.findPath("shopId").asLong();
             long categoryId = jsonNode.findPath("categoryId").asLong();
             int page = jsonNode.findPath("page").asInt();
@@ -79,8 +88,11 @@ public class ServiceController extends BaseController {
      */
     public CompletionStage<Result> getService(Http.Request request, long id) {
         return CompletableFuture.supplyAsync(() -> {
+            //service.error.business.exist=""该商家不存在
+            Messages messages = messagesApi.preferred(request);
+            String busServiceNot = messages.at("service.error.businessService.exist");
             Service service = Service.find.byId(id);
-            if (null == service) return okCustomJson(CODE40001, "该商家服务不存在");
+            if (null == service) return okCustomJson(CODE40001, busServiceNot);
             ObjectNode result = (ObjectNode) Json.toJson(service);
             result.put(CODE, CODE200);
             return ok(result);
@@ -102,19 +114,32 @@ public class ServiceController extends BaseController {
     @Transactional
     public CompletionStage<Result> addService(Http.Request request) {
         return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
+            Messages messages = messagesApi.preferred(request);
             JsonNode jsonNode = request.body().asJson();
             if (uid < 1) return unauth403();
             Member member = Member.find.byId(uid);
             if (null == member) return unauth403();
-            if (null == jsonNode) return okCustomJson(CODE40001, "参数错误");
-            if (member.shopId < 1) return okCustomJson(CODE40001, "请先申请入驻");
+            //base.argument.error=参数错误
+            String paramErr = messages.at("base.argument.error");
+            if (null == jsonNode) return okCustomJson(CODE40001, paramErr);
+            //service.please.apply.admission ="请先申请认证"
+            String admission = messages.at("service.please.apply.admission");
+            if (member.shopId < 1) return okCustomJson(CODE40001, admission);
+            //service.error.store.not.member="非店铺管理人员不可操作"
+            String noMember = messages.at("service.error.store.not.member");
             if (member.userType != Member.USER_TYPE_MANAGER) {
-                return okCustomJson(CODE40001, "非店铺管理人员，不可操作");
+                return okCustomJson(CODE40001, noMember);
             }
             Service service = Json.fromJson(jsonNode, Service.class);
-            if (ValidationUtil.isEmpty(service.serviceName)) return okCustomJson(CODE40001, "请输入服务名字");
-            if (ValidationUtil.isEmpty(service.serviceDigest)) return okCustomJson(CODE40001, "请输入服务摘要");
-            if (ValidationUtil.isEmpty(service.serviceContent)) return okCustomJson(CODE40001, "请上传服务内容");
+            //service.info.please.serviceName="请输入服务名字"
+            String serviceName = messages.at("service.info.please.serviceName");
+            if (ValidationUtil.isEmpty(service.serviceName)) return okCustomJson(CODE40001, serviceName);
+            //service.info.please.digest="请输入服务摘要"
+            String serDigest = messages.at("service.info.please.digest");
+            if (ValidationUtil.isEmpty(service.serviceDigest)) return okCustomJson(CODE40001, serDigest);
+            //service.upload.please.serviceContent="请上传服务内容"
+            String serContent = messages.at("service.upload.please.serviceContent");
+            if (ValidationUtil.isEmpty(service.serviceContent)) return okCustomJson(CODE40001, serContent);
             service.setId(0);
             service.setShopId(member.shopId);
             service.setCreateTime(dateUtils.getCurrentTimeBySecond());
@@ -141,17 +166,26 @@ public class ServiceController extends BaseController {
     @Transactional
     public CompletionStage<Result> updateService(Http.Request request, long id) {
         return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
+            Messages messages = messagesApi.preferred(request);
             JsonNode jsonNode = request.body().asJson();
             if (uid < 1) return unauth403();
             Member member = Member.find.byId(uid);
             if (null == member) return unauth403();
-            if (member.shopId < 1) return okCustomJson(CODE40001, "请先申请入驻");
+            //service.please.apply.enter ="请先申请入驻"
+            String applyEnter = messages.at("service.please.apply.enter");
+            if (member.shopId < 1) return okCustomJson(CODE40001, applyEnter);
+            //service.error.store.not.member="非店铺管理人员不可操作"
+            String storeMeb = messages.at("service.error.store.not.member");
             if (member.userType != Member.USER_TYPE_MANAGER) {
-                return okCustomJson(CODE40001, "非店铺管理人员，不可操作");
+                return okCustomJson(CODE40001, storeMeb);
             }
-            if (null == jsonNode || id < 1) return okCustomJson(CODE40001, "参数错误");
+            //base.argument.error=参数错误
+            String paramErr = messages.at("base.argument.error");
+            if (null == jsonNode || id < 1) return okCustomJson(CODE40001, paramErr);
             Service service = Service.find.byId(id);
-            if (null == service || service.shopId != member.shopId) return okCustomJson(CODE40002, "服务不存在");
+            //service.error.not.exist="服务不存在"
+            String NotExist = messages.at("service.error.not.exist");
+            if (null == service || service.shopId != member.shopId) return okCustomJson(CODE40002, NotExist);
 
             String serviceName = jsonNode.findPath("serviceName").asText();
             String serviceIcon = jsonNode.findPath("serviceIcon").asText();
@@ -183,21 +217,30 @@ public class ServiceController extends BaseController {
     @Transactional
     public CompletionStage<Result> deleteService(Http.Request request) {
         return businessUtils.getUserIdByAuthToken(request).thenApplyAsync((uid) -> {
+            Messages messages = messagesApi.preferred(request);
             JsonNode jsonNode = request.body().asJson();
             if (uid < 1) return unauth403();
             Member member = Member.find.byId(uid);
             if (null == member) return unauth403();
-            if (member.shopId < 1) return okCustomJson(CODE40001, "请先申请入驻");
+            //service.please.apply.enter ="请先申请入驻"
+            String applyEnter = messages.at("service.please.apply.enter");
+            if (member.shopId < 1) return okCustomJson(CODE40001, applyEnter);
+            //service.error.store.not.member="非店铺管理人员不可操作"
+            String storeMeb = messages.at("service.error.store.not.member");
             if (member.userType != Member.USER_TYPE_MANAGER) {
-                return okCustomJson(CODE40001, "非店铺管理人员，不可操作");
+                return okCustomJson(CODE40001, storeMeb);
             }
             String operation = jsonNode.findPath("operation").asText();
+            //base.argument.error=参数错误
+            String paramErr = messages.at("base.argument.error");
             if (ValidationUtil.isEmpty(operation) || !operation.equals("del"))
-                return okCustomJson(CODE40001, "参数错误");
+                return okCustomJson(CODE40001, paramErr);
             long id = jsonNode.findPath("id").asInt();
-            if (id < 1) return okCustomJson(CODE40001, "参数错误");
+            if (id < 1) return okCustomJson(CODE40001, paramErr);
             Service service = Service.find.byId(id);
-            if (null == service || service.shopId != member.shopId) return okCustomJson(CODE40002, "服务不存在");
+            //service.error.not.exist="服务不存在"
+            String NotExist = messages.at("service.error.not.exist");
+            if (null == service || service.shopId != member.shopId) return okCustomJson(CODE40002, NotExist);
             service.delete();
             return okJSON200();
         });

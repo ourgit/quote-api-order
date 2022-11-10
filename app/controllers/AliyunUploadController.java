@@ -8,11 +8,14 @@ import com.aliyun.oss.model.PutObjectRequest;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.io.FilenameUtils;
 import play.Logger;
+import play.i18n.Messages;
+import play.i18n.MessagesApi;
 import play.libs.Files;
 import play.libs.Json;
 import play.mvc.Http;
 import play.mvc.Result;
 
+import javax.inject.Inject;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.nio.file.Paths;
@@ -29,6 +32,9 @@ public class AliyunUploadController extends BaseSecurityController {
     public static String bucketName = "renoseeker";
     public static String IMG_URL_PREFIX = "https://renoseeker.oss-cn-hangzhou.aliyuncs.com/";
 
+    @Inject
+    MessagesApi messagesApi;
+
     /**
      * @api {POST} /v1/user/upload/ 上传
      * @apiName upload
@@ -41,11 +47,17 @@ public class AliyunUploadController extends BaseSecurityController {
         Http.MultipartFormData<Files.TemporaryFile> body = request.body().asMultipartFormData();
         Http.MultipartFormData.FilePart<Files.TemporaryFile> uploadFile = body.getFile("file");
         return CompletableFuture.supplyAsync(() -> {
+            //file.error.file.upload="文件已经下载,请稍后重试"
+            Messages filesMessage = messagesApi.preferred(request);
+            String uploadFiles = filesMessage.at("file.error.file.upload");
+            //file.error.uploadfiles.sign.max.6="系统限制上传文件的大小最多6M"
+            Messages message = messagesApi.preferred(request);
+            String maxfile = message.at("file.error.uploadfiles.sign.max.6");
             try {
-                if (null == uploadFile) return okCustomJson(CODE500, "上传文件失败，请重试");
+                if (null == uploadFile) return okCustomJson(CODE500, uploadFiles);
                 String fileName = uploadFile.getFilename();
                 long fileSize = uploadFile.getFileSize();
-                if (fileSize > 6 * 1024 * 1024) return okCustomJson(CODE40005, "系统限制上传文件的大小最多6M");
+                if (fileSize > 6 * 1024 * 1024) return okCustomJson(CODE40005, maxfile);
                 Files.TemporaryFile file = uploadFile.getRef();
                 String key = UUID.randomUUID() + "." + FilenameUtils.getExtension(fileName);
                 String destPath = "/tmp/upload/" + key;
